@@ -4,7 +4,7 @@
     variant="large"
     :isActive="isActive"
     customAction="Balance"
-    fullscreen='md-down'
+    fullscreen="md-down"
     @close-modal="closeModal"
     @save-changes="balance"
   >
@@ -28,7 +28,6 @@ import MutationTypes from '@/store/mutation-types';
 import { useStore } from '@/store';
 import wasm from '@/mworker';
 
-import player from '@/objects/player';
 import { Teams } from '@/objects/team';
 import { Results } from '@/objects/balance';
 
@@ -74,7 +73,6 @@ export default defineComponent({
     const progress = reactive({ total: 10, current: 0 });
 
     document.addEventListener('wasm-update', e => {
-      // eslint-disable-next-line
       console.log('Step: ', (e as any).detail.message());
       progress.current += 1;
     });
@@ -120,8 +118,8 @@ export default defineComponent({
           range: +sbOptions.value.range,
           lowRankLimiter: sbOptions.value.lowRankLimiter,
           disallowSecondaryRoles: sbOptions.value.disallowSecondaryRoles,
-          reserveCopy: reserveCopy,
-          teamsCopy: teamsCopy,
+          reserveCopy,
+          teamsCopy,
           adjustSr: sbOptions.value.adjustSr,
         })
       );
@@ -143,21 +141,9 @@ export default defineComponent({
       return Object.values(store.state.players).some(player => player.identity.isCaptain);
     };
 
-    const checkSquires: () => boolean = () => {
-      const caps = Object.values(store.state.players).filter(player => player.identity.isCaptain);
-      const squires = Object.values(store.state.players).filter(player => player.identity.isSquire);
-
-      return squires.length >= caps.length;
-    };
-
     const balance = async () => {
       if (!checkCaps()) {
         alert('Please select at least one captain');
-        return;
-      }
-
-      if (!checkSquires()) {
-        alert('Please make sure that every captain has at least one squire');
         return;
       }
 

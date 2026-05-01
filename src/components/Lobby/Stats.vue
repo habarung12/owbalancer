@@ -3,7 +3,6 @@
     <div>Total: {{ players.length }}</div>
     <div>Seen: {{ currentCount }}</div>
     <div>Cap's: {{ captainCount }}</div>
-    <div>Squires: {{ squireCount }}</div>
   </div>
 </template>
 
@@ -18,14 +17,11 @@ export default defineComponent({
     currentCount: Number,
   },
   setup(props) {
-    const squireCount = computed(
-      () => props.players?.filter(([, player]) => player.identity.isSquire === true).length
-    );
     const captainCount = computed(
       () => props.players?.filter(([, player]) => player.identity.isCaptain === true).length
     );
 
-    return { squireCount, captainCount };
+    return { captainCount };
   },
 });
 </script>

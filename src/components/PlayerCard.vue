@@ -15,7 +15,6 @@
       <div class="text-ellip" :class="{ 'lh-100': !teamUuid, 'ps-1': !!teamUuid, wt: !!teamUuid }">
         <span class="extra-icon">
           <crown-icon v-if="player.identity.isCaptain" />
-          <sword-icon v-if="player.identity.isSquire" />
         </span>
         {{ player.identity.name }}
       </div>
@@ -38,7 +37,6 @@ import LockIcon from '@/components/svg/LockIcon.vue';
 import RoleIcon from '@/components/svg/RoleIcon.vue';
 import RankIcon from '@/components/svg/RankIcon.vue';
 import CrownIcon from '@/components/svg/CrownIcon.vue';
-import SwordIcon from '@/components/svg/SwordIcon.vue';
 
 export default defineComponent({
   name: 'PlayerCard',
@@ -53,7 +51,7 @@ export default defineComponent({
       default: 'players'
     }
   },
-  components: { RoleIcon, RankIcon, CrownIcon, SwordIcon, LockIcon },
+  components: { RoleIcon, RankIcon, CrownIcon, LockIcon },
   setup(props) {
     const store = useStore();
 
