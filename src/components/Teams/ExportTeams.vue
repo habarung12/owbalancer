@@ -3,6 +3,7 @@
     <drop-item @drop-click="exportText">Text</drop-item>
     <drop-item @drop-click="exportCSV">CSV</drop-item>
     <drop-item @drop-click="exportCaptains">Captains</drop-item>
+    <drop-item @drop-click="exportJSON">JSON</drop-item>
   </dropdown>
   <export-modal :isActive="isModalActive" :exportText="modalText" @close-modal="closeModal" />
 </template>
@@ -24,6 +25,30 @@ export default defineComponent({
     const modalText = ref('');
     const isModalActive = ref(false);
     const store = useStore();
+
+    const exportJSON = () => {
+      const data = {
+        format: 'xv-1',
+        exportedAt: new Date().toISOString(),
+        players: store.state.players,
+        teams: store.state.teams,
+        reservedPlayers: store.state.reservedPlayers,
+        balancerOptions: store.state.balancerOptions,
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json',
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+
+      a.href = url;
+      a.download = `ow2-balancer-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+
+      URL.revokeObjectURL(url);
+    };
 
     const exportText = () => {
       const { teams } = store.state;
@@ -100,20 +125,12 @@ export default defineComponent({
         const nameA = a.toUpperCase();
         const nameB = b.toUpperCase();
 
-        if (nameA < nameB) {
-          return -1;
-        }
-
-        if (nameA > nameB) {
-          return 1;
-        }
-
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
         return 0;
       });
 
-      const text = captainNames.join('\n');
-
-      modalText.value = text;
+      modalText.value = captainNames.join('\n');
       isModalActive.value = true;
     };
 
@@ -121,7 +138,15 @@ export default defineComponent({
       isModalActive.value = false;
     };
 
-    return { exportText, modalText, isModalActive, closeModal, exportCSV, exportCaptains };
+    return {
+      exportText,
+      exportCSV,
+      exportCaptains,
+      exportJSON,
+      modalText,
+      isModalActive,
+      closeModal,
+    };
   },
 });
 </script>
