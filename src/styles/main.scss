@@ -101,3 +101,50 @@ body.dark-mode .team-number {
 body.dark-mode .team-title {
   background: transparent !important;
 }
+body.dark-mode .role-icons svg,
+body.dark-mode .role-icons i,
+body.dark-mode .role-icons path,
+body.dark-mode .team-body svg,
+body.dark-mode .team-body i,
+body.dark-mode .team-body path {
+  color: #cbd5e1 !important;
+  fill: #cbd5e1 !important;
+}
+
+body.dark-mode .team-body .role-icons > *:last-child,
+body.dark-mode .player-card-item .role-icons > *:last-child {
+  color: #f1f5f9 !important;
+  fill: #f1f5f9 !important;
+}
+
+body.dark-mode .team-number,
+body.dark-mode .team-name,
+body.dark-mode .team-header,
+body.dark-mode .team-title {
+  color: #f1f5f9 !important;
+}
+
+body.dark-mode .team-name::selection {
+  background: #475569 !important;
+}
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select,
+body.dark-mode .form-control,
+body.dark-mode .form-control-sm {
+  color: #f8fafc !important;
+  -webkit-text-fill-color: #f8fafc !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder,
+body.dark-mode .form-control::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+body.dark-mode input:focus,
+body.dark-mode .form-control:focus {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
