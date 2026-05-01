@@ -82,12 +82,9 @@ impl Role {
                     return false;
                 }
 
-                if config.duplicate_roles && team.has_dps_duplicate(rank.1, rank.2) {
-                    return false;
-                }
-
                 true
             }
+
             Role::Support(rank) => {
                 if (team.support_count() + 1) > 2 {
                     return false;
@@ -100,12 +97,9 @@ impl Role {
                     return false;
                 }
 
-                if config.duplicate_roles && team.has_support_duplicate(rank.1, rank.2) {
-                    return false;
-                }
-
                 true
             }
+
             Role::Tank(rank) => {
                 if (team.tank_count() + 1) > 1 {
                     return false;
@@ -115,10 +109,6 @@ impl Role {
                     && rank.0 < config.limiter_max
                     && team.low_tank_count(config.limiter_max) > 0
                 {
-                    return false;
-                }
-
-                if config.duplicate_roles && team.has_tank_duplicate(rank.1, rank.2) {
                     return false;
                 }
 
@@ -139,6 +129,7 @@ impl Role {
 
                 true
             }
+
             Role::Support(rank) => {
                 if config.rank_limiter
                     && rank.0 < config.limiter_max
@@ -149,6 +140,7 @@ impl Role {
 
                 true
             }
+
             Role::Tank(rank) => {
                 if config.rank_limiter
                     && rank.0 < config.limiter_max

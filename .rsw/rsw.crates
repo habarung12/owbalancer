@@ -1,1 +1,1 @@
-@rust/owbalancer :~> @rust/owbalancer/pkg
+@rust/owbalancer :~> .\@rust/owbalancer\pkg
