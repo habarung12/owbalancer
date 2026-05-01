@@ -26,11 +26,17 @@ export default defineComponent({
     lobby: {
       type: String as PropType<LobbyType>,
       default: 'players',
-    }
+    },
   },
   setup(props) {
     const store = useStore();
     const inp = ref<HTMLInputElement | null>(null);
+
+    const clearInput = () => {
+      if (inp.value) {
+        inp.value.value = '';
+      }
+    };
 
     const onReaderLoad = (event: ProgressEvent<FileReader>) => {
       if (!event.target) return;
@@ -39,13 +45,30 @@ export default defineComponent({
 
       try {
         const data = JSON.parse(source);
-
-        if (inp?.value) {
-          inp.value.value = '';
-        }
+        clearInput();
 
         if (data.format === 'xv-1') {
-          store.commit(MutationTypes.IMPORT_PLAYERS, { players: data.players, lobby: props.lobby });
+          if (data.players) {
+            store.commit(MutationTypes.IMPORT_PLAYERS, {
+              players: data.players,
+              lobby: props.lobby,
+            });
+          }
+
+          if (props.lobby === 'players') {
+            if (Array.isArray(data.teams)) {
+              store.commit(MutationTypes.ADD_TEAMS, data.teams);
+            }
+
+            if (Array.isArray(data.reservedPlayers)) {
+              store.commit(MutationTypes.RESERVE_PLAYERS, data.reservedPlayers);
+            }
+
+            if (data.balancerOptions) {
+              store.commit(MutationTypes.SET_BALANCER_OPTIONS, data.balancerOptions);
+            }
+          }
+
           return;
         }
 
@@ -56,8 +79,7 @@ export default defineComponent({
 
         throw new Error('Incorrect players export format');
       } catch (e) {
-        // eslint-disable-next-line
-        alert(`Format error: ${e.message}`);
+        alert(`Format error: ${(e as Error).message}`);
       }
     };
 
@@ -83,6 +105,7 @@ export default defineComponent({
 .wf {
   width: 4rem;
 }
+
 .form-control {
   background-color: $gray-200;
 }
