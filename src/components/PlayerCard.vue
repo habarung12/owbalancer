@@ -124,30 +124,63 @@ export default defineComponent({
   white-space: nowrap;
   overflow: hidden;
 }
+
 .wt {
   width: 160px;
 }
+
 .lh-100 {
   line-height: 50px;
 }
+
 .lh-80 {
   line-height: 41px;
 }
+
 .w-40p {
   width: 40px;
 }
+
+/* сама карточка */
+.w-100 {
+  padding: 0 10px;
+  min-height: 50px;
+  align-items: center;
+  background: transparent;
+}
+
 .role-icons {
   line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 2px;
 }
+
 .role-icons > * {
   font-size: 0.8em;
   color: var(--bs-gray);
 }
+
 .role-icons > *:last-child {
   font-size: 1em;
   color: var(--bs-gray-dark);
 }
+
 .extra-icon {
   color: var(--bs-info);
+}
+
+:global(body.dark-mode) .w-100 {
+  background: transparent !important;
+  color: #f1f1f1 !important;
+}
+
+:global(body.dark-mode) .role-icons > * {
+  color: #cbd5e1 !important;
+}
+
+:global(body.dark-mode) .extra-icon {
+  color: #38bdf8 !important;
 }
 </style>

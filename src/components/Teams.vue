@@ -40,15 +40,16 @@ export default defineComponent({
 <style lang="scss" scoped>
 .teams {
   display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  column-gap: 1rem;
-  row-gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 320px));
+  gap: 1rem;
   margin-top: 2rem;
+  align-items: start;
 }
+
 .wf {
   width: 6rem;
 }
+
 .mh-80vh {
   max-height: 80vh;
 }

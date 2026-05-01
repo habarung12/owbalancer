@@ -168,7 +168,13 @@ export default defineComponent({
   font-size: 1.2em;
   line-height: 2.4em;
 }
+
 .lh-26 {
   line-height: 2.6rem;
+  min-height: 42px;
+}
+
+.list-group-item {
+  min-height: 42px;
 }
 </style>

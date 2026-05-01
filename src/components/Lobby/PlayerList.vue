@@ -15,18 +15,19 @@
         <delete-players :lobby="lobby" />
       </div>
     </div>
+
     <stats :players="state.storePlayers" :currentCount="state.players.length" />
     <player-filter :players="state.storePlayers" @filter="filter" />
+
     <div
-      class="player-cards overflow-auto bg-secondary border p-1"
+      class="player-cards overflow-auto"
       @dragover="allowDrop"
       @drop="drop"
     >
       <player-card
-        class="mb-1"
+        class="player-card-item"
         :class="{
           'bg-locked': player.identity.isLocked,
-          'bg-light': !player.identity.isLocked,
           selected: !!marked[uuid],
           duplicate: duplicates.includes(player.identity.name),
         }"
@@ -96,6 +97,7 @@ export default defineComponent({
             : teamsLen.value <= 0)
       )
     );
+
     const activeSort: { rule: string; order: 'asc' | 'desc' } = {
       rule: 'name',
       order: 'asc',
@@ -215,9 +217,50 @@ export default defineComponent({
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
 
+:global(:root) {
+  --card-bg: #ffffff;
+  --cards-bg: #f8f9fa;
+  --cards-border: #e9ecef;
+  --card-border: #edf0f2;
+  --card-text: #212529;
+}
+
+:global(body.dark-mode) {
+  --card-bg: #242424;
+  --cards-bg: #181818;
+  --cards-border: #333333;
+  --card-border: #3a3a3a;
+  --card-text: #f1f1f1;
+}
+
 .player-cards {
   height: 40rem;
+  background: var(--cards-bg) !important;
+  border: 1px solid var(--cards-border) !important;
+  border-radius: 14px;
+  padding: 0.6rem;
 }
+
+.player-card-item {
+  margin-bottom: 0.45rem;
+  background-color: var(--card-bg) !important;
+  color: var(--card-text) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  transition: 0.15s ease;
+  overflow: hidden;
+}
+
+.player-card-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+}
+
+.player-card-item :deep(*) {
+  color: inherit;
+}
+
 @include media-breakpoint-down(sm) {
   .player-cards {
     height: 30rem;
@@ -225,14 +268,29 @@ export default defineComponent({
 }
 
 .duplicate {
-  background-color: $red-300 !important;
+  background-color: #fff1f1 !important;
+  border-left: 4px solid #dc3545 !important;
 }
 
 .selected {
-  background-color: $cyan-100 !important;
+  background-color: #eefaff !important;
+  border-left: 4px solid #0dcaf0 !important;
 }
 
 .bg-locked {
-  background-color: $yellow-100 !important;
+  background-color: #fff8df !important;
+  border-left: 4px solid #ffc107 !important;
+}
+
+:global(body.dark-mode) .duplicate {
+  background-color: #3a1717 !important;
+}
+
+:global(body.dark-mode) .selected {
+  background-color: #12313a !important;
+}
+
+:global(body.dark-mode) .bg-locked {
+  background-color: #3a2f12 !important;
 }
 </style>

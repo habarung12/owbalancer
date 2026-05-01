@@ -1,6 +1,8 @@
 <template>
-  <div @dragover="allowDrop" @drop="drop" class="border border-danger w-100 delete-player">
-    ==== Delete Player ====
+  <div @dragover="allowDrop" @drop="drop" class="delete-player">
+    <div class="delete-icon">🗑️</div>
+    <div class="delete-title">Удалить игрока</div>
+    <div class="delete-hint">Перетащи игрока сюда</div>
   </div>
 </template>
 
@@ -52,15 +54,39 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-div {
+.delete-player {
   height: 5rem;
+  border: 2px dashed #dc3545;
+  border-radius: 12px;
+  background: #fff5f5;
+  color: #b02a37;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: 0.15s ease;
+  cursor: pointer;
 }
 
-.delete-player {
-  font-weight: bold;
-  line-height: 5rem;
-  text-align: center;
+.delete-player:hover {
+  background: #ffe3e3;
+  border-color: #b02a37;
+  transform: translateY(-1px);
+}
+
+.delete-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.delete-title {
+  font-weight: 700;
   text-transform: uppercase;
-  border-style: dashed !important;
+  font-size: 0.85rem;
+}
+
+.delete-hint {
+  font-size: 0.75rem;
+  opacity: 0.75;
 }
 </style>

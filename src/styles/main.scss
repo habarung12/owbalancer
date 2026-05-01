@@ -1,1 +1,103 @@
 @import '../../node_modules/bootstrap/scss/bootstrap.scss';
+body.dark-mode {
+  background: #121212 !important;
+  color: #f1f1f1 !important;
+}
+
+body.dark-mode .app-wrapper {
+  background: #121212 !important;
+}
+
+body.dark-mode .topbar,
+body.dark-mode .content-box,
+body.dark-mode .team-card,
+body.dark-mode .player-cards,
+body.dark-mode .card,
+body.dark-mode .list-group-item {
+  background: #1e1e1e !important;
+  color: #f1f1f1 !important;
+  border-color: #333 !important;
+}
+
+body.dark-mode .team-header {
+  background: #202020 !important;
+}
+
+body.dark-mode .title,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5 {
+  color: #f1f1f1 !important;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+  background: #2a2a2a !important;
+  color: white !important;
+  border-color: #444 !important;
+}
+
+body.dark-mode .form-control-plaintext {
+  color: #f1f1f1 !important;
+}
+
+body.dark-mode .credits {
+  color: #cbd5e1 !important;
+}
+body.dark-mode ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+  background: #181818;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 10px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+body.dark-mode .delete-player {
+  background: #2a1518 !important;
+  color: #ffb4bd !important;
+  border-color: #dc3545 !important;
+}
+
+body.dark-mode .delete-player .delete-title {
+  color: #ff6b7a !important;
+}
+
+body.dark-mode .delete-player .delete-hint {
+  color: #ffb4bd !important;
+}
+body.dark-mode input.team-name {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #f8fafc !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+body.dark-mode input.team-name:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #f8fafc !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+body.dark-mode .team-number {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .team-title {
+  background: transparent !important;
+}
