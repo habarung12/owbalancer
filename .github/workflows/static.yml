@@ -34,7 +34,7 @@ jobs:
         run: cargo install wasm-pack
 
       - name: Install rsw
-        run: cargo install rsw
+        run: cargo install wasm-pack --version 0.12.1 --locked
 
       - name: Setup Node
         uses: actions/setup-node@v4
