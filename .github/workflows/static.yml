@@ -31,10 +31,10 @@ jobs:
         uses: dtolnay/rust-toolchain@1.75.0
 
       - name: Install wasm-pack
-        run: cargo install wasm-pack
+        run: cargo install wasm-pack --version 0.12.1 --locked
 
       - name: Install rsw
-        run: cargo install wasm-pack --version 0.12.1 --locked
+        run: cargo install rsw
 
       - name: Setup Node
         uses: actions/setup-node@v4
