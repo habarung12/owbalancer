@@ -5,10 +5,17 @@
         <OWIcon />
         <h3 class="ms-2">Tournament Balancer</h3>
       </div>
-      <span>
-        Created by
-        <a target="blank" href="https://github.com/atravkovs">s0ck3t</a>
-      </span>
+
+      <div class="text-end">
+        <div>
+          Created by
+          <a target="_blank" href="https://github.com/atravkovs">s0ck3t</a>
+        </div>
+        <div>
+          Modified by
+          <strong>habarung</strong>
+        </div>
+      </div>
     </div>
 
     <div class="row px-2 pb-2 mx-auto">

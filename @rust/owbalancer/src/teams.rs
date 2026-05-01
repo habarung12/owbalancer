@@ -757,12 +757,21 @@ impl Teams {
     }
 }
 
+fn clean_team_name(name: &str) -> String {
+    name.split('#').next().unwrap_or(name).to_string()
+}
+
 impl From<PlayerPool> for Teams {
     fn from(player_pool: PlayerPool) -> Self {
         let teams = player_pool
             .0
             .into_iter()
-            .map(|player| Team::new(player.name.clone(), Member::from_primary_player(&player)))
+            .map(|player| {
+                Team::new(
+                    clean_team_name(&player.name),
+                    Member::from_primary_player(&player),
+                )
+            })
             .collect();
 
         Teams(teams)
