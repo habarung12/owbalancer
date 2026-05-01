@@ -34,15 +34,16 @@ jobs:
         run: cargo install wasm-pack --version 0.12.1 --locked
 
       - name: Install rsw
-        run: cargo install rsw
+        run: cargo install rsw --version 0.7.5 --locked
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build site
         run: npm run build
