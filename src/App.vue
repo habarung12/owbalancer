@@ -130,7 +130,4 @@ export default defineComponent({
   }
 }
 
-img {
-  width: 24rem;
-}
 </style>

@@ -134,14 +134,26 @@ export default defineComponent({
 }
 
 .lh-80 {
-  line-height: 41px;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
 }
 
 .w-40p {
-  width: 40px;
+  width: 42px;
+  min-width: 42px;
 }
 
-/* сама карточка */
+.lh-80 :deep(img),
+.lh-80 :deep(svg) {
+  width: 30px !important;
+  height: 30px !important;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .w-100 {
   padding: 0 10px;
   min-height: 50px;
