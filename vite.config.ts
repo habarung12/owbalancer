@@ -5,7 +5,7 @@ import { URL, fileURLToPath } from 'url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/ow2/',
+  base: '/owbalancer/',
   plugins: [vue(), ViteRsw()],
   build: {
     assetsInlineLimit: 0,
