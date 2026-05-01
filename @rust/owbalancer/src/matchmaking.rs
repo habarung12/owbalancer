@@ -71,10 +71,12 @@ impl<'a> Matchmaking<'a> {
     pub fn balance_players(&mut self) {
         self.log("Init");
         self.init_teams();
+
         self.log("Distribute squires");
         if self.disable_type.as_str() != "ex_caps" {
             self.distribute_squires();
         }
+
         self.log("Init pool");
         self.init_pool(false);
 
@@ -93,14 +95,19 @@ impl<'a> Matchmaking<'a> {
 
         self.log("Distribute fillers");
         self.distribute_fillers();
+
         self.log("Distribute remaining");
         self.distribute_remaining();
+
         self.log("Swap Steal");
         self.swap_steal();
+
         self.log("Increase quality");
         self.increase_quality();
+
         self.log("Minimize dispersion");
         self.minimize_dispersion();
+
         self.teams.sort(Direction::ASC);
     }
 
@@ -139,6 +146,7 @@ impl<'a> Matchmaking<'a> {
     fn calculate_dispersion(&self) -> i32 {
         let first = self.teams.0.first().unwrap();
         let last = self.teams.0.last().unwrap();
+
         let total_count = if self.config.total_count <= 0 {
             1
         } else {
@@ -180,6 +188,7 @@ impl<'a> Matchmaking<'a> {
 
     fn minimize_dispersion(&mut self) {
         let not_complete_teams = self.teams.get_not_complete();
+
         if !self.config.dispersion_minimizer
             || (self.config.dispersion_minimizer && not_complete_teams.len() > 0)
         {
@@ -191,8 +200,10 @@ impl<'a> Matchmaking<'a> {
         while let Some(swap) = self.try_minimize() {
             let first = self.teams.0[swap.0].members.remove(swap.1);
             let second = self.teams.0[swap.2].members.remove(swap.3);
+
             self.teams.0[swap.2].members.push(first);
             self.teams.0[swap.0].members.push(second);
+
             self.teams.0[swap.2].update();
             self.teams.0[swap.0].update();
         }
@@ -203,12 +214,14 @@ impl<'a> Matchmaking<'a> {
 
         self.config.roles_avg.insert(
             "dps".to_string(),
-            (self.teams.total_role_sr(&SimpleRole::Dps)) / role_players as i32,
+            self.teams.total_role_sr(&SimpleRole::Dps) / role_players as i32,
         );
+
         self.config.roles_avg.insert(
             "support".to_string(),
             self.teams.total_role_sr(&SimpleRole::Support) / role_players as i32,
         );
+
         self.config.roles_avg.insert(
             "tank".to_string(),
             self.teams.total_role_sr(&SimpleRole::Tank) / (role_players / 2) as i32,
@@ -231,6 +244,7 @@ impl<'a> Matchmaking<'a> {
 
     fn swap_steal(&mut self) {
         self.teams.update();
+
         let not_complete_teams = self.teams.get_not_complete();
         let not_complete_len = not_complete_teams.len();
 
@@ -239,6 +253,7 @@ impl<'a> Matchmaking<'a> {
         for id in not_complete_teams {
             let team = self.teams.get(id);
             let role = team.get_missing_role();
+
             if role.is_none() {
                 continue;
             }
@@ -246,6 +261,7 @@ impl<'a> Matchmaking<'a> {
             let role = role.unwrap();
             let role_clone = role.clone();
             let range = team.get_range(&self.config);
+
             let find_replacement = self.pool.distribute_replacement(
                 role,
                 range,
@@ -258,6 +274,7 @@ impl<'a> Matchmaking<'a> {
             if let Some((team_id, replacement_id, leftover)) = find_replacement {
                 let replacement_team = self.teams.get(team_id);
                 let replacement_member = replacement_team.members.get(replacement_id).unwrap();
+
                 let replacement = self
                     .reserve_pool
                     .0
@@ -271,6 +288,7 @@ impl<'a> Matchmaking<'a> {
                     &replacement,
                     replacement.roles.get_by_simple(&role_clone).unwrap(),
                 );
+
                 team.update();
 
                 let team = self.teams.get_mut(team_id);
@@ -281,6 +299,7 @@ impl<'a> Matchmaking<'a> {
                     .0
                     .iter()
                     .position(|c| c.uuid.as_str() == leftover.uuid.as_str());
+
                 if let Some(index) = pos {
                     let candidate = self.pool.0.get(index).unwrap();
                     let add_role = candidate
@@ -290,8 +309,10 @@ impl<'a> Matchmaking<'a> {
 
                     team.add_player(candidate, &add_role);
                     team.update();
+
                     self.config.total_count += 1;
                     self.config.total_sr += add_role.decompose().1;
+
                     self.pool.0.remove(index);
                     inserted += 1;
                 }
@@ -327,15 +348,23 @@ impl<'a> Matchmaking<'a> {
             })
             .collect();
 
-        let low_tanks: Vec<(usize, &Team)> = Vec::new();
+        let low_tanks: Vec<(usize, &Team)> = cl
+            .0
+            .iter()
+            .enumerate()
+            .filter(|(_, team)| {
+                team.members_count() == 5 && team.low_tank_count(self.config.limiter_max) == 1
+            })
+            .collect();
 
-        let low_dps: Vec<(usize, &Team)> =
-            cl.0.iter()
-                .enumerate()
-                .filter(|(_, team)| {
-                    team.members_count() == 5 && team.low_dps_count(self.config.limiter_max) == 2
-                })
-                .collect();
+        let low_dps: Vec<(usize, &Team)> = cl
+            .0
+            .iter()
+            .enumerate()
+            .filter(|(_, team)| {
+                team.members_count() == 5 && team.low_dps_count(self.config.limiter_max) == 2
+            })
+            .collect();
 
         for (li, ls) in &low_supports {
             let res = self.t_find(SimpleRole::Support, *li, &ls, average);
@@ -366,40 +395,40 @@ impl<'a> Matchmaking<'a> {
         ls: &Team,
         average: i32,
     ) -> Option<(usize, usize, usize, usize)> {
-        let high_supports: Vec<(usize, &Team)> = self
+        let high_teams: Vec<(usize, &Team)> = self
             .teams
             .0
             .iter()
             .enumerate()
             .filter(|(_, team)| {
-                team.members_count() == 5 && team.low_support_count(self.config.limiter_max) == 0
+                team.members_count() == 5
+                    && team.low_role_count(&role, self.config.limiter_max) == 0
             })
             .collect();
 
-        for (hi, hs) in &high_supports {
-            // by role
+        for (hi, hs) in &high_teams {
             let ls_members: Vec<(usize, &Member)> = ls
                 .members
                 .iter()
                 .enumerate()
                 .filter(|&member| member.1.role == role)
                 .collect();
+
             for lm in ls_members {
-                // by role
                 let hs_members: Vec<(usize, &Member)> = hs
                     .members
                     .iter()
                     .enumerate()
                     .filter(|&member| member.1.role == role)
                     .collect();
+
                 for hm in hs_members {
                     let new_sr_l = (ls.total_sr - lm.1.rank + hm.1.rank) / 5;
                     let new_sr_h = (hs.total_sr - hm.1.rank + lm.1.rank) / 5;
+
                     if (new_sr_l - average).abs() <= self.config.tolerance as i32
                         && (new_sr_h - average).abs() <= self.config.tolerance as i32
                     {
-                        // return team1_id, member1_id, team2_id, member2_id
-                        // perform swap
                         return Some((li, lm.0, *hi, hm.0));
                     }
                 }
@@ -490,6 +519,7 @@ impl<'a> Matchmaking<'a> {
 
         for candidate in pool {
             let fits = self.fit_player(candidate);
+
             if let Some(sr) = fits {
                 self.config.total_sr += sr;
                 self.config.total_count += 1;
@@ -519,8 +549,10 @@ impl<'a> Matchmaking<'a> {
             let target_role = candidate.roles.get(role_index);
 
             let (_, player_sr) = target_role.decompose();
+
             let new_average =
                 (self.config.total_sr + player_sr) as f32 / (self.config.total_count + 1) as f32;
+
             if let Some(team) =
                 self.teams
                     .fit_player(player_sr, new_average, &self.config, target_role)
@@ -550,7 +582,7 @@ impl Config {
             total_count: 0,
             duplicate_roles,
             sec_roles: false,
-            limiter_max: 600,
+            limiter_max: 1500,
             players_average: 0,
             roles_avg: HashMap::new(),
             rank_limiter2: rank_limiter,
