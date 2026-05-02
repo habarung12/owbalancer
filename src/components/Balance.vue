@@ -14,6 +14,22 @@
 
     <balance-type v-model="balanceType" />
     <balance-disable v-model="disableType" v-if="balanceType === 'full'" />
+
+    <div class="rank-mode-box">
+      <label class="rank-mode-label">Rank mode</label>
+
+      <select v-model="rankMode" class="form-select">
+        <option value="adaptive">Adaptive — auto risk based</option>
+        <option value="strict">Strict — max rank</option>
+        <option value="smart">Smart — highest -200</option>
+        <option value="soft">Soft — current/manual only</option>
+      </select>
+
+      <div class="rank-mode-help">
+        Adaptive: если пик сильно выше текущего — учитывает его жёстче. Smart — мягкий дефолт. Strict — максимальная страховка. Soft — почти только текущий ранг.
+      </div>
+    </div>
+
     <balance-options />
     <adjust-rating />
     <dispersion />
@@ -33,6 +49,7 @@ import wasm from '@/mworker';
 
 import { Teams } from '@/objects/team';
 import { Results } from '@/objects/balance';
+import { Players, ClassType } from '@/objects/player';
 
 import Sync from '@/components/Balance/Sync.vue';
 import Modal from '@/components/Helpers/Modal.vue';
@@ -49,8 +66,11 @@ type DataType = {
   reserveCopy: string[];
 };
 
+type RankMode = 'strict' | 'smart' | 'adaptive' | 'soft';
+
 export default defineComponent({
   name: 'Balance',
+
   components: {
     Sync,
     Modal,
@@ -70,6 +90,7 @@ export default defineComponent({
 
     const balanceType = ref('full');
     const disableType = ref('none');
+    const rankMode = ref<RankMode>('adaptive');
 
     const isActive = computed(() => store.state.isBalance);
     const reservedPlayers = computed(() => store.state.reservedPlayers);
@@ -84,13 +105,112 @@ export default defineComponent({
       store.commit(MutationTypes.TOGGLE_BALANCE, undefined);
     };
 
+    const getAdaptiveRank = (
+      currentRank: number,
+      highestSeenRank: number
+    ): number => {
+      const difference = highestSeenRank - currentRank;
+
+      if (highestSeenRank <= 0) {
+        return currentRank;
+      }
+
+      if (difference >= 600) {
+        return highestSeenRank;
+      }
+
+      if (difference >= 300) {
+        return Math.max(highestSeenRank - 200, 0);
+      }
+
+      return currentRank;
+    };
+
+    const getModeRank = (role: ClassType): number => {
+      const currentRank = role.rank || 0;
+      const registrationRank = role.registrationRank || 0;
+      const highestSeenRank = role.highestSeenRank || 0;
+      const manualRank = role.manualRank || 0;
+
+      if (rankMode.value === 'strict') {
+        return Math.max(
+          currentRank,
+          registrationRank,
+          highestSeenRank,
+          manualRank
+        );
+      }
+
+      if (rankMode.value === 'soft') {
+        return Math.max(
+          currentRank,
+          registrationRank,
+          manualRank
+        );
+      }
+
+      if (rankMode.value === 'adaptive') {
+        return Math.max(
+          getAdaptiveRank(currentRank, highestSeenRank),
+          registrationRank,
+          manualRank
+        );
+      }
+
+      const smartHighestRank =
+        highestSeenRank > 0 ? Math.max(highestSeenRank - 200, 0) : 0;
+
+      return Math.max(
+        currentRank,
+        registrationRank,
+        manualRank,
+        smartHighestRank
+      );
+    };
+
+    const getBalancePlayers = (): Players => {
+      const result: Players = {};
+
+      Object.entries(store.state.players).forEach(([id, player]) => {
+        result[id] = {
+          ...player,
+          stats: {
+            ...player.stats,
+            classes: {
+              dps: {
+                ...player.stats.classes.dps,
+                rank: getModeRank(player.stats.classes.dps),
+              },
+              tank: {
+                ...player.stats.classes.tank,
+                rank: getModeRank(player.stats.classes.tank),
+              },
+              support: {
+                ...player.stats.classes.support,
+                rank: getModeRank(player.stats.classes.support),
+              },
+            },
+          },
+        };
+      });
+
+      return result;
+    };
+
+    const getCommonBalancerPayload = () => ({
+      players: getBalancePlayers(),
+      range: +sbOptions.value.range,
+      lowRankLimiter: sbOptions.value.lowRankLimiter,
+      disallowSecondaryRoles: sbOptions.value.disallowSecondaryRoles,
+      preferBalancedCaptains: sbOptions.value.preferBalancedCaptains,
+      preferFullFlexDistribution: sbOptions.value.preferFullFlexDistribution,
+      preventSuperteamSynergy: sbOptions.value.preventSuperteamSynergy,
+      adjustSr: sbOptions.value.adjustSr,
+    });
+
     const fullBalance: (lib: any) => Results = lib => {
       const data = JSON.stringify({
-        players: store.state.players,
-        range: +sbOptions.value.range,
-        lowRankLimiter: sbOptions.value.lowRankLimiter,
-        disallowSecondaryRoles: sbOptions.value.disallowSecondaryRoles,
-        adjustSr: sbOptions.value.adjustSr,
+        ...getCommonBalancerPayload(),
         disableType: disableType.value,
         dispersionMinimizer: sbOptions.value.dispersionMinimizer,
         triesCount: sbOptions.value.triesCount,
@@ -102,11 +222,7 @@ export default defineComponent({
     const halfBalance: (lib: any) => Results = lib => {
       return lib.halfBalance(
         JSON.stringify({
-          players: store.state.players,
-          range: +sbOptions.value.range,
-          lowRankLimiter: sbOptions.value.lowRankLimiter,
-          disallowSecondaryRoles: sbOptions.value.disallowSecondaryRoles,
-          adjustSr: sbOptions.value.adjustSr,
+          ...getCommonBalancerPayload(),
         })
       );
     };
@@ -117,13 +233,9 @@ export default defineComponent({
     ) => {
       return lib.finalBalance(
         JSON.stringify({
-          players: store.state.players,
-          range: +sbOptions.value.range,
-          lowRankLimiter: sbOptions.value.lowRankLimiter,
-          disallowSecondaryRoles: sbOptions.value.disallowSecondaryRoles,
+          ...getCommonBalancerPayload(),
           reserveCopy,
           teamsCopy,
-          adjustSr: sbOptions.value.adjustSr,
         })
       );
     };
@@ -189,8 +301,41 @@ export default defineComponent({
       closeModal,
       balanceType,
       disableType,
+      rankMode,
       t,
     };
   },
 });
 </script>
+
+<style scoped>
+.rank-mode-box {
+  margin: 12px 0;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  background: #f8f9fa;
+}
+
+.rank-mode-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rank-mode-help {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+:global(body.dark-mode) .rank-mode-box {
+  background: #242424;
+  border-color: #3a3a3a;
+}
+
+:global(body.dark-mode) .rank-mode-help {
+  color: #94a3b8;
+}
+</style>

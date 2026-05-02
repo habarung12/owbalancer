@@ -19,6 +19,11 @@ pub struct Config {
     pub duplicate_roles: bool,
     pub duplicate_roles2: bool,
     pub dispersion_minimizer: bool,
+
+    pub prefer_balanced_captains: bool,
+    pub prefer_full_flex_distribution: bool,
+    pub prevent_superteam_synergy: bool,
+
     pub roles_avg: HashMap<String, i32>,
 }
 
@@ -41,24 +46,34 @@ pub struct BalancerResult {
 }
 
 impl<'a> Matchmaking<'a> {
-    pub fn new(
-        players: &'a Players,
-        tolerance: u32,
-        rank_limiter: bool,
-        duplicate_roles: bool,
-    ) -> Matchmaking {
-        let config = Config::new(tolerance, rank_limiter, duplicate_roles);
+   pub fn new(
+    players: &'a Players,
+    tolerance: u32,
+    rank_limiter: bool,
+    duplicate_roles: bool,
+    prefer_balanced_captains: bool,
+    prefer_full_flex_distribution: bool,
+    prevent_superteam_synergy: bool,
+) -> Matchmaking {
+    let config = Config::new(
+        tolerance,
+        rank_limiter,
+        duplicate_roles,
+        prefer_balanced_captains,
+        prefer_full_flex_distribution,
+        prevent_superteam_synergy,
+    );
 
-        Matchmaking {
-            config,
-            players,
-            teams: Teams::default(),
-            balanced: Vec::default(),
-            pool: PlayerPool::default(),
-            reserve_pool: PlayerPool::default(),
-            disable_type: String::from("none"),
-        }
+    Matchmaking {
+        config,
+        players,
+        teams: Teams::default(),
+        balanced: Vec::default(),
+        pool: PlayerPool::default(),
+        reserve_pool: PlayerPool::default(),
+        disable_type: String::from("none"),
     }
+}
 
     pub fn set_disable_type(&mut self, disable_type: String) {
         self.disable_type = disable_type;
@@ -574,7 +589,14 @@ impl<'a> Matchmaking<'a> {
 }
 
 impl Config {
-    fn new(tolerance: u32, rank_limiter: bool, duplicate_roles: bool) -> Config {
+    fn new(
+        tolerance: u32,
+        rank_limiter: bool,
+        duplicate_roles: bool,
+        prefer_balanced_captains: bool,
+        prefer_full_flex_distribution: bool,
+        prevent_superteam_synergy: bool,
+    ) -> Config {
         Config {
             tolerance,
             rank_limiter,
@@ -588,6 +610,10 @@ impl Config {
             rank_limiter2: rank_limiter,
             dispersion_minimizer: false,
             duplicate_roles2: duplicate_roles,
+
+            prefer_balanced_captains,
+            prefer_full_flex_distribution,
+            prevent_superteam_synergy,
         }
     }
 }

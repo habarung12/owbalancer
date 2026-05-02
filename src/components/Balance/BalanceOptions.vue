@@ -72,6 +72,42 @@
         {{ t.dispersion }}
       </label>
     </div>
+
+    <div class="form-check">
+      <input
+        type="checkbox"
+        id="preferBalancedCaptains"
+        class="form-check-input"
+        v-model="options.preferBalancedCaptains"
+      />
+      <label for="preferBalancedCaptains" class="form-check-label">
+        Prefer balanced captains
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input
+        type="checkbox"
+        id="preferFullFlexDistribution"
+        class="form-check-input"
+        v-model="options.preferFullFlexDistribution"
+      />
+      <label for="preferFullFlexDistribution" class="form-check-label">
+        Prefer full-flex distribution
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input
+        type="checkbox"
+        id="preventSuperteamSynergy"
+        class="form-check-input"
+        v-model="options.preventSuperteamSynergy"
+      />
+      <label for="preventSuperteamSynergy" class="form-check-label">
+        Prevent superteam synergy
+      </label>
+    </div>
   </div>
 </template>
 
@@ -104,6 +140,11 @@ export default defineComponent({
         options.value.lowRankLimiter = false;
         options.value.disallowSecondaryRoles = false;
         options.value.dispersionMinimizer = false;
+
+        options.value.preferBalancedCaptains = false;
+        options.value.preferFullFlexDistribution = false;
+        options.value.preventSuperteamSynergy = false;
+
         options.value.triesCount = 25;
         options.value.range = 80;
         options.value.adjustSr.isEnabled = false;
@@ -113,6 +154,11 @@ export default defineComponent({
         options.value.lowRankLimiter = true;
         options.value.disallowSecondaryRoles = false;
         options.value.dispersionMinimizer = true;
+
+        options.value.preferBalancedCaptains = true;
+        options.value.preferFullFlexDistribution = true;
+        options.value.preventSuperteamSynergy = false;
+
         options.value.triesCount = 15;
         options.value.range = 50;
         options.value.adjustSr.isEnabled = false;
@@ -122,6 +168,11 @@ export default defineComponent({
         options.value.lowRankLimiter = true;
         options.value.disallowSecondaryRoles = true;
         options.value.dispersionMinimizer = true;
+
+        options.value.preferBalancedCaptains = true;
+        options.value.preferFullFlexDistribution = true;
+        options.value.preventSuperteamSynergy = true;
+
         options.value.triesCount = 10;
         options.value.range = 30;
         options.value.adjustSr.isEnabled = false;

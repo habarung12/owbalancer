@@ -33,17 +33,33 @@ pub struct Player {
     pub created_at: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct ClassType {
     pub rank: i32,
+
+    #[serde(default)]
+    pub registration_rank: i32,
+
+    #[serde(default)]
+    pub highest_seen_rank: i32,
+
+    #[serde(default)]
+    pub manual_rank: i32,
+
+    #[serde(default)]
+    pub needs_check: bool,
+
+    #[serde(default)]
+    pub rank_note: String,
+
     pub priority: i16,
     pub primary: bool,
     pub secondary: bool,
     pub is_active: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Classes {
     pub dps: ClassType,
     pub tank: ClassType,
@@ -70,6 +86,54 @@ pub enum Direction {
     DESC,
 }
 
+impl ClassType {
+    pub fn get_balance_rank(&self) -> i32 {
+        let smart_highest_rank = if self.highest_seen_rank > 0 {
+            std::cmp::max(self.highest_seen_rank - 200, 0)
+        } else {
+            0
+        };
+
+        *[
+            self.rank,
+            self.registration_rank,
+            self.manual_rank,
+            smart_highest_rank,
+        ]
+        .iter()
+        .max()
+        .unwrap_or(&self.rank)
+    }
+
+    pub fn use_balance_rank(&mut self) {
+        self.rank = self.get_balance_rank();
+
+        if self.highest_seen_rank < self.rank {
+            self.highest_seen_rank = self.rank;
+        }
+
+        self.needs_check = self.highest_seen_rank - self.rank >= 300;
+    }
+
+    pub fn scale_rank_fields(&mut self, rs: &RatingScaler, role: &str, role_type: &str) {
+        self.rank = rs.scale(role, role_type, self.rank);
+
+        if self.registration_rank > 0 {
+            self.registration_rank = rs.scale(role, role_type, self.registration_rank);
+        }
+
+        if self.highest_seen_rank > 0 {
+            self.highest_seen_rank = rs.scale(role, role_type, self.highest_seen_rank);
+        }
+
+        if self.manual_rank > 0 {
+            self.manual_rank = rs.scale(role, role_type, self.manual_rank);
+        }
+
+        self.use_balance_rank();
+    }
+}
+
 impl Classes {
     pub fn get_class(&self, role: &SimpleRole) -> &ClassType {
         match role {
@@ -77,6 +141,16 @@ impl Classes {
             SimpleRole::Tank => &self.tank,
             SimpleRole::Support => &self.support,
         }
+    }
+
+    pub fn with_balance_ranks(&self) -> Classes {
+        let mut classes = self.clone();
+
+        classes.dps.use_balance_rank();
+        classes.tank.use_balance_rank();
+        classes.support.use_balance_rank();
+
+        classes
     }
 }
 
@@ -137,31 +211,31 @@ impl Players {
         for (_, player) in &mut self.0 {
             if player.stats.classes.dps.is_active {
                 if player.stats.classes.dps.primary {
-                    player.stats.classes.dps.rank = rs.scale("dps", "primary", player.stats.classes.dps.rank);
+                    player.stats.classes.dps.scale_rank_fields(&rs, "dps", "primary");
                 } else if player.stats.classes.dps.secondary {
-                    player.stats.classes.dps.rank = rs.scale("dps", "secondary", player.stats.classes.dps.rank);
+                    player.stats.classes.dps.scale_rank_fields(&rs, "dps", "secondary");
                 } else {
-                    player.stats.classes.dps.rank = rs.scale("dps", "any", player.stats.classes.dps.rank);
+                    player.stats.classes.dps.scale_rank_fields(&rs, "dps", "any");
                 }
             }
 
             if player.stats.classes.tank.is_active {
                 if player.stats.classes.tank.primary {
-                    player.stats.classes.tank.rank = rs.scale("tank", "primary", player.stats.classes.tank.rank);
+                    player.stats.classes.tank.scale_rank_fields(&rs, "tank", "primary");
                 } else if player.stats.classes.tank.secondary {
-                    player.stats.classes.tank.rank = rs.scale("tank", "secondary", player.stats.classes.tank.rank);
+                    player.stats.classes.tank.scale_rank_fields(&rs, "tank", "secondary");
                 } else {
-                    player.stats.classes.tank.rank = rs.scale("tank", "any", player.stats.classes.tank.rank);
+                    player.stats.classes.tank.scale_rank_fields(&rs, "tank", "any");
                 }
             }
 
             if player.stats.classes.support.is_active {
                 if player.stats.classes.support.primary {
-                    player.stats.classes.support.rank = rs.scale("support", "primary", player.stats.classes.support.rank);
+                    player.stats.classes.support.scale_rank_fields(&rs, "support", "primary");
                 } else if player.stats.classes.support.secondary {
-                    player.stats.classes.support.rank = rs.scale("support", "secondary", player.stats.classes.support.rank);
+                    player.stats.classes.support.scale_rank_fields(&rs, "support", "secondary");
                 } else {
-                    player.stats.classes.support.rank = rs.scale("support", "any", player.stats.classes.support.rank);
+                    player.stats.classes.support.scale_rank_fields(&rs, "support", "any");
                 }
             }
         }
@@ -178,7 +252,12 @@ impl Candidate {
     }
 
     fn new(uuid: String, name: String, roles: Roles, is_full_flex: bool) -> Candidate {
-        Candidate { uuid, name, roles, is_full_flex }
+        Candidate {
+            uuid,
+            name,
+            roles,
+            is_full_flex,
+        }
     }
 }
 
@@ -190,10 +269,12 @@ impl PartialEq for Candidate {
 
 impl From<&Player> for Candidate {
     fn from(player: &Player) -> Self {
+        let balance_classes = player.stats.classes.with_balance_ranks();
+
         Candidate::new(
             player.identity.uuid.clone(),
             player.identity.name.clone(),
-            Roles::from(&player.stats.classes),
+            Roles::from(&balance_classes),
             player.identity.is_full_flex.eq(&Some(true)),
         )
     }
@@ -201,7 +282,7 @@ impl From<&Player> for Candidate {
 
 impl PlayerPool {
     pub fn sort_by_rank(&mut self, direction: Direction) {
-        self.0.sort_by(|a, b| {          
+        self.0.sort_by(|a, b| {
             let ordering = b.roles.get_primary_rank().cmp(&a.roles.get_primary_rank());
 
             if direction == Direction::DESC {
@@ -222,7 +303,7 @@ impl PlayerPool {
                 return Ordering::Less;
             }
 
-            return Ordering::Equal;
+            Ordering::Equal
         });
     }
 
@@ -287,6 +368,7 @@ impl PlayerPool {
         if offset >= self.0.len() {
             return offset;
         }
+
         let candidate = self.0.get(offset).unwrap().clone();
 
         if let Some(team) = teams.find_mate(&candidate, 2, config) {
@@ -309,6 +391,7 @@ impl PlayerPool {
         if offset >= self.0.len() {
             return offset;
         }
+
         let candidate = self.0.get(offset).unwrap().clone();
 
         if let Some(team) = teams.find_perfect_ensign(&candidate, config) {
@@ -360,6 +443,7 @@ impl PlayerPool {
     ) -> Option<(usize, usize, &Candidate)> {
         for leftover in &self.0 {
             let lost = teams.replace_leftover(leftover, &role, range, db, target_team, config);
+
             if let Some(replacement) = lost {
                 return Some((replacement.0, replacement.1, leftover));
             }
@@ -374,6 +458,7 @@ impl PlayerPool {
             .iter()
             .map(|candidate| candidate.get_primary_role().decompose().1)
             .sum();
+
         let count = self.0.len();
 
         let mutual_sum = sum + teams_sr;
@@ -410,7 +495,9 @@ impl PlayerPool {
         candidates.sort_by(|a, b| {
             let role1 = a.get_primary_role().decompose();
             let role2 = b.get_primary_role().decompose();
+
             let new_count = team.members_count() as i32 + 1;
+
             let new_sr1 = (team.total_sr + role1.1) / new_count;
             let new_sr2 = (team.total_sr + role2.1) / new_count;
 

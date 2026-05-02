@@ -16,7 +16,10 @@ const reservedPlayers: ReservedPlayers = storage.reservedPlayers || [];
 const balancerResults: Results = [];
 
 // Migration
-if (storage.balancerOptions && Array.isArray(storage.balancerOptions.adjustSr.tank)) {
+if (
+  storage.balancerOptions &&
+  Array.isArray(storage.balancerOptions.adjustSr.tank)
+) {
   storage.balancerOptions.adjustSr = {
     isEnabled: false,
     tank: {
@@ -37,9 +40,17 @@ if (storage.balancerOptions && Array.isArray(storage.balancerOptions.adjustSr.ta
   };
 }
 
+// New fields migration
+if (storage.balancerOptions) {
+  storage.balancerOptions.preferBalancedCaptains ??= true;
+  storage.balancerOptions.preferFullFlexDistribution ??= true;
+  storage.balancerOptions.preventSuperteamSynergy ??= false;
+}
+
 const balancerOptions: BalancerOptions = storage.balancerOptions || {
   range: 30,
   triesCount: 25,
+
   adjustSr: {
     isEnabled: false,
     tank: {
@@ -58,14 +69,19 @@ const balancerOptions: BalancerOptions = storage.balancerOptions || {
       secondary: defaultPoints(),
     },
   },
+
   lowRankLimiter: false,
   dispersionMinimizer: false,
   disallowSecondaryRoles: false,
+
+  preferBalancedCaptains: true,
+  preferFullFlexDistribution: true,
+  preventSuperteamSynergy: false,
 };
 
 const editPlayer: { playerId: string; lobby: LobbyType } = {
   playerId: '',
-  lobby: 'players'
+  lobby: 'players',
 };
 
 const selectPlayers: {

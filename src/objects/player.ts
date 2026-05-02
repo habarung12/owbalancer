@@ -12,10 +12,18 @@ export type Identity = {
 
 export type ClassType = {
   rank: number;
+  registrationRank: number;
+  highestSeenRank: number;
+  manualRank: number;
+  needsCheck: boolean;
+  rankNote: string;
+
   priority: number;
   isActive: boolean;
   primary: boolean;
   secondary: boolean;
+
+  playHours?: number;
 };
 
 export type DescribedClassType = ClassType & { role: string };
@@ -46,6 +54,21 @@ export type PlayerEntries = Entries<Players>;
 
 export type ReservedPlayers = string[];
 
+const createDefaultClass = (priority: number): ClassType => ({
+  rank: 0,
+  registrationRank: 0,
+  highestSeenRank: 0,
+  manualRank: 0,
+  needsCheck: false,
+  rankNote: '',
+
+  playHours: 0,
+  priority,
+  primary: false,
+  isActive: false,
+  secondary: false,
+});
+
 const createDefaultPlayer: (name: string) => Player = name => {
   return {
     identity: {
@@ -58,30 +81,9 @@ const createDefaultPlayer: (name: string) => Player = name => {
     },
     stats: {
       classes: {
-        dps: {
-          rank: 0,
-          playHours: 0,
-          priority: 0,
-          primary: false,
-          isActive: false,
-          secondary: false,
-        },
-        tank: {
-          rank: 0,
-          playHours: 0,
-          priority: 1,
-          primary: false,
-          isActive: false,
-          secondary: false,
-        },
-        support: {
-          rank: 0,
-          playHours: 0,
-          priority: 2,
-          primary: false,
-          isActive: false,
-          secondary: false,
-        },
+        dps: createDefaultClass(0),
+        tank: createDefaultClass(1),
+        support: createDefaultClass(2),
       },
     },
     createdAt: new Date(),
@@ -100,6 +102,22 @@ const getRole = (roles: Classes, role: string): ClassType => {
   return roles.support;
 };
 
+const getBalanceRank = (role: ClassType): number => {
+  const currentRank = role.rank || 0;
+  const registrationRank = role.registrationRank || 0;
+  const manualRank = role.manualRank || 0;
+  const highestSeenRank = role.highestSeenRank || 0;
+
+  const smartHighestRank = highestSeenRank > 0 ? highestSeenRank - 200 : 0;
+
+  return Math.max(
+    currentRank,
+    registrationRank,
+    manualRank,
+    smartHighestRank
+  );
+};
+
 const getTopRole = (player: Player): ClassType => {
   return Object.values(player.stats.classes)
     .filter(role => role.isActive)
@@ -114,7 +132,7 @@ const getTopRoleName = (player: Player): string => {
 
 const getTopRank = (player: Player): number => {
   const topRole = getTopRole(player);
-  return topRole ? topRole.rank : 0;
+  return topRole ? getBalanceRank(topRole) : 0;
 };
 
 export default {
@@ -122,5 +140,6 @@ export default {
   getTopRank,
   getTopRole,
   getTopRoleName,
+  getBalanceRank,
   createDefaultPlayer,
 };

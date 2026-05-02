@@ -27,15 +27,22 @@ export type Balance = {
 export type BalancerOptions = {
   range: number;
   triesCount: number;
+
   adjustSr: {
     isEnabled: boolean;
     tank: RolePoints;
     support: RolePoints;
     dps: RolePoints;
   };
+
   lowRankLimiter: boolean;
   dispersionMinimizer: boolean;
   disallowSecondaryRoles: boolean;
+
+  // NEW OPTIONS
+  preferBalancedCaptains: boolean;
+  preferFullFlexDistribution: boolean;
+  preventSuperteamSynergy: boolean;
 };
 
 export type Results = Balance[];

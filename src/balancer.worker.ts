@@ -28,6 +28,9 @@ export default class WasmWorker {
       range,
       lowRankLimiter,
       disallowSecondaryRoles,
+      preferBalancedCaptains,
+      preferFullFlexDistribution,
+      preventSuperteamSynergy,
       adjustSr,
       disableType,
       dispersionMinimizer,
@@ -40,6 +43,9 @@ export default class WasmWorker {
         range,
         lowRankLimiter,
         disallowSecondaryRoles,
+        preferBalancedCaptains,
+        preferFullFlexDistribution,
+        preventSuperteamSynergy,
         adjustSr,
         disableType,
         dispersionMinimizer,
@@ -51,9 +57,30 @@ export default class WasmWorker {
   }
 
   halfBalance(data) {
-    const { players, range, lowRankLimiter, disallowSecondaryRoles, adjustSr } = JSON.parse(data);
+    const {
+      players,
+      range,
+      lowRankLimiter,
+      disallowSecondaryRoles,
+      preferBalancedCaptains,
+      preferFullFlexDistribution,
+      preventSuperteamSynergy,
+      adjustSr,
+    } = JSON.parse(data);
+
     return new Promise((resolve) => {
-      resolve(balance_half(players, range, lowRankLimiter, disallowSecondaryRoles, adjustSr));
+      resolve(
+        balance_half(
+          players,
+          range,
+          lowRankLimiter,
+          disallowSecondaryRoles,
+          preferBalancedCaptains,
+          preferFullFlexDistribution,
+          preventSuperteamSynergy,
+          adjustSr
+        )
+      );
     });
   }
 
@@ -63,10 +90,14 @@ export default class WasmWorker {
       range,
       lowRankLimiter,
       disallowSecondaryRoles,
+      preferBalancedCaptains,
+      preferFullFlexDistribution,
+      preventSuperteamSynergy,
       reserveCopy,
       teamsCopy,
       adjustSr,
     } = JSON.parse(data);
+
     return new Promise((resolve) => {
       resolve(
         balance_final(
@@ -74,6 +105,9 @@ export default class WasmWorker {
           range,
           lowRankLimiter,
           disallowSecondaryRoles,
+          preferBalancedCaptains,
+          preferFullFlexDistribution,
+          preventSuperteamSynergy,
           reserveCopy,
           teamsCopy,
           adjustSr

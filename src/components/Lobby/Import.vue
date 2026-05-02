@@ -18,7 +18,56 @@ import { useStore } from '@/store';
 import { t } from '@/i18n';
 
 import MutationTypes from '@/store/mutation-types';
-import { LobbyType } from '@/objects/player';
+import { ClassType, LobbyType, Players } from '@/objects/player';
+
+type ImportData = {
+  format?: string;
+  players?: Players;
+  teams?: unknown[];
+  reservedPlayers?: string[];
+  balancerOptions?: unknown;
+  format_version?: number;
+  format_type?: string;
+};
+
+const normalizeClass = (classData: Partial<ClassType>): ClassType => {
+  const rank = classData.rank || 0;
+
+  return {
+    rank,
+    registrationRank: classData.registrationRank ?? rank,
+    highestSeenRank: classData.highestSeenRank ?? rank,
+    manualRank: classData.manualRank ?? 0,
+    needsCheck: classData.needsCheck ?? false,
+    rankNote: classData.rankNote ?? '',
+
+    playHours: classData.playHours ?? 0,
+    priority: classData.priority ?? 0,
+    primary: classData.primary ?? false,
+    isActive: classData.isActive ?? false,
+    secondary: classData.secondary ?? false,
+  };
+};
+
+const normalizePlayers = (players: Players): Players => {
+  const result: Players = {};
+
+  Object.entries(players).forEach(([id, player]) => {
+    result[id] = {
+      ...player,
+      stats: {
+        ...player.stats,
+        classes: {
+          dps: normalizeClass(player.stats.classes.dps),
+          tank: normalizeClass(player.stats.classes.tank),
+          support: normalizeClass(player.stats.classes.support),
+        },
+      },
+    };
+  });
+
+  return result;
+};
 
 export default defineComponent({
   name: 'Import',
@@ -46,13 +95,13 @@ export default defineComponent({
       const source = event.target.result as string;
 
       try {
-        const data = JSON.parse(source);
+        const data = JSON.parse(source) as ImportData;
         clearInput();
 
-        if (data.format === 'xv-1') {
+        if (data.format === 'xv-1' || data.format === 'xv-2') {
           if (data.players) {
             store.commit(MutationTypes.IMPORT_PLAYERS, {
-              players: data.players,
+              players: normalizePlayers(data.players),
               lobby: props.lobby,
             });
           }

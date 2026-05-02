@@ -52,9 +52,7 @@ extern "C" {
 
 #[wasm_bindgen(start)]
 pub fn main_js() -> Result<(), JsValue> {
-    // #[cfg(debug_assertions)]
     console_error_panic_hook::set_once();
-
     Ok(())
 }
 
@@ -63,6 +61,9 @@ pub fn run_matchmaking(
     tolerance: u32,
     rank_limiter: bool,
     duplicate_roles: bool,
+    prefer_balanced_captains: bool,
+    prefer_full_flex_distribution: bool,
+    prevent_superteam_synergy: bool,
     adjust_sr: &JsValue,
     disable_type: String,
     dispersion_minimizer: bool,
@@ -71,7 +72,16 @@ pub fn run_matchmaking(
     let adjust: AdjustSr = adjust_sr.into_serde().unwrap();
     players.adjust_sr(adjust);
 
-    let mut matchmaking = Matchmaking::new(&players, tolerance, rank_limiter, duplicate_roles);
+    let mut matchmaking = Matchmaking::new(
+        &players,
+        tolerance,
+        rank_limiter,
+        duplicate_roles,
+        prefer_balanced_captains,
+        prefer_full_flex_distribution,
+        prevent_superteam_synergy,
+    );
+
     matchmaking.set_disable_type(disable_type.clone());
 
     if dispersion_minimizer {
@@ -79,7 +89,6 @@ pub fn run_matchmaking(
     }
 
     matchmaking.balance_players();
-
     matchmaking.result()
 }
 
@@ -89,6 +98,9 @@ pub fn balance(
     tolerance: u32,
     rank_limiter: bool,
     duplicate_roles: bool,
+    prefer_balanced_captains: bool,
+    prefer_full_flex_distribution: bool,
+    prevent_superteam_synergy: bool,
     adjust_sr: &JsValue,
     disable_type: String,
     dispersion_minimizer: bool,
@@ -103,6 +115,9 @@ pub fn balance(
             tolerance,
             rank_limiter,
             duplicate_roles,
+            prefer_balanced_captains,
+            prefer_full_flex_distribution,
+            prevent_superteam_synergy,
             adjust_sr,
             disable_type.clone(),
             dispersion_minimizer,
@@ -132,13 +147,25 @@ pub fn balance_half(
     tolerance: u32,
     rank_limiter: bool,
     duplicate_roles: bool,
+    prefer_balanced_captains: bool,
+    prefer_full_flex_distribution: bool,
+    prevent_superteam_synergy: bool,
     adjust_sr: &JsValue,
 ) -> JsValue {
     let mut players: Players = player_data.into_serde().unwrap();
     let adjust: AdjustSr = adjust_sr.into_serde().unwrap();
     players.adjust_sr(adjust);
 
-    let mut matchmaking = Matchmaking::new(&players, tolerance, rank_limiter, duplicate_roles);
+    let mut matchmaking = Matchmaking::new(
+        &players,
+        tolerance,
+        rank_limiter,
+        duplicate_roles,
+        prefer_balanced_captains,
+        prefer_full_flex_distribution,
+        prevent_superteam_synergy,
+    );
+
     matchmaking.balance_half();
 
     let mut results = Vec::default();
@@ -153,6 +180,9 @@ pub fn balance_final(
     tolerance: u32,
     rank_limiter: bool,
     duplicate_roles: bool,
+    prefer_balanced_captains: bool,
+    prefer_full_flex_distribution: bool,
+    prevent_superteam_synergy: bool,
     reserve_data: &JsValue,
     teams_data: &JsValue,
     adjust_sr: &JsValue,
@@ -164,7 +194,16 @@ pub fn balance_final(
     let teams: Teams = teams_data.into_serde().unwrap();
     let reserve: ReserveData = reserve_data.into_serde().unwrap();
 
-    let mut matchmaking = Matchmaking::new(&players, tolerance, rank_limiter, duplicate_roles);
+    let mut matchmaking = Matchmaking::new(
+        &players,
+        tolerance,
+        rank_limiter,
+        duplicate_roles,
+        prefer_balanced_captains,
+        prefer_full_flex_distribution,
+        prevent_superteam_synergy,
+    );
+
     matchmaking.add_reserve(reserve.0);
     matchmaking.add_teams(teams);
     matchmaking.balance_remaining();
