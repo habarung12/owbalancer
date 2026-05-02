@@ -150,36 +150,41 @@ export default defineComponent({
     };
 
     const drop = (ev: DragEvent) => {
-      ev.preventDefault();
-      const playerId = ev?.dataTransfer?.getData('playerTag');
-      const teamUuid = ev?.dataTransfer?.getData('team');
-      const from: LobbyType | undefined = ev?.dataTransfer?.getData('from') as LobbyType;
+  ev.preventDefault();
 
-      if (from !== undefined && playerId !== undefined) {
-        const to = from === 'players' ? 'backup' : 'players';
+  const playerId = ev?.dataTransfer?.getData('playerTag');
+  const teamUuid = ev?.dataTransfer?.getData('team');
+  const from = ev?.dataTransfer?.getData('from') as LobbyType | undefined;
 
-        if (from === props.lobby) return;
+  if (!playerId) return;
 
-        if (!store.state[to][playerId] && store.state[from][playerId]) {
-          store.commit(MutationTypes.ADD_PLAYER, {
-            player: store.state[from][playerId],
-            lobby: to,
-          });
+  if (teamUuid && store.state.teams.length > 0) {
+    store.commit(MutationTypes.ADD_RESERVE, playerId);
+    store.commit(MutationTypes.REMOVE_FROM_TEAM, {
+      teamUuid,
+      playerId,
+    });
 
-          if (to === 'players' && store.state.teams.length > 0) {
-            store.commit(MutationTypes.ADD_RESERVE, playerId);
-          }
-        }
-      }
+    return;
+  }
 
-      if (playerId !== undefined && teamUuid && store.state.teams.length > 0) {
+  if (from !== undefined) {
+    const to = from === 'players' ? 'backup' : 'players';
+
+    if (from === props.lobby) return;
+
+    if (!store.state[to][playerId] && store.state[from][playerId]) {
+      store.commit(MutationTypes.ADD_PLAYER, {
+        player: store.state[from][playerId],
+        lobby: to,
+      });
+
+      if (to === 'players' && store.state.teams.length > 0) {
         store.commit(MutationTypes.ADD_RESERVE, playerId);
-        store.commit(MutationTypes.REMOVE_FROM_TEAM, {
-          teamUuid,
-          playerId,
-        });
       }
-    };
+    }
+  }
+};
 
     const marked = computed(() => store.state.selectPlayers[props.lobby]);
     const duplicates = computed(() =>

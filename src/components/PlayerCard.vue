@@ -12,16 +12,25 @@
           <rank-icon :rank="sr" />
         </div>
       </div>
+
       <div class="text-ellip" :class="{ 'lh-100': !teamUuid, 'ps-1': !!teamUuid, wt: !!teamUuid }">
         <span class="extra-icon">
           <crown-icon v-if="player.identity.isCaptain" />
         </span>
+
         {{ player.identity.name }}
       </div>
     </div>
+
     <div class="role-icons">
       <lock-icon v-if="player.identity.isLocked" />
-      <role-icon v-for="role in state.icons" :rtype="role" :key="role" />
+
+      <role-icon
+        v-for="(role, index) in state.icons"
+        :rtype="role"
+        :key="role"
+        :class="{ 'secondary-role': index > 0 }"
+      />
     </div>
   </div>
 </template>
@@ -40,6 +49,7 @@ import CrownIcon from '@/components/svg/CrownIcon.vue';
 
 export default defineComponent({
   name: 'PlayerCard',
+
   props: {
     teamUuid: String,
     player: Object as PropType<Player>,
@@ -48,17 +58,24 @@ export default defineComponent({
     rankRole: String,
     lobby: {
       type: String as PropType<LobbyType>,
-      default: 'players'
-    }
+      default: 'players',
+    },
   },
+
   components: { RoleIcon, RankIcon, CrownIcon, LockIcon },
+
   setup(props) {
     const store = useStore();
 
     const drag = (ev: DragEvent) => {
       let a = null;
+
       if (ev?.dataTransfer) {
-        a = ev.dataTransfer.setData('playerTag', props.player?.identity.uuid || '');
+        a = ev.dataTransfer.setData(
+          'playerTag',
+          props.player?.identity.uuid || ''
+        );
+
         a = ev.dataTransfer.setData('team', props.teamUuid || '');
         a = ev.dataTransfer.setData('from', props.lobby || '');
       }
@@ -69,28 +86,22 @@ export default defineComponent({
     const editPlayer = (e: MouseEvent) => {
       e.preventDefault();
 
-      if (props.player === undefined) {
-        return;
-      }
+      if (props.player === undefined) return;
 
-      store.commit(MutationTypes.EDIT_PLAYER, { playerId: props.player.identity.uuid, lobby: props.lobby });
+      store.commit(MutationTypes.EDIT_PLAYER, {
+        playerId: props.player.identity.uuid,
+        lobby: props.lobby,
+      });
     };
 
     const icons = computed(() => {
-      const classes = Object.entries(props.player?.stats.classes || {});
+  const classes = Object.entries(props.player?.stats.classes || {});
 
-      const def = props.prefferedRole ? [props.prefferedRole] : [];
-
-      return classes
-        .filter(
-          ([rname, role]) =>
-            role.isActive && (props.prefferedRole ? rname !== props.prefferedRole : true)
-        )
-        .sort(([, role], [, role2]) => role2.priority - role.priority)
-        .reduce((acc: string[], [name]) => {
-          return props.prefferedRole ? [name, ...acc] : [...acc, name];
-        }, def);
-    });
+  return classes
+    .filter(([, role]) => role.isActive)
+    .sort(([, role], [, role2]) => role.priority - role2.priority)
+    .map(([name]) => name);
+});
 
     const state = reactive({
       icons,
@@ -99,7 +110,11 @@ export default defineComponent({
     const sr = computed(() => {
       if (!props.player) return 0;
 
-      if (props.rankRole) return PObj.getRole(props.player.stats.classes, props.rankRole).rank;
+      if (props.rankRole)
+        return PObj.getRole(
+          props.player.stats.classes,
+          props.rankRole
+        ).rank;
 
       if (props.prefferedRank) return props.prefferedRank;
 
@@ -179,6 +194,17 @@ export default defineComponent({
 
 .extra-icon {
   color: var(--bs-info);
+}
+
+.secondary-role {
+  opacity: 0.35 !important;
+  transform: scale(0.88);
+  filter: grayscale(15%);
+}
+
+.secondary-role :deep(svg),
+.secondary-role :deep(img) {
+  opacity: 0.35 !important;
 }
 
 :global(body.dark-mode) .w-100 {
