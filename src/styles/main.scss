@@ -1,11 +1,14 @@
 @import '../../node_modules/bootstrap/scss/bootstrap.scss';
+
 body.dark-mode {
-  background: #121212 !important;
-  color: #f1f1f1 !important;
+  background: #0f0f10 !important;
+  color: #f1f5f9 !important;
 }
 
+/* Main layout */
 body.dark-mode .app-wrapper {
-  background: #121212 !important;
+  background: #0f0f10 !important;
+  color: #f1f5f9 !important;
 }
 
 body.dark-mode .topbar,
@@ -14,37 +17,156 @@ body.dark-mode .team-card,
 body.dark-mode .player-cards,
 body.dark-mode .card,
 body.dark-mode .list-group-item {
-  background: #1e1e1e !important;
-  color: #f1f1f1 !important;
-  border-color: #333 !important;
+  background: #1b1b1d !important;
+  color: #f1f5f9 !important;
+  border-color: #33363d !important;
 }
 
 body.dark-mode .team-header {
-  background: #202020 !important;
+  background: #202124 !important;
+  border-color: #33363d !important;
 }
 
 body.dark-mode .title,
+body.dark-mode h1,
+body.dark-mode h2,
 body.dark-mode h3,
 body.dark-mode h4,
-body.dark-mode h5 {
-  color: #f1f1f1 !important;
-}
-
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea {
-  background: #2a2a2a !important;
-  color: white !important;
-  border-color: #444 !important;
-}
-
-body.dark-mode .form-control-plaintext {
-  color: #f1f1f1 !important;
+body.dark-mode h5,
+body.dark-mode label {
+  color: #f1f5f9 !important;
 }
 
 body.dark-mode .credits {
   color: #cbd5e1 !important;
 }
+
+/* Inputs */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .form-control,
+body.dark-mode .form-select,
+body.dark-mode .form-control-sm {
+  background: #262626 !important;
+  color: #f8fafc !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  border-color: #44474f !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder,
+body.dark-mode .form-control::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+body.dark-mode input:focus,
+body.dark-mode .form-control:focus {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Team name input */
+body.dark-mode input.team-name,
+body.dark-mode input.team-name:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #f8fafc !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+body.dark-mode .team-number,
+body.dark-mode .team-name,
+body.dark-mode .team-title {
+  color: #f1f5f9 !important;
+}
+
+/* Player cards */
+body.dark-mode .player-card-item {
+  background: #242426 !important;
+  color: #f8fafc !important;
+  border-color: #36383f !important;
+}
+
+body.dark-mode .player-card-item:hover {
+  background: #2a2a2d !important;
+}
+
+/* Modal */
+body.dark-mode .modal-content {
+  background: #1f2937 !important;
+  color: #f8fafc !important;
+  border-color: #374151 !important;
+}
+
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer {
+  border-color: #374151 !important;
+}
+
+body.dark-mode .modal-title,
+body.dark-mode .modal-body h3 {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Identity / Stats cards */
+body.dark-mode .identity-name-row,
+body.dark-mode .option-card,
+body.dark-mode .role-row {
+  background: #263244 !important;
+  border-color: #3b4a60 !important;
+  color: #f8fafc !important;
+}
+
+body.dark-mode .role-row.active {
+  background: #213a5a !important;
+  border-color: #3b82f6 !important;
+}
+
+body.dark-mode .role-name,
+body.dark-mode .identity-label,
+body.dark-mode .option-card strong {
+  color: #f8fafc !important;
+}
+
+body.dark-mode .role-subtitle,
+body.dark-mode .option-card small {
+  color: #cbd5e1 !important;
+}
+
+/* Buttons */
+body.dark-mode .btn {
+  color: #ffffff;
+}
+
+body.dark-mode .btn-warning {
+  color: #111827 !important;
+}
+
+/* Important: do NOT recolor rank/role images */
+body.dark-mode img,
+body.dark-mode svg {
+  filter: none;
+}
+
+body.dark-mode .role-icons svg,
+body.dark-mode .role-icons path,
+body.dark-mode .team-body svg,
+body.dark-mode .team-body path {
+  fill: inherit;
+  color: inherit;
+}
+
+/* Scrollbar */
 body.dark-mode ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -63,6 +185,7 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
+/* Delete block */
 body.dark-mode .delete-player {
   background: #2a1518 !important;
   color: #ffb4bd !important;
@@ -76,75 +199,19 @@ body.dark-mode .delete-player .delete-title {
 body.dark-mode .delete-player .delete-hint {
   color: #ffb4bd !important;
 }
-body.dark-mode input.team-name {
-  background: transparent !important;
-  background-color: transparent !important;
-  color: #f8fafc !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
 
-body.dark-mode input.team-name:focus {
-  background: transparent !important;
-  background-color: transparent !important;
-  color: #f8fafc !important;
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-body.dark-mode .team-number {
-  color: #94a3b8 !important;
-}
-
-body.dark-mode .team-title {
-  background: transparent !important;
-}
+body.dark-mode .player-card-item svg,
+body.dark-mode .player-card-item path,
 body.dark-mode .role-icons svg,
-body.dark-mode .role-icons i,
-body.dark-mode .role-icons path,
-body.dark-mode .team-body svg,
-body.dark-mode .team-body i,
-body.dark-mode .team-body path {
-  color: #cbd5e1 !important;
-  fill: #cbd5e1 !important;
+body.dark-mode .role-icons path {
+  color: #e5e7eb !important;
+  fill: #e5e7eb !important;
 }
 
-body.dark-mode .team-body .role-icons > *:last-child,
-body.dark-mode .player-card-item .role-icons > *:last-child {
-  color: #f1f5f9 !important;
-  fill: #f1f5f9 !important;
-}
-
-body.dark-mode .team-number,
-body.dark-mode .team-name,
-body.dark-mode .team-header,
-body.dark-mode .team-title {
-  color: #f1f5f9 !important;
-}
-
-body.dark-mode .team-name::selection {
-  background: #475569 !important;
-}
-body.dark-mode input,
-body.dark-mode textarea,
-body.dark-mode select,
-body.dark-mode .form-control,
-body.dark-mode .form-control-sm {
-  color: #f8fafc !important;
-  -webkit-text-fill-color: #f8fafc !important;
-}
-
-body.dark-mode input::placeholder,
-body.dark-mode textarea::placeholder,
-body.dark-mode .form-control::placeholder {
-  color: #94a3b8 !important;
-  opacity: 1 !important;
-}
-
-body.dark-mode input:focus,
-body.dark-mode .form-control:focus {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+body.dark-mode .player-card-item .role-icons *,
+body.dark-mode .team-card .role-icons *,
+body.dark-mode .role-icons * {
+  color: #e5e7eb !important;
+  fill: #e5e7eb !important;
+  stroke: #e5e7eb !important;
 }

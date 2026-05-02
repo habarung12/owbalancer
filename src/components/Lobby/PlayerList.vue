@@ -1,19 +1,15 @@
 <template>
   <div class="w-100">
-    <div class="d-flex justify-content-between">
-      <div>
-        <sort @sort="sort" />
-      </div>
-      <div v-if="enableExtra">
-        <assign />
-      </div>
-      <div class="d-flex">
-        <export :lobby="lobby" />
-        <import-file :lobby="lobby" />
-      </div>
-      <div>
-        <delete-players :lobby="lobby" />
-      </div>
+    <div class="lobby-toolbar">
+      <sort @sort="sort" />
+
+      <assign v-if="enableExtra" />
+
+      <export :lobby="lobby" />
+
+      <import-file :lobby="lobby" />
+
+      <delete-players :lobby="lobby" />
     </div>
 
     <stats :players="state.storePlayers" :currentCount="state.players.length" />
@@ -88,6 +84,7 @@ export default defineComponent({
     const store = useStore();
     const teamsLen = computed(() => store.state.teams.length);
     const lobby = computed<LobbyType>(() => props.lobby);
+
     const storePlayers = computed(() =>
       Object.entries(store.state[lobby.value]).filter(
         ([, p]) =>
@@ -150,43 +147,44 @@ export default defineComponent({
     };
 
     const drop = (ev: DragEvent) => {
-  ev.preventDefault();
+      ev.preventDefault();
 
-  const playerId = ev?.dataTransfer?.getData('playerTag');
-  const teamUuid = ev?.dataTransfer?.getData('team');
-  const from = ev?.dataTransfer?.getData('from') as LobbyType | undefined;
+      const playerId = ev?.dataTransfer?.getData('playerTag');
+      const teamUuid = ev?.dataTransfer?.getData('team');
+      const from = ev?.dataTransfer?.getData('from') as LobbyType | undefined;
 
-  if (!playerId) return;
+      if (!playerId) return;
 
-  if (teamUuid && store.state.teams.length > 0) {
-    store.commit(MutationTypes.ADD_RESERVE, playerId);
-    store.commit(MutationTypes.REMOVE_FROM_TEAM, {
-      teamUuid,
-      playerId,
-    });
-
-    return;
-  }
-
-  if (from !== undefined) {
-    const to = from === 'players' ? 'backup' : 'players';
-
-    if (from === props.lobby) return;
-
-    if (!store.state[to][playerId] && store.state[from][playerId]) {
-      store.commit(MutationTypes.ADD_PLAYER, {
-        player: store.state[from][playerId],
-        lobby: to,
-      });
-
-      if (to === 'players' && store.state.teams.length > 0) {
+      if (teamUuid && store.state.teams.length > 0) {
         store.commit(MutationTypes.ADD_RESERVE, playerId);
+        store.commit(MutationTypes.REMOVE_FROM_TEAM, {
+          teamUuid,
+          playerId,
+        });
+
+        return;
       }
-    }
-  }
-};
+
+      if (from !== undefined) {
+        const to = from === 'players' ? 'backup' : 'players';
+
+        if (from === props.lobby) return;
+
+        if (!store.state[to][playerId] && store.state[from][playerId]) {
+          store.commit(MutationTypes.ADD_PLAYER, {
+            player: store.state[from][playerId],
+            lobby: to,
+          });
+
+          if (to === 'players' && store.state.teams.length > 0) {
+            store.commit(MutationTypes.ADD_RESERVE, playerId);
+          }
+        }
+      }
+    };
 
     const marked = computed(() => store.state.selectPlayers[props.lobby]);
+
     const duplicates = computed(() =>
       Object.entries(
         Object.values(store.state[props.lobby]).reduce(
@@ -221,6 +219,19 @@ export default defineComponent({
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
+
+.lobby-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+  margin-bottom: 6px;
+}
+
+.lobby-toolbar > * {
+  margin: 0 !important;
+  flex-shrink: 0;
+}
 
 :global(:root) {
   --card-bg: #ffffff;

@@ -1,17 +1,15 @@
 <template>
-  <div class="form-control form-control-sm rounded-0 rounded-end wf">
+  <label class="import-button">
+    {{ t.import }}
+
     <input
       type="file"
       accept=".json"
-      :id="`importFile${lobby}`"
-      class="form-file-input d-none"
+      class="d-none"
       ref="inp"
       @change="onChange"
     />
-    <label :for="`importFile${lobby}`" class="w-100">
-      <span>{{ t.import }}</span>
-    </label>
-  </div>
+  </label>
 </template>
 
 <script lang="ts">
@@ -24,12 +22,14 @@ import { LobbyType } from '@/objects/player';
 
 export default defineComponent({
   name: 'Import',
+
   props: {
     lobby: {
       type: String as PropType<LobbyType>,
       default: 'players',
     },
   },
+
   setup(props) {
     const store = useStore();
     const inp = ref<HTMLInputElement | null>(null);
@@ -67,7 +67,10 @@ export default defineComponent({
             }
 
             if (data.balancerOptions) {
-              store.commit(MutationTypes.SET_BALANCER_OPTIONS, data.balancerOptions);
+              store.commit(
+                MutationTypes.SET_BALANCER_OPTIONS,
+                data.balancerOptions
+              );
             }
           }
 
@@ -95,20 +98,38 @@ export default defineComponent({
       }
     };
 
-    return { inp, onChange, t };
+    return {
+      inp,
+      onChange,
+      t,
+    };
   },
 });
 </script>
 
-<style lang="scss" scoped>
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-
-.wf {
-  width: 4rem;
+<style scoped>
+.import-button {
+  height: 32px;
+  padding: 0 12px;
+  margin: 0;
+  border-radius: 10px;
+  background: #6b7280;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.15s ease;
 }
 
-.form-control {
-  background-color: $gray-200;
+.import-button:hover {
+  filter: brightness(1.05);
+}
+
+:global(body.dark-mode) .import-button {
+  background: #374151;
 }
 </style>

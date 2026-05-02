@@ -1,28 +1,31 @@
 <template>
-  <div class="input-group">
-    <span class="input-group-text cursor-pointer sortable-handler">
+  <div class="role-row" :class="{ active: mRole.isActive }">
+    <div class="role-drag sortable-handler" title="Drag to change priority">
       <role-icon :rtype="rtype" />
-    </span>
+    </div>
 
-    <span class="input-group-text">
+    <div class="role-rank-icon">
       <rank-icon :rank="mRole.rank" />
-    </span>
+    </div>
 
-    <span class="input-group-text">
+    <div class="role-info">
+      <div class="role-name">{{ roles[rtype].primary }}</div>
+      <div class="role-subtitle">
+        {{ mRole.isActive ? 'Active role' : 'Disabled role' }}
+      </div>
+    </div>
+
+    <label class="role-toggle">
       <input
         v-model="mRole.isActive"
         type="checkbox"
         :id="`${rtype}_enabled`"
-        class="form-check-input"
         :aria-label="rtype"
       />
-    </span>
+      <span></span>
+    </label>
 
-    <span class="input-group-text w-7rem">
-      {{ roles[rtype].primary }}
-    </span>
-
-    <select class="form-select" :value="mRole.rank" @change="rankChange">
+    <select class="form-select role-select" :value="mRole.rank" @change="rankChange">
       <option :value="0">No rank</option>
 
       <option v-for="rank in rankOptions" :key="rank.value" :value="rank.value">
@@ -128,32 +131,126 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
-.cursor-pointer {
-  cursor: pointer;
+<style lang="scss" scoped>
+.role-row {
+  display: grid;
+  grid-template-columns: 42px 42px 1fr 54px minmax(150px, 190px);
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  background: #ffffff;
+  transition: 0.15s ease;
 }
 
-.s-2em {
-  width: 2em;
-  height: 2em;
+.role-row.active {
+  border-color: #bfdbfe;
+  background: #f8fbff;
 }
 
-.w-7rem {
-  width: 7rem;
-}
-
-.input-group-text {
-  min-width: 42px;
+.role-drag,
+.role-rank-icon {
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.input-group-text img,
-.input-group-text svg {
-  width: 28px !important;
-  height: 28px !important;
+.role-drag {
+  cursor: grab;
+  border-radius: 10px;
+  background: #f1f3f5;
+}
+
+.role-drag :deep(img),
+.role-drag :deep(svg),
+.role-rank-icon :deep(img),
+.role-rank-icon :deep(svg) {
+  width: 30px !important;
+  height: 30px !important;
   object-fit: contain;
-  flex-shrink: 0;
+}
+
+.role-info {
+  min-width: 0;
+}
+
+.role-name {
+  font-weight: 700;
+  color: #212529;
+}
+
+.role-subtitle {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.role-select {
+  min-height: 38px;
+}
+
+.role-toggle {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+.role-toggle input {
+  display: none;
+}
+
+.role-toggle span {
+  width: 42px;
+  height: 24px;
+  border-radius: 999px;
+  background: #ced4da;
+  position: relative;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.role-toggle span::after {
+  content: '';
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  transition: 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.role-toggle input:checked + span {
+  background: #0d6efd;
+}
+
+.role-toggle input:checked + span::after {
+  transform: translateX(18px);
+}
+
+:global(body.dark-mode) .role-row {
+  background: #242424;
+  border-color: #3a3a3a;
+}
+
+:global(body.dark-mode) .role-row.active {
+  background: #172033;
+  border-color: #2563eb;
+}
+
+:global(body.dark-mode) .role-drag {
+  background: #333333;
+}
+
+:global(body.dark-mode) .role-name {
+  color: #f8fafc;
+}
+
+:global(body.dark-mode) .role-subtitle {
+  color: #94a3b8;
 }
 </style>

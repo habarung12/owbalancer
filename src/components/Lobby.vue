@@ -1,9 +1,11 @@
 <template>
-  <div class="w-100 h-100">
-    <h3>{{ t.lobby }}</h3>
+  <div class="w-100 h-100 lobby-panel">
+    <h3 class="mb-2">{{ t.lobby }}</h3>
 
-    <add-player />
-    <player-list class="mt-2" />
+    <add-player class="mb-2" />
+
+    <player-list />
+
     <delete-player class="mt-2" />
     <edit-player />
   </div>
@@ -31,3 +33,18 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.lobby-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+:global(.lobby-panel .row),
+:global(.lobby-panel .g-1),
+:global(.lobby-panel .g-2),
+:global(.lobby-panel .g-3) {
+  --bs-gutter-x: 0.35rem !important;
+  --bs-gutter-y: 0.35rem !important;
+}
+</style>

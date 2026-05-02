@@ -7,7 +7,10 @@
   >
     <fieldset class="EditPlayer-Block">
       <h3>{{ t.identity }}</h3>
-      <edit-identity :identity="player.identity" />
+      <edit-identity
+        :identity="player.identity"
+        @update-bnet-stats="updateBnetStats"
+      />
     </fieldset>
 
     <fieldset class="EditPlayer-Block" :disabled="player.identity.isLocked">
@@ -36,6 +39,17 @@ import Modal from '@/components/Helpers/Modal.vue';
 import EditStats from '@/components/Lobby/EditStats.vue';
 import EditIdentity from '@/components/Lobby/EditIdentity.vue';
 
+type BnetRole = {
+  division?: string;
+  tier?: number;
+};
+
+type BnetStats = {
+  damage?: BnetRole;
+  tank?: BnetRole;
+  support?: BnetRole;
+};
+
 export default defineComponent({
   name: 'EditPlayer',
   components: { Modal, EditStats, EditIdentity },
@@ -59,6 +73,41 @@ export default defineComponent({
         player.value = cloneDeep(playerData.value);
       }
     );
+
+    const divisionBase: Record<string, number> = {
+      bronze: 1000,
+      silver: 1500,
+      gold: 2000,
+      platinum: 2500,
+      diamond: 3000,
+      master: 3500,
+      grandmaster: 4000,
+      champion: 4500,
+    };
+
+    const convertRank = (role?: BnetRole) => {
+      if (!role?.division || !role?.tier) return 0;
+
+      const base = divisionBase[role.division.toLowerCase()];
+      if (!base) return 0;
+
+      return base + (5 - role.tier) * 100;
+    };
+
+    const updateBnetStats = (bnetStats: BnetStats) => {
+      const dpsRank = convertRank(bnetStats.damage);
+      const tankRank = convertRank(bnetStats.tank);
+      const supportRank = convertRank(bnetStats.support);
+
+      player.value.stats.classes.dps.rank = dpsRank;
+      player.value.stats.classes.dps.isActive = dpsRank > 0;
+
+      player.value.stats.classes.tank.rank = tankRank;
+      player.value.stats.classes.tank.isActive = tankRank > 0;
+
+      player.value.stats.classes.support.rank = supportRank;
+      player.value.stats.classes.support.isActive = supportRank > 0;
+    };
 
     const closeModal = () => {
       player.value = cloneDeep(emptyPlayer);
@@ -99,6 +148,7 @@ export default defineComponent({
       updateRank,
       updateSpecialization,
       updateStats,
+      updateBnetStats,
       t,
     };
   },

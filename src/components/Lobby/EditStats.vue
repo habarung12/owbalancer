@@ -1,5 +1,9 @@
 <template>
-  <sortable v-on:update-position="updatePosition" handle=".sortable-handler">
+  <sortable
+    class="stats-list"
+    v-on:update-position="updatePosition"
+    handle=".sortable-handler"
+  >
     <edit-role
       v-for="role in roles"
       :key="role.role"
@@ -43,7 +47,6 @@ export default defineComponent({
     const getRole = (classesList: Classes, role: string): ClassType => {
       if (role === 'tank') return classesList.tank;
       if (role === 'support') return classesList.support;
-
       return classesList.dps;
     };
 
@@ -84,3 +87,11 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+</style>

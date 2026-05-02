@@ -1,5 +1,7 @@
 <template>
-  <button @click="onClick" class="btn btn-secondary btn-sm rounded-0 rounded-start">Export</button>
+  <button @click="onClick" class="utility-btn">
+    Export
+  </button>
 </template>
 
 <script lang="ts">
@@ -26,10 +28,9 @@ export default defineComponent({
     const players = computed(() => store.state[props.lobby]);
 
     const onClick = () => {
-      const data = players.value;
       const exportData: ExportData = {
         format: 'xv-1',
-        players: data,
+        players: players.value,
       };
 
       Utils.download(
@@ -42,3 +43,26 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.utility-btn {
+  height: 32px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 10px;
+  background: #6b7280;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  transition: 0.15s ease;
+}
+
+.utility-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+:global(body.dark-mode) .utility-btn {
+  background: #374151;
+}
+</style>

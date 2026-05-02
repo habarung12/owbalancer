@@ -3,7 +3,7 @@
     width="1em"
     height="1em"
     class="bi"
-    fill="currentColor"
+    fill="#e5e7eb"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     role="presentation"
