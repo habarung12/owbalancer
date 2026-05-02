@@ -1,13 +1,17 @@
 <template>
-  <h3>Teams</h3>
+  <h3>{{ t.teams }}</h3>
+
   <div class="d-flex justify-content-between align-items-top">
     <actions />
     <mode-toggler />
   </div>
+
   <stats v-if="teams.length > 0" />
+
   <div class="teams overflow-auto mh-80vh">
     <team v-for="(team, i) in teams" :key="team.uuid" :team="team" :team-id="i + 1" />
   </div>
+
   <balance />
   <archive />
   <result-selection />
@@ -16,6 +20,7 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
 import { useStore } from '@/store';
+import { t } from '@/i18n';
 
 import Archive from '@/components/Archive.vue';
 import Balance from '@/components/Balance.vue';
@@ -32,7 +37,7 @@ export default defineComponent({
     const store = useStore();
     const storeTeams = computed(() => store.state.teams);
 
-    return { teams: storeTeams };
+    return { teams: storeTeams, t };
   },
 });
 </script>

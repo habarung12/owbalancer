@@ -1,16 +1,33 @@
 <template>
   <div class="mb-3">
-    <label class="form-label fw-bold">Tournament Preset</label>
+    <label class="form-label fw-bold">{{ t.tournamentPreset }}</label>
 
     <div class="btn-group d-block mb-3" role="group">
-      <button type="button" class="btn btn-sm" :class="preset === 'casual' ? 'btn-primary' : 'btn-outline-primary'" @click="setPreset('casual')">
-        Casual
+      <button
+        type="button"
+        class="btn btn-sm"
+        :class="preset === 'casual' ? 'btn-primary' : 'btn-outline-primary'"
+        @click="setPreset('casual')"
+      >
+        {{ t.casual }}
       </button>
-      <button type="button" class="btn btn-sm" :class="preset === 'tournament' ? 'btn-primary' : 'btn-outline-primary'" @click="setPreset('tournament')">
-        Tournament
+
+      <button
+        type="button"
+        class="btn btn-sm"
+        :class="preset === 'tournament' ? 'btn-primary' : 'btn-outline-primary'"
+        @click="setPreset('tournament')"
+      >
+        {{ t.tournament }}
       </button>
-      <button type="button" class="btn btn-sm" :class="preset === 'competitive' ? 'btn-primary' : 'btn-outline-primary'" @click="setPreset('competitive')">
-        Competitive
+
+      <button
+        type="button"
+        class="btn btn-sm"
+        :class="preset === 'competitive' ? 'btn-primary' : 'btn-outline-primary'"
+        @click="setPreset('competitive')"
+      >
+        {{ t.competitive }}
       </button>
     </div>
 
@@ -18,7 +35,7 @@
       {{ presetDescription }}
     </div>
 
-    <label class="form-label">Advanced options</label>
+    <label class="form-label">{{ t.advancedOptions }}</label>
 
     <div class="form-check">
       <input
@@ -27,7 +44,9 @@
         class="form-check-input"
         v-model="options.lowRankLimiter"
       />
-      <label for="lowRankLimiter" class="form-check-label">Low rank limiter</label>
+      <label for="lowRankLimiter" class="form-check-label">
+        {{ t.lowRankLimiter }}
+      </label>
     </div>
 
     <div class="form-check">
@@ -38,7 +57,7 @@
         v-model="options.disallowSecondaryRoles"
       />
       <label for="disallowSecondaryRoles" class="form-check-label">
-        Disallow duplicate secondary roles
+        {{ t.secondaryRoles }}
       </label>
     </div>
 
@@ -50,7 +69,7 @@
         v-model="options.dispersionMinimizer"
       />
       <label for="dispersionMinimizer" class="form-check-label">
-        Enable role dispersion minimizer
+        {{ t.dispersion }}
       </label>
     </div>
   </div>
@@ -59,11 +78,13 @@
 <script lang="ts">
 import { useStore } from '@/store';
 import { computed, defineComponent, ref } from 'vue';
+import { t } from '@/i18n';
 
 type Preset = 'casual' | 'tournament' | 'competitive';
 
 export default defineComponent({
   name: 'BalanceOptions',
+
   setup() {
     const store = useStore();
     const storeOptions = computed(() => store.state.balancerOptions);
@@ -71,15 +92,9 @@ export default defineComponent({
     const preset = ref<Preset>('tournament');
 
     const presetDescription = computed(() => {
-      if (preset.value === 'casual') {
-        return 'Fast balance for regular custom games. More flexible and less strict.';
-      }
-
-      if (preset.value === 'competitive') {
-        return 'Strictest balance for serious matches. More attempts and tighter role control.';
-      }
-
-      return 'Recommended preset for tournaments. Balanced between quality and speed.';
+      if (preset.value === 'casual') return t.value.casualDesc;
+      if (preset.value === 'competitive') return t.value.competitiveDesc;
+      return t.value.tournamentDesc;
     });
 
     const setPreset = (value: Preset) => {
@@ -120,6 +135,7 @@ export default defineComponent({
       preset,
       presetDescription,
       setPreset,
+      t,
     };
   },
 });

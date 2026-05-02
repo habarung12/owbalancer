@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col-sm-3">
-        <label for="name" class="col-form-label">Name</label>
+        <label for="name" class="col-form-label">{{ t.name }}</label>
       </div>
       <div class="col-auto">
         <input type="text" id="name" class="form-control" v-model="mIdentity.name" />
@@ -11,7 +11,7 @@
 
     <div class="row">
       <div class="col-sm-3">
-        <label for="captain" class="col-form-label">Captain</label>
+        <label for="captain" class="col-form-label">{{ t.captain }}</label>
       </div>
       <div class="col-auto">
         <input
@@ -25,7 +25,7 @@
 
     <div class="row">
       <div class="col-sm-3">
-        <label for="fullFlex" class="col-form-label">Full flex</label>
+        <label for="fullFlex" class="col-form-label">{{ t.fullFlex }}</label>
       </div>
       <div class="col-auto">
         <input
@@ -39,7 +39,7 @@
 
     <div class="row">
       <div class="col-sm-3">
-        <label for="locked" class="col-form-label">Is Locked</label>
+        <label for="locked" class="col-form-label">{{ t.locked }}</label>
       </div>
       <div class="col-auto">
         <input
@@ -56,6 +56,7 @@
 <script lang="ts">
 import { Identity } from '@/objects/player';
 import { computed, defineComponent, PropType, ref } from 'vue';
+import { t } from '@/i18n';
 
 export default defineComponent({
   name: 'EditIdentity',
@@ -66,7 +67,7 @@ export default defineComponent({
     const identity = computed(() => props.identity);
     const mIdentity = ref(identity);
 
-    return { mIdentity };
+    return { mIdentity, t };
   },
 });
 </script>

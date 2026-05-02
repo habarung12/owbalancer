@@ -11,16 +11,21 @@
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
-            aria-label="Close"
+            :aria-label="t.close"
           ></button>
         </div>
+
         <div class="modal-body">
           <slot />
         </div>
+
         <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button class="btn btn-secondary" data-bs-dismiss="modal">
+            {{ t.close }}
+          </button>
+
           <button v-if="!hideAction" class="btn btn-primary" @click="$emit('save-changes')">
-            {{ customAction || 'Save changes' }}
+            {{ customAction || t.saveChanges }}
           </button>
         </div>
       </div>
@@ -30,6 +35,7 @@
 
 <script lang="ts">
 import { defineComponent, watch, onMounted, ref, computed } from 'vue';
+import { t } from '@/i18n';
 
 import { Modal as ModalType } from 'bootstrap';
 import Modal from 'bootstrap/js/src/modal';
@@ -53,10 +59,7 @@ export default defineComponent({
       isActiveP
     ) => {
       if (!modal) return;
-
-      if (isActive === isActiveP) {
-        return;
-      }
+      if (isActive === isActiveP) return;
 
       if (isActive) {
         modal.show();
@@ -67,6 +70,7 @@ export default defineComponent({
     };
 
     let modal: null | ModalType = null;
+
     onMounted(() => {
       modal = new Modal(modalRef.value);
 
@@ -84,18 +88,22 @@ export default defineComponent({
 
     const fullscreenClass = computed(() => {
       const baseClass = 'modal-fullscreen';
+
       if (typeof props.fullscreen === 'string') {
         return `${baseClass}-${props.fullscreen}`;
       }
+
       if (typeof props.fullscreen === 'boolean') {
         return props.fullscreen ? baseClass : '';
       }
+
       return '';
     });
 
     return {
       modalRef,
       fullscreenClass,
+      t,
     };
   },
 });

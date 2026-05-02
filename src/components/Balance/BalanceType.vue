@@ -1,6 +1,7 @@
 <template>
   <div class="mb-3 mt-1">
-    <label class="form-label w-100">Balance Type</label>
+    <label class="form-label w-100">{{ t.balanceType }}</label>
+
     <div class="btn-group">
       <input
         type="radio"
@@ -10,7 +11,10 @@
         :checked="modelValue === 'full'"
         @input="$emit('update:modelValue', $event.target.value)"
       />
-      <label class="btn btn-primary" for="balance1">Full</label>
+      <label class="btn btn-primary" for="balance1">
+        {{ t.full }}
+      </label>
+
       <input
         type="radio"
         value="half"
@@ -19,7 +23,10 @@
         :checked="modelValue === 'half'"
         @input="$emit('update:modelValue', $event.target.value)"
       />
-      <label class="btn btn-primary" for="balance2">Half</label>
+      <label class="btn btn-primary" for="balance2">
+        {{ t.half }}
+      </label>
+
       <input
         type="radio"
         value="final"
@@ -28,18 +35,24 @@
         :checked="modelValue === 'final'"
         @input="$emit('update:modelValue', $event.target.value)"
       />
-      <label class="btn btn-primary" for="balance3">Final</label>
+      <label class="btn btn-primary" for="balance3">
+        {{ t.final }}
+      </label>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { t } from '@/i18n';
 
 export default defineComponent({
   name: 'BalanceType',
   props: {
     modelValue: String,
+  },
+  setup() {
+    return { t };
   },
 });
 </script>

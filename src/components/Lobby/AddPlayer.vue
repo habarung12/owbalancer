@@ -8,11 +8,15 @@
         type="text"
         class="form-control form-control-sm"
         id="playerTag"
-        placeholder="Name#1337"
+        :placeholder="t.playerPlaceholder"
       />
     </div>
+
     <div class="col-auto">
-      <button @click="addPlayer" class="btn btn-sm btn-danger">Add Player</button>
+      <button @click="addPlayer" class="btn btn-sm btn-danger">
+        {{ t.addPlayer }}
+      </button>
+
       <generate-randoms v-if="enableRandoms" />
     </div>
   </div>
@@ -20,6 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
+import { t } from '@/i18n';
 
 import { useStore } from '@/store';
 import MutationTypes from '@/store/mutation-types';
@@ -30,6 +35,7 @@ import GenerateRandoms from '@/components/Lobby/GenerateRandoms.vue';
 export default defineComponent({
   name: 'AddPlayer',
   components: { GenerateRandoms },
+
   props: {
     enableRandoms: {
       type: Boolean,
@@ -40,6 +46,7 @@ export default defineComponent({
       default: 'players'
     },
   },
+
   setup(props) {
     const store = useStore();
     const playerTag = ref('');
@@ -47,14 +54,23 @@ export default defineComponent({
     function addPlayer() {
       const player = PlayerEditor.createDefaultPlayer(playerTag.value);
 
-      store.commit(MutationTypes.ADD_PLAYER, { player, lobby: props.lobby });
-      store.commit(MutationTypes.EDIT_PLAYER, { playerId: player.identity.uuid, lobby: props.lobby });
+      store.commit(MutationTypes.ADD_PLAYER, {
+        player,
+        lobby: props.lobby
+      });
+
+      store.commit(MutationTypes.EDIT_PLAYER, {
+        playerId: player.identity.uuid,
+        lobby: props.lobby
+      });
+
       playerTag.value = '';
     }
 
     return {
       addPlayer,
       playerTag,
+      t,
     };
   },
 });

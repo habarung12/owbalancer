@@ -15,9 +15,6 @@
 import { defineComponent, ref, PropType, computed } from 'vue';
 import { SortableEvent } from 'sortablejs';
 
-import { useStore } from '@/store';
-import MutationTypes from '@/store/mutation-types';
-
 import { Classes, ClassType, DescribedClassType, Stats } from '@/objects/player';
 
 import Sortable from '@/components/Helpers/Sortable.vue';
@@ -30,10 +27,8 @@ export default defineComponent({
     stats: Object as PropType<Stats>,
   },
   components: { Sortable, EditRole },
-  setup(props) {
-    const store = useStore();
+  setup(props, { emit }) {
     const stats = computed(() => props.stats);
-    const uuid = computed(() => props.uuid);
     const result: DescribedClassType[] = [];
     const playerStats = ref(stats);
 
@@ -57,15 +52,13 @@ export default defineComponent({
         oldIndex === undefined ||
         newIndex === undefined ||
         oldIndex === newIndex ||
-        uuid.value === undefined ||
         !stats.value
-      )
+      ) {
         return;
+      }
 
       const directionUp = newIndex - oldIndex < 0;
-      if (!playerStats.value) return;
-
-      const classes = { ...playerStats.value.classes };
+      const classes = { ...stats.value.classes };
 
       Object.keys(classes).forEach(role => {
         const sRole = getRole(classes, role);
@@ -84,10 +77,7 @@ export default defineComponent({
         }
       });
 
-      store.commit(MutationTypes.UPDATE_STATS, {
-        uuid: uuid.value,
-        stats: { classes },
-      });
+      emit('update-stats', { classes });
     };
 
     return { playerStats, roles, updatePosition };

@@ -1,9 +1,9 @@
 <template>
   <modal
-    title="Balance"
+    :title="t.balance"
     variant="large"
     :isActive="isActive"
-    customAction="Balance"
+    :customAction="t.balance"
     fullscreen="md-down"
     @close-modal="closeModal"
     @save-changes="balance"
@@ -11,6 +11,7 @@
     <div class="position-relative w-100">
       <sync />
     </div>
+
     <balance-type v-model="balanceType" />
     <balance-disable v-model="disableType" v-if="balanceType === 'full'" />
     <balance-options />
@@ -24,6 +25,8 @@
 <script lang="ts">
 /* eslint-disable */
 import { computed, defineComponent, reactive, ref } from 'vue';
+import { t } from '@/i18n';
+
 import MutationTypes from '@/store/mutation-types';
 import { useStore } from '@/store';
 import wasm from '@/mworker';
@@ -59,6 +62,7 @@ export default defineComponent({
     BalanceDisable,
     BalancerProgress,
   },
+
   setup() {
     const store = useStore();
 
@@ -73,7 +77,6 @@ export default defineComponent({
     const progress = reactive({ total: 10, current: 0 });
 
     document.addEventListener('wasm-update', e => {
-      console.log('Step: ', (e as any).detail.message());
       progress.current += 1;
     });
 
@@ -126,19 +129,15 @@ export default defineComponent({
     };
 
     const conditionalBalance: (lib: any, data: DataType) => Results = (lib, data) => {
-      if (balanceType.value === 'half') {
-        return halfBalance(lib);
-      }
-
-      if (balanceType.value === 'final') {
-        return finalBalance(lib, data);
-      }
-
+      if (balanceType.value === 'half') return halfBalance(lib);
+      if (balanceType.value === 'final') return finalBalance(lib, data);
       return fullBalance(lib);
     };
 
-    const checkCaps: () => boolean = () => {
-      return Object.values(store.state.players).some(player => player.identity.isCaptain);
+    const checkCaps = () => {
+      return Object.values(store.state.players).some(
+        player => player.identity.isCaptain
+      );
     };
 
     const balance = async () => {
@@ -165,19 +164,19 @@ export default defineComponent({
         if (results.length != 1) {
           store.commit(MutationTypes.SET_RESULTS, results);
           store.commit(MutationTypes.TOGGLE_SELECTION, undefined);
-          results = null;
           return;
         }
 
-        const ignoredUuids = results[0].leftovers.reduce((acc: string[], leftover) => {
-          acc.push(leftover.uuid);
-          return acc;
-        }, []);
+        const ignoredUuids = results[0].leftovers.reduce(
+          (acc: string[], leftover) => {
+            acc.push(leftover.uuid);
+            return acc;
+          },
+          []
+        );
 
         store.commit(MutationTypes.RESERVE_PLAYERS, ignoredUuids);
         store.commit(MutationTypes.ADD_TEAMS, results[0].teams);
-
-        results = null;
       } catch (e) {
         console.error(e.message);
       }
@@ -190,6 +189,7 @@ export default defineComponent({
       closeModal,
       balanceType,
       disableType,
+      t,
     };
   },
 });

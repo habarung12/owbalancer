@@ -9,7 +9,7 @@
       @change="onChange"
     />
     <label :for="`importFile${lobby}`" class="w-100">
-      <span>Import</span>
+      <span>{{ t.import }}</span>
     </label>
   </div>
 </template>
@@ -17,6 +17,8 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { useStore } from '@/store';
+import { t } from '@/i18n';
+
 import MutationTypes from '@/store/mutation-types';
 import { LobbyType } from '@/objects/player';
 
@@ -93,7 +95,7 @@ export default defineComponent({
       }
     };
 
-    return { inp, onChange };
+    return { inp, onChange, t };
   },
 });
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="w-100 h-100">
-    <h3>Lobby</h3>
+    <h3>{{ t.lobby }}</h3>
 
     <add-player />
     <player-list class="mt-2" />
@@ -11,6 +11,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { t } from '@/i18n';
 
 import AddPlayer from '@/components/Lobby/AddPlayer.vue';
 import PlayerList from '@/components/Lobby/PlayerList.vue';
@@ -24,6 +25,9 @@ export default defineComponent({
     PlayerList,
     DeletePlayer,
     EditPlayer,
+  },
+  setup() {
+    return { t };
   },
 });
 </script>

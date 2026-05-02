@@ -3,21 +3,26 @@
     <div class="topbar d-flex justify-content-between w-100 py-2 mb-2 px-3 mx-auto">
       <div class="d-flex align-items-center">
         <OWIcon />
-        <h3 class="ms-2 mb-0 title">Tournament Balancer</h3>
+        <h3 class="ms-2 mb-0 title">{{ t.title }}</h3>
       </div>
 
       <div class="text-end credits">
         <div>
-          Created by
+          {{ t.createdBy }}
           <a target="_blank" href="https://github.com/atravkovs">s0ck3t</a>
         </div>
+
         <div>
-          Modified by
+          {{ t.modifiedBy }}
           <strong>habarung</strong>
         </div>
 
-        <button class="theme-btn mt-1" @click="toggleTheme">
+        <button class="theme-btn mt-1 me-1" @click="toggleTheme">
           🌙 Theme
+        </button>
+
+        <button class="theme-btn mt-1" @click="toggleLanguage">
+          {{ language === 'ru' ? 'EN' : 'RU' }}
         </button>
       </div>
     </div>
@@ -41,6 +46,7 @@
 <script lang="ts">
 import '@/styles/main.scss';
 import { defineComponent } from 'vue';
+import { language, t, toggleLanguage } from '@/i18n';
 
 import Lobby from '@/components/Lobby.vue';
 import Teams from '@/components/Teams.vue';
@@ -66,7 +72,12 @@ export default defineComponent({
       );
     };
 
-    return { toggleTheme };
+    return {
+      toggleTheme,
+      toggleLanguage,
+      language,
+      t,
+    };
   },
 });
 </script>
@@ -129,5 +140,4 @@ export default defineComponent({
     width: 25rem !important;
   }
 }
-
 </style>

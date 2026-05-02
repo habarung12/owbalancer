@@ -1,17 +1,23 @@
 <template>
-  <dropdown id="exportTeams" title="Export">
-    <drop-item @drop-click="exportText">Text</drop-item>
+  <dropdown id="exportTeams" :title="t.export">
+    <drop-item @drop-click="exportText">{{ t.text }}</drop-item>
     <drop-item @drop-click="exportCSV">CSV</drop-item>
-    <drop-item @drop-click="exportCaptains">Captains</drop-item>
+    <drop-item @drop-click="exportCaptains">{{ t.captains }}</drop-item>
     <drop-item @drop-click="exportJSON">JSON</drop-item>
   </dropdown>
-  <export-modal :isActive="isModalActive" :exportText="modalText" @close-modal="closeModal" />
+
+  <export-modal
+    :isActive="isModalActive"
+    :exportText="modalText"
+    @close-modal="closeModal"
+  />
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import Table from 'easy-table';
 import { useStore } from '@/store';
+import { t } from '@/i18n';
 
 import Dropdown from '@/components/Helpers/Dropdown.vue';
 import DropItem from '@/components/Helpers/DropItem.vue';
@@ -21,6 +27,7 @@ import { Player } from '@/objects/player';
 export default defineComponent({
   name: 'ExportTeams',
   components: { Dropdown, DropItem, ExportModal },
+
   setup() {
     const modalText = ref('');
     const isModalActive = ref(false);
@@ -54,12 +61,13 @@ export default defineComponent({
       const { teams } = store.state;
 
       const text = teams.reduce((acc, team) => {
-        const t = new Table();
+        const table = new Table();
 
         const teamAvgSr = Math.round(
           team.members.reduce(
             (accAvg, member) =>
-              accAvg + store.state.players[member.uuid].stats.classes[member.role].rank,
+              accAvg +
+              store.state.players[member.uuid].stats.classes[member.role].rank,
             0
           ) / team.members.length
         );
@@ -70,18 +78,22 @@ export default defineComponent({
           team.members
             .filter((member) => member.role === role)
             .forEach((member) => {
-              const { isCaptain } = store.state.players[member.uuid].identity;
-              const { rank } = store.state.players[member.uuid].stats.classes[member.role];
+              const { isCaptain } =
+                store.state.players[member.uuid].identity;
+
+              const { rank } =
+                store.state.players[member.uuid].stats.classes[member.role];
+
               const name = `${isCaptain ? '♛ ' : ''}${member.name}`;
 
-              t.cell('Role', member.role);
-              t.cell('Rank', Math.round(rank));
-              t.cell('Name', name);
-              t.newRow();
+              table.cell('Role', member.role);
+              table.cell('Rank', Math.round(rank));
+              table.cell('Name', name);
+              table.newRow();
             });
         });
 
-        teamText = `${teamText}${t.print()}`;
+        teamText = `${teamText}${table.print()}`;
 
         return `${acc}\n\n${teamText}`;
       }, '');
@@ -92,7 +104,7 @@ export default defineComponent({
 
     const exportCSV = () => {
       const { teams } = store.state;
-      let text = 'Team;Role;Rank;Name;Captain\n';
+      let text = 'Team;Role;Rank;Name;Captain;Squire\n';
 
       const extendText = teams.reduce((acc, team) => {
         let teamText = '';
@@ -101,11 +113,10 @@ export default defineComponent({
           team.members
             .filter((member) => member.role === role)
             .forEach((member) => {
-              const { isCaptain } = store.state.players[member.uuid].identity;
+              const { isCaptain } =
+                store.state.players[member.uuid].identity;
 
-              teamText = `${teamText}"${team.name}";"${member.role}";"${member.rank}";"${
-                member.name
-              }";${isCaptain ? '1' : '0'}\n`;
+              teamText = `${teamText}"${team.name}";"${member.role}";"${member.rank}";"${member.name}";${isCaptain ? '1' : '0'};0\n`;
             });
         });
 
@@ -119,18 +130,12 @@ export default defineComponent({
 
     const exportCaptains = () => {
       const { players } = store.state;
+
       const captainNames: string[] = Object.values<Player>(players)
         .filter((player: Player) => player.identity.isCaptain)
         .map((player) => player.identity.name);
 
-      captainNames.sort((a, b) => {
-        const nameA = a.toUpperCase();
-        const nameB = b.toUpperCase();
-
-        if (nameA < nameB) return -1;
-        if (nameA > nameB) return 1;
-        return 0;
-      });
+      captainNames.sort((a, b) => a.localeCompare(b));
 
       modalText.value = captainNames.join('\n');
       isModalActive.value = true;
@@ -148,6 +153,7 @@ export default defineComponent({
       modalText,
       isModalActive,
       closeModal,
+      t,
     };
   },
 });
