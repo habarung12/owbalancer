@@ -1,12 +1,5 @@
 <template>
   <div class="w-100">
-    <div class="lobby-toolbar">
-      <sort @sort="sort" />
-      <assign v-if="enableExtra" />
-      <export :lobby="lobby" />
-      <import-file :lobby="lobby" />
-      <delete-players :lobby="lobby" />
-    </div>
 
     <player-filter :players="state.storePlayers" @filter="filter" />
 
@@ -39,19 +32,13 @@ import orderBy from 'lodash/orderBy';
 import { useStore } from '@/store';
 import MutationTypes from '@/store/mutation-types';
 
-import Sort from '@/components/Lobby/Sort.vue';
-import Stats from '@/components/Lobby/Stats.vue';
 import PlayerFilter from '@/components/Lobby/Filter.vue';
-import Assign from '@/components/Lobby/Assign.vue';
 import PlayerCard from '@/components/PlayerCard.vue';
-import Export from '@/components/Lobby/Export.vue';
-import ImportFile from '@/components/Lobby/Import.vue';
-import DeletePlayers from '@/components/Lobby/DeletePlayers.vue';
 import PObj, { Player, PlayerEntries, LobbyType } from '@/objects/player';
 
 export default defineComponent({
   name: 'PlayerList',
-  components: { Assign, Sort, Stats, PlayerFilter, PlayerCard, Export, ImportFile, DeletePlayers },
+  components: { PlayerFilter, PlayerCard },
   props: {
     enableExtra: { type: Boolean, default: true },
     lobby: { type: String as PropType<LobbyType>, default: 'players' },
@@ -153,19 +140,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-/* Lobby toolbar */
-.lobby-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: nowrap;
-  margin-bottom: 10px;
-}
-.lobby-toolbar > * {
-  margin: 0 !important;
-  flex-shrink: 0;
-}
-
 /* Scrollable player list — matches reference */
 .player-list {
   display: flex;
@@ -174,12 +148,20 @@ export default defineComponent({
   max-height: 62vh;
   overflow-y: auto;
   padding-right: 4px;
+  padding-bottom: 2px;
+}
+
+/* Each direct child gets spacing — belt + suspenders */
+.player-list > :deep(*) {
+  flex-shrink: 0;
 }
 
 /* Card state overrides */
 .player-card-item {
   transition: .14s ease;
   overflow: hidden;
+  /* Ensure no margin collapses the gap */
+  margin: 0 !important;
 }
 
 .is-duplicate {

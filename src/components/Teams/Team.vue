@@ -16,9 +16,9 @@
       <div class="role-group">
         <div class="role-section-label tank">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>
-          Tank
+          {{ t.teamTank }}
         </div>
-        <ul class="list-group list-group-flush">
+        <ul class="role-slots">
           <team-roles :members="tanks" rtype="tank" :teamUuid="teamUuid" />
         </ul>
       </div>
@@ -26,9 +26,9 @@
       <div class="role-group">
         <div class="role-section-label dps">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>
-          Damage
+          {{ t.teamDamage }}
         </div>
-        <ul class="list-group list-group-flush">
+        <ul class="role-slots">
           <team-roles :members="dps" rtype="dps" :teamUuid="teamUuid" />
         </ul>
       </div>
@@ -36,9 +36,9 @@
       <div class="role-group">
         <div class="role-section-label support">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          Support
+          {{ t.teamSupport }}
         </div>
-        <ul class="list-group list-group-flush">
+        <ul class="role-slots">
           <team-roles :members="supports" rtype="support" :teamUuid="teamUuid" />
         </ul>
       </div>
@@ -49,6 +49,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue';
 import { Team } from '@/objects/team';
+import { t } from '@/i18n';
 import { useStore } from '@/store';
 import debounce from 'lodash/debounce';
 
@@ -96,7 +97,7 @@ export default defineComponent({
       store.commit(MutationTypes.REMOVE_TEAM, cTeam.value.uuid);
     };
 
-    return { tanks, dps, supports, teamUuid, mTeam, teamAverage, updateTeam, removeTeam };
+    return { tanks, dps, supports, teamUuid, mTeam, teamAverage, updateTeam, removeTeam, t };
   },
 });
 </script>
@@ -115,7 +116,8 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
+  gap: 14px;
+  padding: 12px 14px;
   background: var(--surface-2);
   border-bottom: 1px solid var(--border);
 }
@@ -126,6 +128,7 @@ export default defineComponent({
   gap: 9px;
   min-width: 0;
   flex: 1;
+  overflow: hidden;
 }
 
 .remove-btn {
@@ -158,23 +161,28 @@ export default defineComponent({
   background: transparent;
   width: 100%;
   min-width: 0;
-  padding: 0;
+  padding: 6px 10px;
+  border-radius: 8px;
   color: var(--text);
-  font-size: 1rem;
+  font-size: .95rem;
   font-weight: 700;
   letter-spacing: -.02em;
   font-family: var(--font);
   outline: none;
+  transition: background .14s;
 }
-.team-name:focus { color: var(--accent); }
+.team-name:focus {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
 
 .team-average {
   font-family: var(--mono);
-  font-size: .92rem;
-  font-weight: 600;
+  font-size: .95rem;
+  font-weight: 700;
   flex-shrink: 0;
   background: var(--surface-3);
-  padding: 5px 11px;
+  padding: 7px 14px;
   border-radius: 9px;
   border: 1px solid var(--border);
   color: var(--text);
@@ -182,21 +190,32 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   line-height: 1.2;
+  white-space: nowrap;
 
   small {
-    font-size: .6rem;
+    font-size: .58rem;
     color: var(--text-dim);
     display: block;
     text-align: center;
-    letter-spacing: .04em;
+    letter-spacing: .05em;
     font-family: var(--font);
-    font-weight: 500;
+    font-weight: 600;
+    text-transform: uppercase;
   }
 }
 
-.team-body { padding: 8px; }
+.team-body { padding: 8px 8px 12px; }
 
-.role-group { margin: 4px 0; }
+.role-group { margin: 2px 0; }
+
+.role-slots {
+  list-style: none;
+  padding: 0 4px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
 .role-section-label {
   display: flex;
@@ -226,9 +245,4 @@ export default defineComponent({
   transform: none !important;
 }
 
-:deep(.list-group-item) {
-  background: transparent !important;
-  border-color: var(--border) !important;
-  padding: 0 !important;
-}
 </style>

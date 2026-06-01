@@ -28,7 +28,6 @@
   </div>
 
   <balance />
-  <archive />
   <result-selection />
 </template>
 
@@ -37,7 +36,6 @@ import { computed, defineComponent, ref } from 'vue';
 import { useStore } from '@/store';
 import { t } from '@/i18n';
 
-import Archive from '@/components/Archive.vue';
 import Balance from '@/components/Balance.vue';
 import Team from '@/components/Teams/Team.vue';
 import Stats from '@/components/Teams/Stats.vue';
@@ -46,7 +44,7 @@ import ResultSelection from '@/components/Teams/ResultSelection.vue';
 
 export default defineComponent({
   name: 'Teams',
-  components: { Archive, Team, Balance, Stats, Actions, ResultSelection },
+  components: { Team, Balance, Stats, Actions, ResultSelection },
   setup() {
     const store = useStore();
     const storeTeams = computed(() => store.state.teams);

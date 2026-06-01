@@ -4,25 +4,26 @@
     :key="i"
     @dragover="allowDrop"
     @drop="e => drop(e, i)"
-    class="list-group-item d-flex p-0 ps-3 pe-1"
+    class="team-role-slot"
+    :class="{ empty: !members[i - 1] }"
   >
-    <div class="fs-b pe-2">
-      <role-icon :rtype="rtype" />
-    </div>
-    <div class="w-100 lh-26">
-      <player-card
-        v-if="members[i - 1]"
-        :player="players[members[i - 1].uuid]"
-        :prefferedRank="members[i - 1].rank"
-        :rankRole="showBalancerSR ? undefined : members[i - 1].role"
-        :teamUuid="teamUuid"
-      />
+    <player-card
+      v-if="members[i - 1]"
+      :player="players[members[i - 1].uuid]"
+      :prefferedRank="members[i - 1].rank"
+      :rankRole="showBalancerSR ? undefined : members[i - 1].role"
+      :teamUuid="teamUuid"
+    />
+    <div v-else class="empty-slot">
+      <div class="empty-dot"></div>
+      <span class="empty-text">{{ t.emptySlot }}</span>
     </div>
   </li>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue';
+import { t } from '@/i18n';
 
 import PObj from '@/objects/player';
 import { useStore } from '@/store';
@@ -158,23 +159,54 @@ export default defineComponent({
 
     const showBalancerSR = computed(() => store.state.showBalancerSR);
 
-    return { players, allowDrop, drop, showBalancerSR, teamSize };
+    return { players, allowDrop, drop, showBalancerSR, teamSize, t };
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.fs-b {
-  font-size: 1.2em;
-  line-height: 2.4em;
+.team-role-slot {
+  list-style: none;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 4px 0;
+  border-radius: 10px;
+  transition: background .14s;
 }
 
-.lh-26 {
-  line-height: 2.6rem;
-  min-height: 42px;
+.empty-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  min-height: 46px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 10px;
+  transition: border-color .14s, background .14s;
+}
+.team-role-slot.empty:hover .empty-slot {
+  border-color: var(--accent);
+  background: var(--accent-soft);
 }
 
-.list-group-item {
-  min-height: 42px;
+.empty-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  flex-shrink: 0;
+}
+.team-role-slot.empty:hover .empty-dot {
+  background: var(--accent);
+}
+
+.empty-text {
+  font-size: .75rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.team-role-slot.empty:hover .empty-text {
+  color: var(--accent);
 }
 </style>

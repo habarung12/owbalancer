@@ -1,22 +1,19 @@
 <template>
   <div class="stats-grid mt-3">
     <div class="stat-card">
-      <div class="stat-label">Players</div>
+      <div class="stat-label">{{ t.statPlayers }}</div>
       <div class="stat-value">{{ playerCount }}</div>
     </div>
-
     <div class="stat-card">
-      <div class="stat-label">Teams</div>
+      <div class="stat-label">{{ t.statTeams }}</div>
       <div class="stat-value">{{ teamCount }}</div>
     </div>
-
     <div class="stat-card">
-      <div class="stat-label">Avg SR</div>
+      <div class="stat-label">{{ t.statAvgSr }}</div>
       <div class="stat-value accent">{{ avgSr }}</div>
     </div>
-
     <div class="stat-card">
-      <div class="stat-label">Balance Δ</div>
+      <div class="stat-label">{{ t.statBalance }}</div>
       <div class="stat-value">{{ maxSr - minSr }}<span class="stat-suffix">sr</span></div>
     </div>
   </div>
@@ -25,6 +22,7 @@
 <script lang="ts">
 import { useStore } from '@/store';
 import { computed, defineComponent } from 'vue';
+import { t } from '@/i18n';
 
 import { Team as TeamType } from '@/objects/team';
 import PObj, { Players } from '@/objects/player';
@@ -77,7 +75,7 @@ export default defineComponent({
     const playerCount = computed(() => Object.keys(store.state.players).length);
     const teamCount = computed(() => store.state.teams.length);
 
-    return { maxSr, minSr, avgSr, playerCount, teamCount };
+    return { maxSr, minSr, avgSr, playerCount, teamCount, t };
   },
 });
 </script>

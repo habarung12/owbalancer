@@ -13,13 +13,13 @@
 
       <div class="topbar-right">
         <div class="credits">
-          <div>Created by <a target="_blank" href="https://github.com/atravkovs">s0ck3t</a></div>
-          <div>Modified by <strong>habarung</strong></div>
+          <div>{{ t.createdBy }} <a target="_blank" href="https://github.com/atravkovs">s0ck3t</a></div>
+          <div>{{ t.modifiedBy }} <a target="_blank" href="https://github.com/habarung12" class="credits-author">habarung</a></div>
         </div>
         <div class="tools">
           <button class="pill-btn" @click="toggleTheme">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-            <span>{{ isDark ? 'Light' : 'Dark' }}</span>
+            <span>{{ isDark ? t.themeLight : t.themeDark }}</span>
           </button>
           <button class="pill-btn" @click="toggleLanguage">
             {{ language === 'ru' ? 'EN' : 'RU' }}
@@ -116,13 +116,13 @@ export default defineComponent({
   font-weight: 700 !important;
   letter-spacing: -.03em !important;
   line-height: 1 !important;
-  color: #f4f5f7 !important;
+  color: var(--text) !important;
   margin: 0 !important;
 }
 
 .brand-sub {
   font-size: .72rem;
-  color: #6b7280;
+  color: var(--text-dim);
   font-weight: 500;
   letter-spacing: .04em;
   text-transform: uppercase;
@@ -138,21 +138,25 @@ export default defineComponent({
 .credits {
   text-align: right;
   font-size: .74rem;
-  color: #6b7280;
+  color: var(--text-dim);
   line-height: 1.45;
 
   a, strong {
-    color: #a4a9b4;
+    color: var(--text-muted);
     font-weight: 600;
     text-decoration: none;
   }
-  a:hover { color: #f99e1a; }
+  a:hover { color: var(--accent); }
 }
 
-.tools {
-  display: flex;
-  gap: 8px;
+.credits-author {
+  color: var(--text-muted) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  &:hover { color: var(--accent) !important; }
 }
+
+.tools { display: flex; gap: 8px; }
 
 .pill-btn {
   display: flex;
@@ -161,20 +165,21 @@ export default defineComponent({
   height: 36px;
   padding: 0 14px;
   border-radius: 10px;
-  background: #16181d;
-  border: 1px solid rgba(255,255,255,.07);
-  color: #a4a9b4;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
   font-size: .82rem;
   font-weight: 600;
+  font-family: var(--font);
   cursor: pointer;
   transition: .16s ease;
 
   svg { width: 15px; height: 15px; }
 
   &:hover {
-    border-color: rgba(255,255,255,.12);
-    color: #f4f5f7;
-    background: #1c1f26;
+    border-color: var(--border-strong);
+    color: var(--text);
+    background: var(--surface-3);
   }
 }
 

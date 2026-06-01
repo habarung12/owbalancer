@@ -1,19 +1,8 @@
 <template>
-  <div class="form-control form-control-sm border-0 wf">
-    <input
-      type="file"
-      accept=".json"
-      id="importBalancerOptions"
-      class="form-file-input d-none"
-      ref="inp"
-      @change="onChange"
-    />
-    <label for="importBalancerOptions" class="w-100">
-      <span>
-        <upload-icon />
-      </span>
-    </label>
-  </div>
+  <label class="import-settings-btn" title="Import settings">
+    <upload-icon />
+    <input type="file" accept=".json" class="d-none" ref="inp" @change="onChange" />
+  </label>
 </template>
 
 <script lang="ts">
@@ -68,15 +57,27 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-.wf {
-  width: 4rem;
-}
-
-label,
-.form-file-button {
-  background-color: #fff;
-  border: 0;
+<style scoped>
+.import-settings-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
   cursor: pointer;
+  transition: .15s;
+}
+.import-settings-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: var(--elevated);
+}
+.import-settings-btn :deep(svg) {
+  width: 15px;
+  height: 15px;
 }
 </style>

@@ -12,15 +12,15 @@
       <span class="count-chip">{{ playerCount }}</span>
     </div>
 
-    <add-player class="mb-3" />
-    <player-list />
+    <add-player class="mb-3" @sort="onSort" />
+    <player-list ref="playerListRef" :show-all="true" />
     <delete-player class="mt-3" />
     <edit-player />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { t } from '@/i18n';
 import { useStore } from '@/store';
 
@@ -35,40 +35,21 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const playerCount = computed(() => Object.keys(store.state.players).length);
-    return { t, playerCount };
+    const playerListRef = ref<any>(null);
+
+    const onSort = (rule: string, order: 'asc' | 'desc') => {
+      playerListRef.value?.sort(rule, order);
+    };
+
+    return { t, playerCount, playerListRef, onSort };
   },
 });
 </script>
 
 <style scoped>
 .lobby-panel { display: flex; flex-direction: column; }
-
-.panel-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-.panel-head h2 {
-  font-size: 1.02rem !important;
-  font-weight: 700 !important;
-  letter-spacing: -.02em !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 9px !important;
-  color: #f4f5f7 !important;
-  margin: 0 !important;
-}
-.panel-head h2 svg { stroke: #f99e1a; flex-shrink: 0; }
-
-.count-chip {
-  font-family: var(--mono);
-  font-size: .72rem;
-  font-weight: 600;
-  background: #1c1f26;
-  color: #a4a9b4;
-  padding: 3px 9px;
-  border-radius: 7px;
-  border: 1px solid rgba(255,255,255,.07);
-}
+.panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.panel-head h2 { font-size: 1.02rem !important; font-weight: 700 !important; letter-spacing: -.02em !important; display: flex !important; align-items: center !important; gap: 9px !important; color: var(--text) !important; margin: 0 !important; }
+.panel-head h2 svg { stroke: var(--accent); flex-shrink: 0; }
+.count-chip { font-family: var(--mono); font-size: .72rem; font-weight: 600; background: var(--surface-3); color: var(--text-muted); padding: 3px 9px; border-radius: 7px; border: 1px solid var(--border); }
 </style>

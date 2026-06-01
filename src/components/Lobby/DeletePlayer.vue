@@ -1,78 +1,83 @@
 <template>
-  <div @dragover="allowDrop" @drop="drop" class="delete-player">
-    <div class="delete-icon">🗑️</div>
-    <div class="delete-title">Удалить игрока</div>
-    <div class="delete-hint">Перетащи игрока сюда</div>
+  <div @dragover="allowDrop" @drop="drop" class="drop-zone" :class="{ active: isDragOver }"
+    @dragenter="isDragOver = true" @dragleave="isDragOver = false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="drop-icon">
+      <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
+    </svg>
+    <span class="drop-label">{{ t.deleteZoneTitle }}</span>
+    <span class="drop-hint">{{ t.deleteZoneHint }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-
+import { defineComponent, PropType, ref } from 'vue';
 import { useStore } from '@/store';
 import MutationTypes from '@/store/mutation-types';
 import { LobbyType } from '@/objects/player';
+import { t } from '@/i18n';
 
 export default defineComponent({
   name: 'DeletePlayer',
-  props: {
-    lobby: {
-      type: String as PropType<LobbyType>,
-      default: 'players'
-    }
-  },
+  props: { lobby: { type: String as PropType<LobbyType>, default: 'players' } },
   setup(props) {
     const store = useStore();
-
-    const allowDrop = (ev: DragEvent) => {
-      ev.preventDefault();
-    };
-
+    const isDragOver = ref(false);
+    const allowDrop = (ev: DragEvent) => ev.preventDefault();
     const drop = (ev: DragEvent) => {
       ev.preventDefault();
+      isDragOver.value = false;
       const playerId = ev?.dataTransfer?.getData('playerTag');
       const teamUuid = ev?.dataTransfer?.getData('team');
-
-      if (playerId === undefined) return;
-
+      if (!playerId) return;
       store.commit(MutationTypes.DELETE_PLAYER, { playerId, lobby: props.lobby });
-
-      if (teamUuid) {
-        store.commit(MutationTypes.REMOVE_FROM_TEAM, {
-          teamUuid,
-          playerId,
-        });
-      }
+      if (teamUuid) store.commit(MutationTypes.REMOVE_FROM_TEAM, { teamUuid, playerId });
     };
-
-    return {
-      drop,
-      allowDrop,
-    };
+    return { drop, allowDrop, isDragOver, t };
   },
 });
 </script>
 
-<style lang="scss" scoped>
-.delete-player {
-  height: 5rem;
-  border: 2px dashed rgba(239,68,68,0.3);
-  border-radius: 12px;
-  background: rgba(239,68,68,0.05);
-  color: #f87171;
+<style scoped>
+.drop-zone {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: 0.15s ease;
+  gap: 4px;
+  padding: 14px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius);
   cursor: pointer;
+  transition: all .15s ease;
+  background: transparent;
 }
-.delete-player:hover {
-  background: rgba(239,68,68,0.1);
-  border-color: rgba(239,68,68,0.5);
-  transform: translateY(-1px);
+.drop-zone:hover,
+.drop-zone.active {
+  border-color: var(--danger);
+  background: var(--danger-soft);
 }
-.delete-icon { font-size: 1.2rem; line-height: 1; }
-.delete-title { font-weight: 700; text-transform: uppercase; font-size: 0.85rem; }
-.delete-hint { font-size: 0.75rem; opacity: 0.7; }
+.drop-icon {
+  width: 18px; height: 18px;
+  color: var(--text-dim);
+  transition: color .15s;
+}
+.drop-zone:hover .drop-icon,
+.drop-zone.active .drop-icon { color: var(--danger); }
+
+.drop-label {
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-dim);
+  transition: color .15s;
+}
+.drop-zone:hover .drop-label,
+.drop-zone.active .drop-label { color: var(--danger); }
+
+.drop-hint {
+  font-size: .7rem;
+  color: var(--text-dim);
+  opacity: .7;
+}
 </style>

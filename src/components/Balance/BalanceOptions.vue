@@ -2,32 +2,16 @@
   <div class="mb-3">
     <label class="form-label fw-bold">{{ t.tournamentPreset }}</label>
 
-    <div class="btn-group d-block mb-3" role="group">
+    <div class="preset-group mb-3">
       <button
+        v-for="p in ['casual','tournament','competitive']"
+        :key="p"
         type="button"
-        class="btn btn-sm"
-        :class="preset === 'casual' ? 'btn-primary' : 'btn-outline-primary'"
-        @click="setPreset('casual')"
+        class="preset-btn"
+        :class="{ active: preset === p }"
+        @click="setPreset(p as any)"
       >
-        {{ t.casual }}
-      </button>
-
-      <button
-        type="button"
-        class="btn btn-sm"
-        :class="preset === 'tournament' ? 'btn-primary' : 'btn-outline-primary'"
-        @click="setPreset('tournament')"
-      >
-        {{ t.tournament }}
-      </button>
-
-      <button
-        type="button"
-        class="btn btn-sm"
-        :class="preset === 'competitive' ? 'btn-primary' : 'btn-outline-primary'"
-        @click="setPreset('competitive')"
-      >
-        {{ t.competitive }}
+        {{ p === 'casual' ? t.casual : p === 'tournament' ? t.tournament : t.competitive }}
       </button>
     </div>
 
@@ -191,3 +175,33 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.preset-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.preset-btn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: .82rem;
+  font-weight: 600;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: .15s;
+  font-family: var(--font);
+}
+.preset-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.preset-btn.active {
+  background: var(--accent);
+  border-color: transparent;
+  color: #1a1206;
+  box-shadow: 0 2px 8px rgba(249,158,26,.3);
+}
+</style>
