@@ -49,13 +49,15 @@ export default defineComponent({
     const teamsLen = computed(() => store.state.teams.length);
     const lobby = computed<LobbyType>(() => props.lobby);
 
+    const teamMemberUuids = computed(() => {
+      const set = new Set<string>();
+      store.state.teams.forEach(team => team.members.forEach(m => set.add(m.uuid)));
+      return set;
+    });
+
     const storePlayers = computed(() =>
       Object.entries(store.state[lobby.value]).filter(
-        ([, p]) =>
-          props.showAll ||
-          (store.state.reservedPlayers.length > 0
-            ? store.state.reservedPlayers.includes(p.identity.uuid)
-            : teamsLen.value <= 0)
+        ([, p]) => props.showAll || !teamMemberUuids.value.has(p.identity.uuid)
       )
     );
 

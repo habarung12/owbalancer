@@ -10,6 +10,19 @@ use serde::{Deserialize, Serialize};
 use teams::Teams;
 use wasm_bindgen::prelude::*;
 
+/// Serialize a value to a JsValue, encoding maps as plain JS objects
+/// (matches the legacy `JsValue::from_serde` behaviour).
+fn to_js<T: Serialize>(value: &T) -> JsValue {
+    let serializer =
+        serde_wasm_bindgen::Serializer::new().serialize_maps_as_objects(true);
+    value.serialize(&serializer).unwrap()
+}
+
+/// Deserialize a JsValue into a Rust type.
+fn from_js<T: serde::de::DeserializeOwned>(value: &JsValue) -> T {
+    serde_wasm_bindgen::from_value(value.clone()).unwrap()
+}
+
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
@@ -68,8 +81,8 @@ pub fn run_matchmaking(
     disable_type: String,
     dispersion_minimizer: bool,
 ) -> BalancerResult {
-    let mut players: Players = player_data.into_serde().unwrap();
-    let adjust: AdjustSr = adjust_sr.into_serde().unwrap();
+    let mut players: Players = from_js(player_data);
+    let adjust: AdjustSr = from_js(adjust_sr);
     players.adjust_sr(adjust);
 
     let mut matchmaking = Matchmaking::new(
@@ -138,7 +151,7 @@ pub fn balance(
         results.retain(|result| result.leftovers.0.len() == 0);
     }
 
-    JsValue::from_serde(&results).unwrap()
+    to_js(&results)
 }
 
 #[wasm_bindgen]
@@ -152,8 +165,8 @@ pub fn balance_half(
     prevent_superteam_synergy: bool,
     adjust_sr: &JsValue,
 ) -> JsValue {
-    let mut players: Players = player_data.into_serde().unwrap();
-    let adjust: AdjustSr = adjust_sr.into_serde().unwrap();
+    let mut players: Players = from_js(player_data);
+    let adjust: AdjustSr = from_js(adjust_sr);
     players.adjust_sr(adjust);
 
     let mut matchmaking = Matchmaking::new(
@@ -171,7 +184,7 @@ pub fn balance_half(
     let mut results = Vec::default();
     results.push(matchmaking.result());
 
-    JsValue::from_serde(&results).unwrap()
+    to_js(&results)
 }
 
 #[wasm_bindgen]
@@ -187,12 +200,12 @@ pub fn balance_final(
     teams_data: &JsValue,
     adjust_sr: &JsValue,
 ) -> JsValue {
-    let mut players: Players = player_data.into_serde().unwrap();
-    let adjust: AdjustSr = adjust_sr.into_serde().unwrap();
+    let mut players: Players = from_js(player_data);
+    let adjust: AdjustSr = from_js(adjust_sr);
     players.adjust_sr(adjust);
 
-    let teams: Teams = teams_data.into_serde().unwrap();
-    let reserve: ReserveData = reserve_data.into_serde().unwrap();
+    let teams: Teams = from_js(teams_data);
+    let reserve: ReserveData = from_js(reserve_data);
 
     let mut matchmaking = Matchmaking::new(
         &players,
@@ -211,5 +224,5 @@ pub fn balance_final(
     let mut results = Vec::default();
     results.push(matchmaking.result());
 
-    JsValue::from_serde(&results).unwrap()
+    to_js(&results)
 }

@@ -356,15 +356,26 @@ export default defineComponent({
           results = await lib.fullBalance(JSON.stringify({ ...payload, disableType: disableType.value, dispersionMinimizer: options.value.dispersionMinimizer, triesCount: options.value.triesCount }));
         }
 
-        if (results.length !== 1) {
-          store.commit(MutationTypes.SET_RESULTS, results);
-          store.commit(MutationTypes.TOGGLE_SELECTION, undefined);
+        if (!results || results.length === 0) {
+          closeModal();
+          alert(t.value.balanceNoResult);
           return;
         }
+
+        // Apply the first balanced composition directly so teams appear immediately.
         const ignoredUuids = results[0].leftovers.map((l: any) => l.uuid);
         store.commit(MutationTypes.RESERVE_PLAYERS, ignoredUuids);
         store.commit(MutationTypes.ADD_TEAMS, results[0].teams);
-      } catch (e) { console.error((e as Error).message); }
+
+        // Keep the remaining variants available for the "Choose" action.
+        if (results.length > 1) {
+          store.commit(MutationTypes.SET_RESULTS, results);
+        }
+        closeModal();
+      } catch (e) {
+        console.error((e as Error).message);
+        alert('Balance failed: ' + (e as Error).message);
+      }
     };
 
     return {

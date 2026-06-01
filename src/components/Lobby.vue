@@ -13,7 +13,7 @@
     </div>
 
     <add-player class="mb-3" @sort="onSort" />
-    <player-list ref="playerListRef" :show-all="true" />
+    <player-list ref="playerListRef" />
     <delete-player class="mt-3" />
     <edit-player />
   </div>

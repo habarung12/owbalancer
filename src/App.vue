@@ -54,6 +54,12 @@
           <button class="ctrl-btn ctrl-lang" @click="toggleLanguage">
             {{ language === 'ru' ? 'EN' : 'RU' }}
           </button>
+
+          <!-- GNC -->
+          <a class="ctrl-btn ctrl-gnc" href="https://gncow.ru/" target="_blank" rel="noopener" title="GNC">
+            <img src="/gnc-logo.png" alt="GNC" />
+            <span>GNC</span>
+          </a>
         </div>
       </div>
     </header>
@@ -115,14 +121,16 @@ export default defineComponent({
 
 .app-wrapper { min-height: 100vh; }
 
-/* ── Floating centered pill topbar ── */
+/* ── Floating pill topbar (left-aligned) ── */
 .topbar-wrap {
   position: sticky;
   top: 14px;
   z-index: 30;
   display: flex;
-  justify-content: center;
-  padding: 14px 16px 0;
+  justify-content: flex-start;
+  padding: 14px clamp(16px, 3vw, 40px) 0;
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
 .topbar-pill {
@@ -225,6 +233,17 @@ export default defineComponent({
   font-weight: 700;
 }
 
+.ctrl-gnc {
+  text-decoration: none;
+  img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  &:hover { border-color: var(--accent); color: var(--text); }
+}
+
 /* GitHub dropdown menu */
 .gh-menu {
   background: var(--surface-1);
@@ -273,7 +292,7 @@ export default defineComponent({
   display: grid;
   grid-template-columns: 340px 1fr;
   gap: 20px;
-  padding: 24px clamp(16px, 3vw, 40px) 48px;
+  padding: 28px clamp(16px, 3vw, 40px) 48px;
   max-width: 1500px;
   margin: 0 auto;
   align-items: start;

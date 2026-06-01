@@ -693,7 +693,9 @@ impl Teams {
         config: &Config,
     ) -> Option<&mut Team> {
         self.0.iter_mut().find(|team| {
-            team.members_count() <= 3
+            // Only teams that already have captain + squire + lieutenant (3 members)
+            // are valid ensign targets — otherwise get_leutenant() would be out of bounds.
+            team.members_count() == 3
                 && candidate.get_primary_role().fits_team(team, config)
                 && !team.get_captain().has_same_role(candidate)
                 && !team.get_leutenant().has_same_role(candidate)
