@@ -345,9 +345,9 @@ export default defineComponent({
 <style lang="scss" scoped>
 .role-row {
   padding: 10px;
-  border: 1px solid rgba(255,255,255,0.07);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  background: #1c1c22;
+  background: var(--surface-2);
   transition: 0.15s ease;
 }
 
@@ -410,7 +410,7 @@ export default defineComponent({
 .role-drag {
   cursor: grab;
   border-radius: 10px;
-  background: rgba(255,255,255,0.05);
+  background: var(--surface-3);
 }
 
 .role-drag :deep(img),
@@ -461,10 +461,10 @@ export default defineComponent({
   min-width: 42px;
   height: 36px;
   min-height: 36px;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgba(255,255,255,0.04);
-  color: #94a3b8;
+  background: var(--surface-3);
+  color: var(--text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -476,9 +476,9 @@ export default defineComponent({
 }
 .advanced-btn:hover,
 .advanced-btn.open {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.15);
-  color: #e2e8f0;
+  background: var(--elevated);
+  border-color: var(--border-strong);
+  color: var(--text);
 }
 .advanced-fields {
   display: grid;
@@ -486,7 +486,7 @@ export default defineComponent({
   gap: 8px;
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px dashed rgba(255,255,255,0.08);
+  border-top: 1px dashed var(--border-strong);
   overflow: visible;
 }
 .advanced-field {

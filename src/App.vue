@@ -53,13 +53,20 @@ export default defineComponent({
   components: { Lobby, Teams, OWIcon },
 
   setup() {
-    const isDark = ref(true);
+    const saved = localStorage.getItem('theme');
+    const isDark = ref(saved !== 'light');
 
-    document.body.classList.add('dark-mode');
+    const applyTheme = (dark: boolean) => {
+      document.body.classList.toggle('dark-mode', dark);
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    };
+
+    applyTheme(isDark.value);
 
     const toggleTheme = () => {
       isDark.value = !isDark.value;
-      document.body.classList.toggle('dark-mode', isDark.value);
+      applyTheme(isDark.value);
     };
 
     return { toggleTheme, toggleLanguage, language, t, isDark };

@@ -176,9 +176,9 @@ export default defineComponent({
 <style scoped>
 .identity-name-row {
   padding: 14px;
-  border: 1px solid rgba(255,255,255,0.07);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  background: #1c1c22;
+  background: var(--surface-2);
   display: grid;
   grid-template-columns: 90px 1fr;
   align-items: center;
@@ -244,15 +244,15 @@ export default defineComponent({
   justify-content: space-between;
   gap: 8px;
   padding: 10px 12px;
-  border: 1px solid rgba(255,255,255,0.07);
+  border: 1px solid var(--border);
   border-radius: 10px;
-  background: #1c1c22;
+  background: var(--surface-2);
   cursor: pointer;
   transition: 0.15s ease;
 }
 .option-card:hover {
-  border-color: rgba(255,255,255,0.14);
-  background: #22222c;
+  border-color: var(--border-strong);
+  background: var(--surface-3);
 }
 .option-card strong {
   display: block;
