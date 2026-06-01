@@ -35,13 +35,12 @@ import MutationTypes from '@/store/mutation-types';
 
 import TObj from '@/objects/team';
 
-import BinIcon from '@/components/svg/BinIcon.vue';
 import ExportTeams from '@/components/Teams/ExportTeams.vue';
 import { t } from '@/i18n';
 
 export default defineComponent({
   name: 'Actions',
-  components: { BinIcon, ExportTeams, ArchiveIcon },
+  components: { ExportTeams },
   setup() {
     const store = useStore();
 
