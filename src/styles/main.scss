@@ -1,217 +1,692 @@
 @import '../../node_modules/bootstrap/scss/bootstrap.scss';
 
+/* =============================================
+   DESIGN TOKENS  (reference: balancer-redesign.html)
+   ============================================= */
+:root {
+  --bg:            #0a0b0d;
+  --surface-1:     #121317;
+  --surface-2:     #16181d;
+  --surface-3:     #1c1f26;
+  --elevated:      #20242c;
+
+  --border:        rgba(255,255,255,.07);
+  --border-strong: rgba(255,255,255,.12);
+
+  --text:          #f4f5f7;
+  --text-muted:    #a4a9b4;
+  --text-dim:      #6b7280;
+
+  --accent:        #f99e1a;
+  --accent-hover:  #ffb13d;
+  --accent-soft:   rgba(249,158,26,.12);
+
+  --tank:          #6aa3e0;
+  --dps:           #e0685f;
+  --support:       #6fc59a;
+
+  --danger:        #ef4444;
+  --danger-soft:   rgba(239,68,68,.12);
+
+  --radius-sm: 8px;
+  --radius:    12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+  --shadow:    0 8px 30px rgba(0,0,0,.35);
+
+  --font: "Hanken Grotesk", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* =============================================
+   BASE
+   ============================================= */
 body.dark-mode {
-  background: #0f0f10 !important;
-  color: #f1f5f9 !important;
+  font-family: var(--font) !important;
+  background: var(--bg) !important;
+  color: var(--text) !important;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -.01em;
 }
 
-/* Main layout */
-body.dark-mode .app-wrapper {
-  background: #0f0f10 !important;
-  color: #f1f5f9 !important;
+body.dark-mode::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(60rem 40rem at 78% -10%, rgba(249,158,26,.06), transparent 60%),
+    radial-gradient(50rem 40rem at 0% 110%, rgba(106,163,224,.05), transparent 55%);
 }
 
-body.dark-mode .topbar,
-body.dark-mode .content-box,
-body.dark-mode .team-card,
-body.dark-mode .player-cards,
+body.dark-mode .app-wrapper { position: relative; z-index: 1; background: transparent !important; }
+
+body.dark-mode * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+body.dark-mode ::-webkit-scrollbar       { width: 9px; height: 9px; }
+body.dark-mode ::-webkit-scrollbar-track { background: transparent; }
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 9px;
+}
+body.dark-mode ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* =============================================
+   TOPBAR
+   ============================================= */
+body.dark-mode .topbar {
+  background: color-mix(in srgb, var(--bg) 72%, transparent) !important;
+  backdrop-filter: blur(16px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(140%) !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 20 !important;
+}
+
+/* =============================================
+   PANELS / CONTENT BOXES
+   ============================================= */
+body.dark-mode .content-box {
+  background: var(--surface-1) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 20px !important;
+  color: var(--text) !important;
+}
+
 body.dark-mode .card,
 body.dark-mode .list-group-item {
-  background: #1b1b1d !important;
-  color: #f1f5f9 !important;
-  border-color: #33363d !important;
+  background: transparent !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
 }
 
-body.dark-mode .team-header {
-  background: #202124 !important;
-  border-color: #33363d !important;
+/* =============================================
+   TYPOGRAPHY
+   ============================================= */
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
+body.dark-mode h4, body.dark-mode h5, body.dark-mode label {
+  color: var(--text) !important;
+  font-family: var(--font) !important;
 }
-
-body.dark-mode .title,
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3,
-body.dark-mode h4,
-body.dark-mode h5,
-body.dark-mode label {
-  color: #f1f5f9 !important;
+body.dark-mode h3 {
+  font-size: 1.02rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -.02em !important;
 }
-
-body.dark-mode .credits {
-  color: #cbd5e1 !important;
+body.dark-mode .mono, body.dark-mode .stat-value {
+  font-family: var(--mono) !important;
 }
+body.dark-mode .text-muted,
+body.dark-mode .small.text-muted { color: var(--text-dim) !important; }
 
-/* Inputs */
+/* =============================================
+   INPUTS
+   ============================================= */
 body.dark-mode input,
 body.dark-mode select,
 body.dark-mode textarea,
 body.dark-mode .form-control,
 body.dark-mode .form-select,
 body.dark-mode .form-control-sm {
-  background: #262626 !important;
-  color: #f8fafc !important;
-  -webkit-text-fill-color: #f8fafc !important;
-  border-color: #44474f !important;
+  font-family: var(--font) !important;
+  background: var(--surface-3) !important;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 11px !important;
+  transition: border-color .16s, box-shadow .16s !important;
 }
-
 body.dark-mode input::placeholder,
-body.dark-mode textarea::placeholder,
-body.dark-mode .form-control::placeholder {
-  color: #94a3b8 !important;
-  opacity: 1 !important;
-}
-
+body.dark-mode .form-control::placeholder { color: var(--text-dim) !important; opacity: 1 !important; }
 body.dark-mode input:focus,
-body.dark-mode .form-control:focus {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  border-color: #3b82f6 !important;
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-soft) !important;
+  outline: none !important;
 }
-
-/* Team name input */
 body.dark-mode input.team-name,
 body.dark-mode input.team-name:focus {
   background: transparent !important;
   background-color: transparent !important;
-  color: #f8fafc !important;
-  -webkit-text-fill-color: #f8fafc !important;
   border: none !important;
   box-shadow: none !important;
-  outline: none !important;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text) !important;
 }
 
-body.dark-mode .team-number,
-body.dark-mode .team-name,
-body.dark-mode .team-title {
-  color: #f1f5f9 !important;
+/* =============================================
+   BUTTONS — Bootstrap overrides
+   ============================================= */
+body.dark-mode .btn {
+  font-family: var(--font) !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 600 !important;
+  transition: all .16s !important;
 }
-
-/* Player cards */
-body.dark-mode .player-card-item {
-  background: #242426 !important;
-  color: #f8fafc !important;
-  border-color: #36383f !important;
+body.dark-mode .btn-primary {
+  background: var(--accent) !important;
+  border: none !important;
+  color: #1a1206 !important;
 }
+body.dark-mode .btn-primary:hover { background: var(--accent-hover) !important; }
 
-body.dark-mode .player-card-item:hover {
-  background: #2a2a2d !important;
+body.dark-mode .btn-secondary {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
 }
-
-/* Modal */
-body.dark-mode .modal-content {
-  background: #1f2937 !important;
-  color: #f8fafc !important;
-  border-color: #374151 !important;
+body.dark-mode .btn-secondary:hover {
+  background: var(--surface-3) !important;
+  border-color: var(--border-strong) !important;
+  color: var(--text) !important;
 }
-
-body.dark-mode .modal-header,
-body.dark-mode .modal-footer {
-  border-color: #374151 !important;
+body.dark-mode .btn-warning {
+  background: var(--accent) !important;
+  border: none !important;
+  color: #1a1206 !important;
 }
-
-body.dark-mode .modal-title,
-body.dark-mode .modal-body h3 {
-  color: #f8fafc !important;
+body.dark-mode .btn-danger {
+  background: var(--danger) !important;
+  border: none !important;
 }
-
+body.dark-mode .btn-success {
+  background: var(--support) !important;
+  border: none !important;
+  color: #0a1a12 !important;
+}
 body.dark-mode .btn-close {
   filter: invert(1) grayscale(100%) brightness(200%);
+  opacity: .4;
+}
+body.dark-mode .btn-close:hover { opacity: .9; }
+
+/* btn-check radio groups */
+body.dark-mode .btn-check + .btn-primary {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
+}
+body.dark-mode .btn-check:checked + .btn-primary {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #1a1206 !important;
 }
 
-/* Identity / Stats cards */
+/* =============================================
+   TOOLBAR BUTTONS (Actions.vue)
+   ============================================= */
+body.dark-mode .action-btn {
+  font-family: var(--font) !important;
+  height: 38px !important;
+  padding: 0 15px !important;
+  border-radius: 10px !important;
+  font-size: .84rem !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  transition: .16s !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+}
+body.dark-mode .action-btn svg { width: 15px !important; height: 15px !important; flex-shrink: 0 !important; }
+
+body.dark-mode .action-btn.neutral {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
+}
+body.dark-mode .action-btn.neutral:hover {
+  border-color: var(--border-strong) !important;
+  color: var(--text) !important;
+}
+body.dark-mode .action-btn.primary {
+  background: var(--accent) !important;
+  border-color: transparent !important;
+  color: #1a1206 !important;
+}
+body.dark-mode .action-btn.primary:hover { background: var(--accent-hover) !important; }
+body.dark-mode .action-btn.danger {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
+}
+body.dark-mode .action-btn.danger:hover {
+  color: var(--danger) !important;
+  border-color: var(--danger) !important;
+  background: var(--surface-2) !important;
+}
+body.dark-mode .action-btn.warning {
+  background: var(--accent-soft) !important;
+  border: 1px solid rgba(249,158,26,.25) !important;
+  color: var(--accent) !important;
+}
+body.dark-mode .action-btn.warning-outline {
+  background: var(--surface-2) !important;
+  border: 1px solid rgba(249,158,26,.25) !important;
+  color: var(--accent) !important;
+}
+body.dark-mode .action-btn.icon {
+  width: 38px !important;
+  padding: 0 !important;
+  justify-content: center !important;
+}
+
+/* =============================================
+   ADD PLAYER
+   ============================================= */
+body.dark-mode .add-btn {
+  height: 42px !important;
+  border-radius: 11px !important;
+  background: var(--accent) !important;
+  color: #1a1206 !important;
+  font-weight: 700 !important;
+  font-size: .88rem !important;
+  transition: .16s !important;
+  border: none !important;
+}
+body.dark-mode .add-btn:hover {
+  background: var(--accent-hover) !important;
+  transform: translateY(-1px) !important;
+}
+body.dark-mode .player-input {
+  height: 42px !important;
+  background: var(--surface-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 11px !important;
+  color: var(--text) !important;
+}
+body.dark-mode .player-input:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-soft) !important;
+  background: var(--surface-2) !important;
+}
+body.dark-mode .player-input::placeholder { color: var(--text-dim) !important; }
+
+/* Generate randoms button */
+body.dark-mode .icon-btn-gen {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 11px !important;
+  background: var(--surface-3) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
+  transition: .16s !important;
+  display: grid !important;
+  place-items: center !important;
+}
+body.dark-mode .icon-btn-gen:hover {
+  border-color: var(--border-strong) !important;
+  color: var(--accent) !important;
+  background: var(--surface-2) !important;
+}
+
+/* =============================================
+   PLAYER CARDS
+   ============================================= */
+body.dark-mode .player-card-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 11px !important;
+  padding: 9px 12px !important;
+  border-radius: 12px !important;
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  cursor: grab !important;
+  transition: .14s ease !important;
+}
+body.dark-mode .player-card-item:hover {
+  border-color: var(--border-strong) !important;
+  background: var(--surface-3) !important;
+  transform: translateX(2px) !important;
+}
+
+/* =============================================
+   STATS CARDS
+   ============================================= */
+body.dark-mode .stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4,1fr) !important;
+  gap: 10px !important;
+}
+body.dark-mode .stat-card {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 13px 15px !important;
+}
+body.dark-mode .stat-label {
+  font-size: .72rem !important;
+  color: var(--text-dim) !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .04em !important;
+}
+body.dark-mode .stat-value {
+  font-family: var(--mono) !important;
+  font-size: 1.4rem !important;
+  font-weight: 600 !important;
+  margin-top: 5px !important;
+  letter-spacing: -.02em !important;
+  color: var(--text) !important;
+}
+body.dark-mode .stat-value.accent { color: var(--accent) !important; }
+body.dark-mode .stat-suffix {
+  font-size: .7rem !important;
+  color: var(--text-muted) !important;
+  font-family: var(--font) !important;
+  font-weight: 500 !important;
+  margin-left: 2px !important;
+}
+
+/* =============================================
+   MODE TOGGLE (Full/Half/Final)
+   ============================================= */
+body.dark-mode .mode-toggle {
+  display: flex !important;
+  background: var(--surface-3) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px !important;
+  padding: 3px !important;
+}
+body.dark-mode .mode-toggle-btn {
+  padding: 5px 13px !important;
+  border-radius: 7px !important;
+  font-size: .78rem !important;
+  font-weight: 600 !important;
+  color: var(--text-dim) !important;
+  transition: .16s !important;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
+}
+body.dark-mode .mode-toggle-btn.active {
+  background: var(--elevated) !important;
+  color: var(--text) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+/* =============================================
+   TEAM CARDS
+   ============================================= */
+body.dark-mode .team-card {
+  background: var(--surface-1) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden !important;
+  transition: .18s !important;
+}
+body.dark-mode .team-card:hover { border-color: var(--border-strong) !important; }
+body.dark-mode .team-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 14px 16px !important;
+  background: var(--surface-2) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+body.dark-mode .team-number {
+  font-family: var(--mono) !important;
+  font-size: .78rem !important;
+  font-weight: 600 !important;
+  color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+  padding: 3px 8px !important;
+  border-radius: 7px !important;
+}
+body.dark-mode .team-name {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text) !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -.02em !important;
+}
+body.dark-mode .team-name:focus { color: var(--accent) !important; -webkit-text-fill-color: var(--accent) !important; }
+body.dark-mode .team-average {
+  font-family: var(--mono) !important;
+  font-size: .92rem !important;
+  font-weight: 600 !important;
+  background: var(--surface-3) !important;
+  padding: 5px 11px !important;
+  border-radius: 9px !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+body.dark-mode .team-body,
+body.dark-mode .team-body .list-group-item,
+body.dark-mode .team-body :deep(.list-group-item) {
+  background: transparent !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+/* Role section labels */
+body.dark-mode .role-section-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  font-size: .68rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .06em !important;
+  color: var(--text-dim) !important;
+  padding: 6px 8px 4px !important;
+}
+body.dark-mode .role-section-label svg { width: 13px !important; height: 13px !important; }
+body.dark-mode .role-section-label.tank    { color: var(--tank) !important; }
+body.dark-mode .role-section-label.dps     { color: var(--dps) !important; }
+body.dark-mode .role-section-label.support { color: var(--support) !important; }
+
+/* Player cards inside teams — transparent bg */
+body.dark-mode .team-body .player-card-item {
+  background: transparent !important;
+  border-color: transparent !important;
+  transform: none !important;
+}
+body.dark-mode .team-body .player-card-item:hover {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  transform: none !important;
+}
+
+/* =============================================
+   MODAL
+   ============================================= */
+body.dark-mode .modal-content {
+  font-family: var(--font) !important;
+  background: var(--surface-1) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: var(--radius-lg) !important;
+  color: var(--text) !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,.7) !important;
+}
+body.dark-mode .modal-header { border-bottom: 1px solid var(--border) !important; }
+body.dark-mode .modal-footer { border-top: 1px solid var(--border) !important; }
+body.dark-mode .modal-title  { color: var(--text) !important; font-weight: 700 !important; }
+body.dark-mode .modal-backdrop { background: rgba(0,0,0,.65) !important; }
+
+/* =============================================
+   IDENTITY / ROLE / OPTION CARDS
+   ============================================= */
 body.dark-mode .identity-name-row,
 body.dark-mode .option-card,
 body.dark-mode .role-row {
-  background: #263244 !important;
-  border-color: #3b4a60 !important;
-  color: #f8fafc !important;
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  color: var(--text) !important;
 }
-
 body.dark-mode .role-row.active {
-  background: #213a5a !important;
-  border-color: #3b82f6 !important;
+  background: var(--accent-soft) !important;
+  border-color: rgba(249,158,26,.35) !important;
 }
-
-body.dark-mode .role-name,
-body.dark-mode .identity-label,
-body.dark-mode .option-card strong {
-  color: #f8fafc !important;
+body.dark-mode .role-row.warning {
+  background: var(--accent-soft) !important;
+  border-color: rgba(249,158,26,.4) !important;
 }
-
+body.dark-mode .role-row.danger {
+  background: var(--danger-soft) !important;
+  border-color: rgba(239,68,68,.4) !important;
+}
+body.dark-mode .role-name  { color: var(--text) !important; font-weight: 700 !important; }
 body.dark-mode .role-subtitle,
-body.dark-mode .option-card small {
-  color: #cbd5e1 !important;
+body.dark-mode .advanced-field label { color: var(--text-dim) !important; }
+body.dark-mode .role-warning.medium { color: #fbbf24 !important; background: rgba(245,158,11,.18) !important; }
+body.dark-mode .role-warning.high   { color: #fca5a5 !important; background: rgba(239,68,68,.18) !important; }
+body.dark-mode .option-card strong  { color: var(--text) !important; }
+body.dark-mode .option-card small   { color: var(--text-dim) !important; }
+body.dark-mode .identity-label      { color: var(--text-muted) !important; }
+body.dark-mode .advanced-btn {
+  background: var(--surface-3) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
+}
+body.dark-mode .advanced-btn:hover,
+body.dark-mode .advanced-btn.open {
+  background: var(--elevated) !important;
+  border-color: var(--border-strong) !important;
+  color: var(--text) !important;
+}
+body.dark-mode .advanced-fields {
+  border-top: 1px dashed var(--border-strong) !important;
+}
+body.dark-mode .role-drag { background: var(--surface-3) !important; }
+body.dark-mode .hint {
+  background: var(--surface-3) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
 }
 
-/* Buttons */
-body.dark-mode .btn {
-  color: #ffffff;
-}
-
-body.dark-mode .btn-warning {
-  color: #111827 !important;
-}
-
-/* Important: do NOT recolor rank/role images */
-body.dark-mode img,
-body.dark-mode svg {
-  filter: none;
-}
-
-body.dark-mode .role-icons svg,
-body.dark-mode .role-icons path,
-body.dark-mode .team-body svg,
-body.dark-mode .team-body path {
-  fill: inherit;
-  color: inherit;
-}
-
-/* Scrollbar */
-body.dark-mode ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-body.dark-mode ::-webkit-scrollbar-track {
-  background: #181818;
-}
-
-body.dark-mode ::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 10px;
-}
-
-body.dark-mode ::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Delete block */
+/* =============================================
+   DELETE ZONE
+   ============================================= */
 body.dark-mode .delete-player {
-  background: #2a1518 !important;
-  color: #ffb4bd !important;
-  border-color: #dc3545 !important;
+  background: var(--danger-soft) !important;
+  border: 2px dashed rgba(239,68,68,.3) !important;
+  border-radius: var(--radius) !important;
+  color: #f87171 !important;
+}
+body.dark-mode .delete-player:hover {
+  background: rgba(239,68,68,.12) !important;
+  border-color: rgba(239,68,68,.5) !important;
+}
+body.dark-mode .delete-player .delete-title { color: #f87171 !important; }
+
+/* =============================================
+   CHECKBOXES & FORM CHECKS
+   ============================================= */
+body.dark-mode .form-check-input {
+  background-color: var(--surface-3) !important;
+  border-color: var(--border-strong) !important;
+}
+body.dark-mode .form-check-input:checked {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+body.dark-mode .form-check-label { color: var(--text-muted) !important; }
+body.dark-mode .form-label {
+  color: var(--text-dim) !important;
+  font-size: .72rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .06em !important;
 }
 
-body.dark-mode .delete-player .delete-title {
-  color: #ff6b7a !important;
+/* =============================================
+   PROGRESS BAR
+   ============================================= */
+body.dark-mode .progress {
+  background: var(--surface-3) !important;
+  border-radius: 99px !important;
+  height: 6px !important;
+}
+body.dark-mode .progress-bar {
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover)) !important;
+  border-radius: 99px !important;
 }
 
-body.dark-mode .delete-player .delete-hint {
-  color: #ffb4bd !important;
+/* =============================================
+   DROPDOWN
+   ============================================= */
+body.dark-mode .dropdown-menu {
+  font-family: var(--font) !important;
+  background: var(--surface-1) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow) !important;
+  padding: 6px !important;
+}
+body.dark-mode .dropdown-item {
+  color: var(--text-muted) !important;
+  border-radius: var(--radius-sm) !important;
+  font-size: .84rem !important;
+  padding: 8px 10px !important;
+}
+body.dark-mode .dropdown-item:hover {
+  background: var(--surface-3) !important;
+  color: var(--text) !important;
 }
 
-body.dark-mode .player-card-item svg,
-body.dark-mode .player-card-item path,
-body.dark-mode .role-icons svg,
-body.dark-mode .role-icons path {
-  color: #e5e7eb !important;
-  fill: #e5e7eb !important;
-}
+/* =============================================
+   RANK / ROLE ICONS — preserve OW images
+   ============================================= */
+body.dark-mode img  { filter: none; }
+body.dark-mode svg  { filter: none; }
+/* role icons in player cards use role colors */
+body.dark-mode .ri.tank    { color: var(--tank) !important; }
+body.dark-mode .ri.dps     { color: var(--dps) !important; }
+body.dark-mode .ri.support { color: var(--support) !important; }
 
-body.dark-mode .player-card-item .role-icons *,
-body.dark-mode .team-card .role-icons *,
-body.dark-mode .role-icons * {
-  color: #e5e7eb !important;
-  fill: #e5e7eb !important;
-  stroke: #e5e7eb !important;
+/* =============================================
+   RANK MODE BOX (Balance.vue)
+   ============================================= */
+body.dark-mode .rank-mode-box {
+  background: var(--surface-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  padding: 12px !important;
 }
+body.dark-mode .rank-mode-label {
+  color: var(--text-dim) !important;
+  font-size: .72rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: .06em !important;
+}
+body.dark-mode .rank-mode-help { color: var(--text-dim) !important; }
+
+/* =============================================
+   fieldset disabled
+   ============================================= */
+body.dark-mode fieldset[disabled],
+body.dark-mode fieldset:disabled { opacity: .45 !important; pointer-events: none !important; }
+
+/* =============================================
+   Remove btn-icon span (now using svg directly)
+   ============================================= */
+body.dark-mode .action-btn .btn-icon {
+  font-size: 15px !important;
+  line-height: 1 !important;
+  font-weight: 700 !important;
+}
+body.dark-mode .action-btn svg,
+body.dark-mode .action-btn path { color: inherit !important; fill: none !important; stroke: currentColor !important; }
+body.dark-mode .action-btn.primary svg,
+body.dark-mode .action-btn.primary path { stroke: #1a1206 !important; }

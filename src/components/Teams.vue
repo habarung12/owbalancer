@@ -1,14 +1,29 @@
 <template>
-  <h3>{{ t.teams }}</h3>
-
-  <div class="d-flex justify-content-between align-items-top">
+  <div class="toolbar">
     <actions />
-    <mode-toggler />
+    <span class="spacer"></span>
+    <div class="mode-toggle">
+      <button
+        class="mode-toggle-btn"
+        :class="{ active: activeMode === 'full' }"
+        @click="activeMode = 'full'"
+      >Full</button>
+      <button
+        class="mode-toggle-btn"
+        :class="{ active: activeMode === 'half' }"
+        @click="activeMode = 'half'"
+      >Half</button>
+      <button
+        class="mode-toggle-btn"
+        :class="{ active: activeMode === 'final' }"
+        @click="activeMode = 'final'"
+      >Final</button>
+    </div>
   </div>
 
   <stats v-if="teams.length > 0" />
 
-  <div class="teams overflow-auto mh-80vh">
+  <div class="teams-grid overflow-auto">
     <team v-for="(team, i) in teams" :key="team.uuid" :team="team" :team-id="i + 1" />
   </div>
 
@@ -18,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { useStore } from '@/store';
 import { t } from '@/i18n';
 
@@ -27,35 +42,36 @@ import Balance from '@/components/Balance.vue';
 import Team from '@/components/Teams/Team.vue';
 import Stats from '@/components/Teams/Stats.vue';
 import Actions from '@/components/Teams/Actions.vue';
-import ModeToggler from '@/components/Teams/ModeToggler.vue';
 import ResultSelection from '@/components/Teams/ResultSelection.vue';
 
 export default defineComponent({
   name: 'Teams',
-  components: { Archive, Team, Balance, Stats, Actions, ModeToggler, ResultSelection },
+  components: { Archive, Team, Balance, Stats, Actions, ResultSelection },
   setup() {
     const store = useStore();
     const storeTeams = computed(() => store.state.teams);
-
-    return { teams: storeTeams, t };
+    const activeMode = ref('full');
+    return { teams: storeTeams, t, activeMode };
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.teams {
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.spacer { flex: 1; }
+.teams-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 320px));
-  gap: 1rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
   align-items: start;
-}
-
-.wf {
-  width: 6rem;
-}
-
-.mh-80vh {
   max-height: 80vh;
+  overflow-y: auto;
 }
 </style>

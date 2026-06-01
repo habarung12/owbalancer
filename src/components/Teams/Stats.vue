@@ -1,10 +1,24 @@
 <template>
-  <div class="mt-2">
-    <span>Min SR: {{ minSr }}</span>
-    <span class="ms-2">Max SR: {{ maxSr }}</span>
-    <span class="ms-2">Difference: {{ maxSr - minSr }}</span>
-    <span class="ms-2">Average: {{ avgSr }}</span>
-    <span class="ms-2">Off roles: {{ offRolesPercentage }}%</span>
+  <div class="stats-grid mt-3">
+    <div class="stat-card">
+      <div class="stat-label">Players</div>
+      <div class="stat-value">{{ playerCount }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Teams</div>
+      <div class="stat-value">{{ teamCount }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Avg SR</div>
+      <div class="stat-value accent">{{ avgSr }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Balance Δ</div>
+      <div class="stat-value">{{ maxSr - minSr }}<span class="stat-suffix">sr</span></div>
+    </div>
   </div>
 </template>
 
@@ -60,37 +74,10 @@ export default defineComponent({
       )
     );
 
-    const offRolesPercentage = computed(() => {
-      const [offCount, totalCount] = store.state.teams.reduce(
-        (acc, team) => {
-          let off = acc[0];
-          let total = acc[1];
+    const playerCount = computed(() => Object.keys(store.state.players).length);
+    const teamCount = computed(() => store.state.teams.length);
 
-          team.members.forEach(member => {
-            total += 1;
-            if (
-              store.state.players[member.uuid] &&
-              member.role !== PObj.getTopRoleName(store.state.players[member.uuid]) &&
-              !store.state.players[member.uuid].identity.isFullFlex
-            ) {
-              off += 1;
-            }
-          });
-
-          return [off, total];
-        },
-        [0, 0]
-      );
-
-      return Math.floor((offCount / totalCount) * 1000) / 10;
-    });
-
-    return {
-      maxSr,
-      minSr,
-      avgSr,
-      offRolesPercentage,
-    };
+    return { maxSr, minSr, avgSr, playerCount, teamCount };
   },
 });
 </script>

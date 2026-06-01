@@ -156,11 +156,17 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.EditPlayer {
-  &-Block:not(:last-child) {
-    border-bottom: 1px solid black;
-    padding-bottom: 1em;
-    margin: 1em 0;
-  }
+.EditPlayer-Block:not(:last-child) {
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding-bottom: 1em;
+  margin: 1em 0;
+}
+.EditPlayer-Block h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  margin-bottom: 12px;
 }
 </style>

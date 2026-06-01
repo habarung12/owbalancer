@@ -1,4 +1,5 @@
 <template>
+  <teleport to="body">
   <div class="modal fade" tabindex="-1" aria-hidden="true" ref="modalRef">
     <div
       class="modal-dialog modal-dialog-centered"
@@ -31,6 +32,7 @@
       </div>
     </div>
   </div>
+  </teleport>
 </template>
 
 <script lang="ts">

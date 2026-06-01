@@ -176,27 +176,25 @@ export default defineComponent({
 <style scoped>
 .identity-name-row {
   padding: 14px;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  background: #f8fafc;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  background: #1c1c22;
   display: grid;
   grid-template-columns: 90px 1fr;
   align-items: center;
   gap: 10px 14px;
 }
-
 .identity-label {
   margin: 0;
   font-weight: 700;
-  color: #374151;
+  color: #94a3b8;
+  font-size: 13px;
 }
-
 .identity-input {
   max-width: 100%;
   height: 38px;
   border-radius: 10px;
 }
-
 .identity-actions {
   grid-column: 2;
   margin: 0;
@@ -204,13 +202,11 @@ export default defineComponent({
   gap: 8px;
   flex-wrap: wrap;
 }
-
 .action-btn {
   min-width: 96px;
-  border-radius: 10px;
-  font-weight: 700;
+  border-radius: 8px;
+  font-weight: 600;
 }
-
 .check-btn {
   min-width: 115px;
   display: inline-flex;
@@ -218,16 +214,14 @@ export default defineComponent({
   justify-content: center;
   gap: 6px;
 }
-
 .spinner {
   width: 13px;
   height: 13px;
-  border: 2px solid rgba(0, 0, 0, 0.25);
-  border-top-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: rgba(255,255,255,0.8);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
-
 .bnet-status {
   grid-column: 2;
   width: fit-content;
@@ -236,86 +230,47 @@ export default defineComponent({
   font-size: 12px;
   font-weight: 600;
 }
-
-.bnet-status.success {
-  color: #0f5132;
-  background: #d1e7dd;
-}
-
-.bnet-status.error {
-  color: #842029;
-  background: #f8d7da;
-}
-
+.bnet-status.success { color: #6ee7b7; background: rgba(16,185,129,0.12); }
+.bnet-status.error   { color: #fca5a5; background: rgba(239,68,68,0.12); }
 .identity-options {
-  margin-top: 18px;
+  margin-top: 14px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
 }
-
 .option-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
   padding: 10px 12px;
-  border: 1px solid #dee2e6;
-  border-radius: 12px;
-  background: #ffffff;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  background: #1c1c22;
   cursor: pointer;
   transition: 0.15s ease;
 }
-
 .option-card:hover {
-  border-color: #adb5bd;
-  transform: translateY(-1px);
+  border-color: rgba(255,255,255,0.14);
+  background: #22222c;
 }
-
 .option-card strong {
   display: block;
-  font-size: 14px;
-  color: #212529;
+  font-size: 13px;
+  color: #e2e8f0;
+  font-weight: 600;
 }
-
 .option-card small {
   display: block;
-  color: #6c757d;
+  color: #64748b;
   font-size: 11px;
   line-height: 1.2;
 }
-
 .option-card input {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
+  accent-color: #f59e0b;
 }
-
-:global(body.dark-mode) .identity-name-row {
-  background: #1f2937;
-  border-color: #374151;
-}
-
-:global(body.dark-mode) .identity-label {
-  color: #e5e7eb;
-}
-
-:global(body.dark-mode) .option-card {
-  background: #242424;
-  border-color: #3a3a3a;
-}
-
-:global(body.dark-mode) .option-card strong {
-  color: #f8fafc;
-}
-
-:global(body.dark-mode) .option-card small {
-  color: #94a3b8;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>

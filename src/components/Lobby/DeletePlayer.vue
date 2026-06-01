@@ -56,10 +56,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .delete-player {
   height: 5rem;
-  border: 2px dashed #dc3545;
+  border: 2px dashed rgba(239,68,68,0.3);
   border-radius: 12px;
-  background: #fff5f5;
-  color: #b02a37;
+  background: rgba(239,68,68,0.05);
+  color: #f87171;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -67,26 +67,12 @@ export default defineComponent({
   transition: 0.15s ease;
   cursor: pointer;
 }
-
 .delete-player:hover {
-  background: #ffe3e3;
-  border-color: #b02a37;
+  background: rgba(239,68,68,0.1);
+  border-color: rgba(239,68,68,0.5);
   transform: translateY(-1px);
 }
-
-.delete-icon {
-  font-size: 1.2rem;
-  line-height: 1;
-}
-
-.delete-title {
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-}
-
-.delete-hint {
-  font-size: 0.75rem;
-  opacity: 0.75;
-}
+.delete-icon { font-size: 1.2rem; line-height: 1; }
+.delete-title { font-weight: 700; text-transform: uppercase; font-size: 0.85rem; }
+.delete-hint { font-size: 0.75rem; opacity: 0.7; }
 </style>

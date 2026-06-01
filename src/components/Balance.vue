@@ -311,31 +311,24 @@ export default defineComponent({
 <style scoped>
 .rank-mode-box {
   margin: 12px 0;
-  padding: 10px;
-  border: 1px solid #dee2e6;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 12px;
-  background: #f8f9fa;
+  background: #1c1c22;
 }
-
 .rank-mode-label {
   display: block;
   margin-bottom: 6px;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.rank-mode-help {
-  margin-top: 6px;
   font-size: 12px;
-  color: #6b7280;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
 }
-
-:global(body.dark-mode) .rank-mode-box {
-  background: #242424;
-  border-color: #3a3a3a;
-}
-
-:global(body.dark-mode) .rank-mode-help {
-  color: #94a3b8;
+.rank-mode-help {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #4b5563;
+  line-height: 1.5;
 }
 </style>

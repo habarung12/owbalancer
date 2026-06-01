@@ -2,25 +2,46 @@
   <div class="team-card">
     <div class="team-header">
       <div class="team-title">
-        <button class="remove-btn" @click="removeTeam" title="Удалить команду">×</button>
+        <button class="remove-btn" @click="removeTeam" title="Remove">×</button>
         <span class="team-number">#{{ teamId }}</span>
-       <input
-  type="text"
-  class="team-name"
-  :value="mTeam.name"
-  @input="updateTeam"
-/>
+        <input type="text" class="team-name" :value="mTeam.name" @input="updateTeam" />
       </div>
-
-      <span class="team-average">{{ teamAverage }}</span>
+      <div class="team-average">
+        {{ teamAverage }}
+        <small>AVG SR</small>
+      </div>
     </div>
 
     <div class="team-body">
-      <ul class="list-group list-group-flush">
-        <team-roles :members="tanks" rtype="tank" :teamUuid="teamUuid" />
-        <team-roles :members="dps" rtype="dps" :teamUuid="teamUuid" />
-        <team-roles :members="supports" rtype="support" :teamUuid="teamUuid" />
-      </ul>
+      <div class="role-group">
+        <div class="role-section-label tank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>
+          Tank
+        </div>
+        <ul class="list-group list-group-flush">
+          <team-roles :members="tanks" rtype="tank" :teamUuid="teamUuid" />
+        </ul>
+      </div>
+
+      <div class="role-group">
+        <div class="role-section-label dps">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>
+          Damage
+        </div>
+        <ul class="list-group list-group-flush">
+          <team-roles :members="dps" rtype="dps" :teamUuid="teamUuid" />
+        </ul>
+      </div>
+
+      <div class="role-group">
+        <div class="role-section-label support">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          Support
+        </div>
+        <ul class="list-group list-group-flush">
+          <team-roles :members="supports" rtype="support" :teamUuid="teamUuid" />
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -36,59 +57,37 @@ import MutationTypes from '@/store/mutation-types';
 
 export default defineComponent({
   name: 'Team',
-  props: {
-    teamId: Number,
-    team: Object as PropType<Team>,
-  },
+  props: { teamId: Number, team: Object as PropType<Team> },
   components: { TeamRoles },
 
   setup(props) {
     const store = useStore();
-    const players = computed(() => store.state.players);
     const teamUuid = computed(() => props.team?.uuid);
 
     const teamAverage = computed(() => {
       if (!props.team || props.team.members.length === 0) return 0;
-
       if (!store.state.showBalancerSR) {
         return Math.round(
           props.team.members.reduce(
-            (acc, member) =>
-              acc + store.state.players[member.uuid].stats.classes[member.role].rank,
+            (acc, member) => acc + store.state.players[member.uuid].stats.classes[member.role].rank,
             0
           ) / props.team.members.length
         );
       }
-
       return Math.round(props.team.avgSr || 0);
     });
 
-    const cTeam = computed(() =>
-      store.state.teams.find(team => team.uuid === teamUuid.value)
-    );
-
+    const cTeam = computed(() => store.state.teams.find(t => t.uuid === teamUuid.value));
     const mTeam = ref(cTeam);
 
-    const tanks = computed(() =>
-      mTeam.value?.members.filter(member => member.role === 'tank')
-    );
-
-    const dps = computed(() =>
-      mTeam.value?.members.filter(member => member.role === 'dps')
-    );
-
-    const supports = computed(() =>
-      mTeam.value?.members.filter(member => member.role === 'support')
-    );
+    const tanks    = computed(() => mTeam.value?.members.filter(m => m.role === 'tank'));
+    const dps      = computed(() => mTeam.value?.members.filter(m => m.role === 'dps'));
+    const supports = computed(() => mTeam.value?.members.filter(m => m.role === 'support'));
 
     const updateTeam = debounce((e: Event) => {
       const teamName = (e.target as HTMLInputElement).value;
-
       if (cTeam.value && teamName) {
-        store.commit(MutationTypes.UPDATE_TEAM_NAME, {
-          teamUuid: cTeam.value.uuid,
-          teamName,
-        });
+        store.commit(MutationTypes.UPDATE_TEAM_NAME, { teamUuid: cTeam.value.uuid, teamName });
       }
     }, 1000);
 
@@ -97,74 +96,61 @@ export default defineComponent({
       store.commit(MutationTypes.REMOVE_TEAM, cTeam.value.uuid);
     };
 
-    return {
-      tanks,
-      dps,
-      supports,
-      players,
-      teamUuid,
-      mTeam,
-      teamAverage,
-      updateTeam,
-      removeTeam,
-    };
+    return { tanks, dps, supports, teamUuid, mTeam, teamAverage, updateTeam, removeTeam };
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .team-card {
-  width: 320px;
-  max-height: 300px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-  transition: 0.15s ease;
+  transition: .18s;
 }
-
-.team-card:hover {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
-  transform: translateY(-1px);
-}
+.team-card:hover { border-color: var(--border-strong); }
 
 .team-header {
-  min-height: 36px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
 }
 
 .team-title {
   display: flex;
   align-items: center;
+  gap: 9px;
   min-width: 0;
   flex: 1;
-  padding: 0 0.45rem;
 }
 
 .remove-btn {
   border: none;
   background: transparent;
-  color: #adb5bd;
+  color: rgba(255,255,255,.2);
   font-size: 1rem;
   line-height: 1;
-  padding: 0 0.25rem;
+  padding: 0 2px;
   cursor: pointer;
+  transition: .15s;
+  flex-shrink: 0;
 }
-
-.remove-btn:hover {
-  color: #dc3545;
-}
+.remove-btn:hover { color: var(--danger); }
 
 .team-number {
-  font-weight: 700;
-  margin: 0 0.35rem;
-  color: #212529;
+  font-family: var(--mono);
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 3px 8px;
+  border-radius: 7px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .team-name {
@@ -173,70 +159,76 @@ export default defineComponent({
   width: 100%;
   min-width: 0;
   padding: 0;
-  color: #343a40;
-}
-
-.team-name:focus {
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  font-family: var(--font);
   outline: none;
-  box-shadow: none;
 }
+.team-name:focus { color: var(--accent); }
 
 .team-average {
-  align-self: stretch;
-  min-width: 60px;
-  background: #6c757d;
-  color: #ffffff;
-  font-weight: 700;
+  font-family: var(--mono);
+  font-size: .92rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  background: var(--surface-3);
+  padding: 5px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+
+  small {
+    font-size: .6rem;
+    color: var(--text-dim);
+    display: block;
+    text-align: center;
+    letter-spacing: .04em;
+    font-family: var(--font);
+    font-weight: 500;
+  }
+}
+
+.team-body { padding: 8px; }
+
+.role-group { margin: 4px 0; }
+
+.role-section-label {
   display: flex;
   align-items: center;
-  justify-content: center;
-}
+  gap: 7px;
+  font-size: .68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-dim);
+  padding: 6px 8px 4px;
 
-.team-body {
-  font-size: 0.9rem;
+  svg { width: 13px; height: 13px; }
 }
+.role-section-label.tank    { color: var(--tank); }
+.role-section-label.dps     { color: var(--dps); }
+.role-section-label.support { color: var(--support); }
 
-.team-body :deep(.list-group-item) {
-  border-color: #edf0f2;
-}
-
-/* DARK MODE */
-:global(body.dark-mode) .team-card {
-  background: #1e1e1e !important;
-  border-color: #333 !important;
-}
-
-:global(body.dark-mode) .team-header {
-  background: #242424 !important;
-  border-bottom-color: #333 !important;
-}
-
-:global(body.dark-mode) .team-number {
-  color: #94a3b8 !important;
-}
-
-:global(body.dark-mode) .team-name {
+/* player cards inside team — transparent */
+:deep(.player-card-item) {
   background: transparent !important;
-  color: #f8fafc !important;
-  border: none !important;
-  box-shadow: none !important;
+  border-color: transparent !important;
+}
+:deep(.player-card-item:hover) {
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+  transform: none !important;
 }
 
-:global(body.dark-mode) .team-name:focus {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-:global(body.dark-mode) .team-title {
+:deep(.list-group-item) {
   background: transparent !important;
-}
-
-:global(body.dark-mode) .team-average {
-  background: #475569 !important;
-}
-
-:global(body.dark-mode) .team-body :deep(.list-group-item) {
-  background: #1e1e1e !important;
-  border-color: #333 !important;
+  border-color: var(--border) !important;
+  padding: 0 !important;
 }
 </style>

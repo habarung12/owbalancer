@@ -17,19 +17,16 @@ lto = true
 
 [dependencies]
 flo_curves = "0.4"
-console_error_panic_hook = "0.1.5"
-wee_alloc = { version = "0.4.2", optional = true }
+console_error_panic_hook = "0.1.7"
 serde = { version = "1.0", features = ["derive"] }
-rand = { version = "0.7", features = ["wasm-bindgen"] }
-uuid = { version = "0.8", features = ["wasm-bindgen", "v4", "serde"] }
-wasm-bindgen = { version = "0.2.45", features = ["serde-serialize"] }
+rand = { version = "0.8", features = ["small_rng"] }
+uuid = { version = "1.0", features = ["v4", "serde", "js"] }
+wasm-bindgen = { version = "0.2.92", features = ["serde-serialize"] }
+getrandom = { version = "0.2", features = ["js"] }
 
 [dependencies.web-sys]
-version = "0.3.22"
+version = "0.3.69"
 features = ["console"]
 
 [dev-dependencies]
-wasm-bindgen-test = "0.2.45"
-futures = "0.1.27"
-js-sys = "0.3.22"
-wasm-bindgen-futures = "0.3.22"
+wasm-bindgen-test = "0.3.42"

@@ -345,9 +345,9 @@ export default defineComponent({
 <style lang="scss" scoped>
 .role-row {
   padding: 10px;
-  border: 1px solid #dee2e6;
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 12px;
-  background: #ffffff;
+  background: #1c1c22;
   transition: 0.15s ease;
 }
 
@@ -386,18 +386,16 @@ export default defineComponent({
 }
 
 .role-row.active {
-  border-color: #bfdbfe;
-  background: #f8fbff;
+  border-color: rgba(245,158,11,0.35);
+  background: rgba(245,158,11,0.06);
 }
-
 .role-row.warning {
-  border-color: #f59e0b;
-  background: #fffbeb;
+  border-color: rgba(245,158,11,0.4);
+  background: rgba(245,158,11,0.08);
 }
-
 .role-row.danger {
-  border-color: #ef4444;
-  background: #fef2f2;
+  border-color: rgba(239,68,68,0.4);
+  background: rgba(239,68,68,0.08);
 }
 
 .role-drag,
@@ -412,7 +410,7 @@ export default defineComponent({
 .role-drag {
   cursor: grab;
   border-radius: 10px;
-  background: #f1f3f5;
+  background: rgba(255,255,255,0.05);
 }
 
 .role-drag :deep(img),
@@ -430,12 +428,11 @@ export default defineComponent({
 
 .role-name {
   font-weight: 700;
-  color: #212529;
+  color: #e2e8f0;
   display: flex;
   align-items: center;
   gap: 6px;
 }
-
 .role-warning {
   font-size: 11px;
   font-weight: 700;
@@ -443,20 +440,11 @@ export default defineComponent({
   border-radius: 999px;
   white-space: nowrap;
 }
-
-.role-warning.medium {
-  color: #92400e;
-  background: #fef3c7;
-}
-
-.role-warning.high {
-  color: #991b1b;
-  background: #fee2e2;
-}
-
+.role-warning.medium { color: #fbbf24; background: rgba(245,158,11,0.18); }
+.role-warning.high   { color: #fca5a5; background: rgba(239,68,68,0.18); }
 .role-subtitle {
   font-size: 12px;
-  color: #6c757d;
+  color: #64748b;
   line-height: 1.2;
 }
 
@@ -473,10 +461,10 @@ export default defineComponent({
   min-width: 42px;
   height: 36px;
   min-height: 36px;
-  border: 1px solid #dee2e6;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 8px;
-  background: #f8f9fa;
-  color: #495057;
+  background: rgba(255,255,255,0.04);
+  color: #94a3b8;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -486,34 +474,31 @@ export default defineComponent({
   line-height: 1;
   transition: 0.15s ease;
 }
-
 .advanced-btn:hover,
 .advanced-btn.open {
-  background: #e9ecef;
-  border-color: #adb5bd;
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.15);
+  color: #e2e8f0;
 }
-
 .advanced-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px dashed #dee2e6;
+  border-top: 1px dashed rgba(255,255,255,0.08);
   overflow: visible;
 }
-
 .advanced-field {
   display: flex;
   flex-direction: column;
   gap: 4px;
   overflow: visible;
 }
-
 .advanced-field label {
   font-size: 11px;
   font-weight: 600;
-  color: #6b7280;
+  color: #64748b;
   overflow: visible;
 }
 
@@ -529,8 +514,8 @@ export default defineComponent({
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #d1d5db;
-  color: #111827;
+  background: rgba(255,255,255,0.1);
+  color: #94a3b8;
   font-size: 10px;
   margin-left: 3px;
   cursor: help;
@@ -602,94 +587,28 @@ export default defineComponent({
   width: 42px;
   height: 24px;
   border-radius: 999px;
-  background: #ced4da;
+  background: rgba(255,255,255,0.1);
   position: relative;
   cursor: pointer;
   transition: 0.15s ease;
 }
-
 .role-toggle span::after {
   content: '';
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #ffffff;
+  background: #94a3b8;
   position: absolute;
   left: 3px;
   top: 3px;
   transition: 0.15s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
-
 .role-toggle input:checked + span {
-  background: #0d6efd;
+  background: #f59e0b;
 }
-
 .role-toggle input:checked + span::after {
+  background: #111;
   transform: translateX(18px);
-}
-
-:global(body.dark-mode) .role-row {
-  background: #242424;
-  border-color: #3a3a3a;
-}
-
-:global(body.dark-mode) .role-row.active {
-  background: #172033;
-  border-color: #2563eb;
-}
-
-:global(body.dark-mode) .role-row.warning {
-  background: #2b2412;
-  border-color: #f59e0b;
-}
-
-:global(body.dark-mode) .role-row.danger {
-  background: #2b1717;
-  border-color: #ef4444;
-}
-
-:global(body.dark-mode) .role-drag,
-:global(body.dark-mode) .advanced-btn {
-  background: #333333;
-}
-
-:global(body.dark-mode) .advanced-btn:hover,
-:global(body.dark-mode) .advanced-btn.open {
-  background: #3f3f46;
-  border-color: #52525b;
-}
-
-:global(body.dark-mode) .role-name {
-  color: #f8fafc;
-}
-
-:global(body.dark-mode) .role-subtitle,
-:global(body.dark-mode) .advanced-field label {
-  color: #94a3b8;
-}
-
-:global(body.dark-mode) .role-warning.medium {
-  color: #fbbf24;
-  background: rgba(245, 158, 11, 0.18);
-}
-
-:global(body.dark-mode) .role-warning.high {
-  color: #fca5a5;
-  background: rgba(239, 68, 68, 0.18);
-}
-
-:global(body.dark-mode) .hint {
-  background: #475569;
-  color: #f8fafc;
-}
-
-:global(body.dark-mode) .hint::after {
-  background: #020617;
-  color: #f8fafc;
-}
-
-:global(body.dark-mode) .hint::before {
-  border-top-color: #020617;
 }
 </style>
