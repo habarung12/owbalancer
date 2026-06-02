@@ -47,15 +47,15 @@
                     <div class="ar-ph-season-name">{{ s.seasonName }}</div>
                     <div class="ar-ranks">
                       <span class="rank-chip tank" :style="badge(s.ranks.tank)">
-                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>
+                        <svg class="ri-ico" viewBox="0 0 32 32" fill="currentColor"><path d="M29,10.7c0,2.1,0,4.1,0,6.2c0,0.6-0.1,1.1-0.4,1.6c-2.9,5.3-6.8,9.7-11.8,13.2c-0.6,0.4-1,0.4-1.6,0c-4.9-3.4-8.8-7.8-11.7-13c-0.3-0.6-0.4-1.2-0.4-1.8c0-3.9,0.1-7.8,0-11.7C3,2.3,5.2,1.9,7.1,1.4C10.4,0.6,13.3,0,16.6,0c3.1,0,7.7,1.1,9.4,1.6c1.3,0.4,2.7,0.9,2.9,2.2C29,4.9,28.9,6,29,7.1C29,8.3,29,9.5,29,10.7C29,10.7,29,10.7,29,10.7z"/></svg>
                         <b>{{ disp(s.ranks.tank) }}</b>
                       </span>
                       <span class="rank-chip dps" :style="badge(s.ranks.dps)">
-                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>
+                        <svg class="ri-ico" viewBox="0 0 32 32" fill="currentColor"><rect x="2.1" y="28.1" width="7.1" height="3.9"/><path d="M9.1,7c0,0,0-0.5,0-0.7C8.6,1.5,5.6,0,5.6,0s-3,1.5-3.5,6.3c0,0.2,0,0.7,0,0.7v18.4h3.5h3.5V7z"/><rect x="12.5" y="28.1" width="7.1" height="3.9"/><path d="M19.5,7c0,0,0-0.5,0-0.7C19,1.5,16,0,16,0s-3,1.5-3.5,6.3c0,0.2,0,0.7,0,0.7v18.4H16h3.5V7z"/><rect x="22.9" y="28.1" width="7.1" height="3.9"/><path d="M29.9,7c0,0,0-0.5,0-0.7C29.4,1.5,26.4,0,26.4,0s-3,1.5-3.5,6.3c0,0.2,0,0.7,0,0.7v18.4h3.5h3.5V7z"/></svg>
                         <b>{{ disp(s.ranks.dps) }}</b>
                       </span>
                       <span class="rank-chip support" :style="badge(s.ranks.support)">
-                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                        <svg class="ri-ico" viewBox="0 0 32 32" fill="currentColor"><path fill-rule="evenodd" d="M29.3,10.2h-7.5V2.7c0-1.5-1.2-2.7-2.7-2.7h-6.3c-1.5,0-2.7,1.2-2.7,2.7v7.5H2.7c-1.5,0-2.7,1.2-2.7,2.7v6.3c0,1.5,1.2,2.7,2.7,2.7h7.5v7.5c0,1.5,1.2,2.7,2.7,2.7h6.3c1.5,0,2.7-1.2,2.7-2.7v-7.5h7.5c1.5,0,2.7-1.2,2.7-2.7v-6.3C32,11.4,30.8,10.2,29.3,10.2z"/></svg>
                         <b>{{ disp(s.ranks.support) }}</b>
                       </span>
                     </div>
@@ -85,15 +85,15 @@
                     <span class="ar-player-name">{{ name }}</span>
                     <div class="ar-ranks">
                       <span class="rank-chip tank" :style="badge(ranks.tank)">
-                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>
+                        <svg class="ri-ico" viewBox="0 0 32 32" fill="currentColor"><path d="M29,10.7c0,2.1,0,4.1,0,6.2c0,0.6-0.1,1.1-0.4,1.6c-2.9,5.3-6.8,9.7-11.8,13.2c-0.6,0.4-1,0.4-1.6,0c-4.9-3.4-8.8-7.8-11.7-13c-0.3-0.6-0.4-1.2-0.4-1.8c0-3.9,0.1-7.8,0-11.7C3,2.3,5.2,1.9,7.1,1.4C10.4,0.6,13.3,0,16.6,0c3.1,0,7.7,1.1,9.4,1.6c1.3,0.4,2.7,0.9,2.9,2.2C29,4.9,28.9,6,29,7.1C29,8.3,29,9.5,29,10.7C29,10.7,29,10.7,29,10.7z"/></svg>
                         <b>{{ disp(ranks.tank) }}</b>
                       </span>
                       <span class="rank-chip dps" :style="badge(ranks.dps)">
-                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>
+                        <svg class="ri-ico" viewBox="0 0 32 32" fill="currentColor"><rect x="2.1" y="28.1" width="7.1" height="3.9"/><path d="M9.1,7c0,0,0-0.5,0-0.7C8.6,1.5,5.6,0,5.6,0s-3,1.5-3.5,6.3c0,0.2,0,0.7,0,0.7v18.4h3.5h3.5V7z"/><rect x="12.5" y="28.1" width="7.1" height="3.9"/><path d="M19.5,7c0,0,0-0.5,0-0.7C19,1.5,16,0,16,0s-3,1.5-3.5,6.3c0,0.2,0,0.7,0,0.7v18.4H16h3.5V7z"/><rect x="22.9" y="28.1" width="7.1" height="3.9"/><path d="M29.9,7c0,0,0-0.5,0-0.7C29.4,1.5,26.4,0,26.4,0s-3,1.5-3.5,6.3c0,0.2,0,0.7,0,0.7v18.4h3.5h3.5V7z"/></svg>
                         <b>{{ disp(ranks.dps) }}</b>
                       </span>
                       <span class="rank-chip support" :style="badge(ranks.support)">
-                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                        <svg class="ri-ico" viewBox="0 0 32 32" fill="currentColor"><path fill-rule="evenodd" d="M29.3,10.2h-7.5V2.7c0-1.5-1.2-2.7-2.7-2.7h-6.3c-1.5,0-2.7,1.2-2.7,2.7v7.5H2.7c-1.5,0-2.7,1.2-2.7,2.7v6.3c0,1.5,1.2,2.7,2.7,2.7h7.5v7.5c0,1.5,1.2,2.7,2.7,2.7h6.3c1.5,0,2.7-1.2,2.7-2.7v-7.5h7.5c1.5,0,2.7-1.2,2.7-2.7v-6.3C32,11.4,30.8,10.2,29.3,10.2z"/></svg>
                         <b>{{ disp(ranks.support) }}</b>
                       </span>
                     </div>
@@ -299,7 +299,7 @@ export default defineComponent({
   min-width: 38px;
   b { font-family: var(--mono); font-size: .68rem; font-weight: 700; line-height: 1; }
 }
-.rank-chip .ri-ico { width: 12px; height: 12px; opacity: .9; }
+.rank-chip .ri-ico { width: 13px; height: 13px; }
 .rank-chip.tank    .ri-ico { color: var(--tank); }
 .rank-chip.dps     .ri-ico { color: var(--dps); }
 .rank-chip.support .ri-ico { color: var(--support); }
