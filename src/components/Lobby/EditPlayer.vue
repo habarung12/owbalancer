@@ -340,9 +340,9 @@ export default defineComponent({
 .rank-card-main { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--surface-3); }
 .rank-drag { width: 18px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: grab; color: var(--text-dim); flex-shrink: 0; svg { width: 14px; height: 14px; } &:active { cursor: grabbing; } }
 .rank-role-icon { width: 28px; height: 28px; display: grid; place-items: center; flex-shrink: 0; :deep(svg),  :deep(img) { width: 20px !important; height: 20px !important; } }
-.rank-card.tank    .rank-role-icon :deep(*) { color: var(--tank) !important; stroke: var(--tank) !important; fill: none !important; }
-.rank-card.dps     .rank-role-icon :deep(*) { color: var(--dps) !important; stroke: var(--dps) !important; fill: none !important; }
-.rank-card.support .rank-role-icon :deep(*) { color: var(--support) !important; stroke: var(--support) !important; fill: none !important; }
+.rank-card.tank    .rank-role-icon :deep(*) { color: var(--tank) !important; fill: var(--tank) !important; stroke: none !important; }
+.rank-card.dps     .rank-role-icon :deep(*) { color: var(--dps) !important; fill: var(--dps) !important; stroke: none !important; }
+.rank-card.support .rank-role-icon :deep(*) { color: var(--support) !important; fill: var(--support) !important; stroke: none !important; }
 .rank-info { flex: 1; min-width: 0; }
 .rank-role-name { font-size: .84rem; font-weight: 700; color: var(--text); }
 .rank-balance-hint { font-size: .68rem; color: var(--text-dim); margin-top: 1px; }

@@ -231,8 +231,8 @@ export default defineComponent({
     height: 14px !important;
   }
 }
-.ri.tank    { color: #6aa3e0; :deep(svg path), :deep(svg circle), :deep(svg) { stroke: currentColor !important; fill: none !important; } }
-.ri.dps     { color: #e0685f; :deep(svg path), :deep(svg circle), :deep(svg) { stroke: currentColor !important; fill: none !important; } }
-.ri.support { color: #6fc59a; :deep(svg path), :deep(svg circle), :deep(svg) { stroke: currentColor !important; fill: none !important; } }
+.ri.tank    { color: #6aa3e0; :deep(svg), :deep(svg *) { fill: currentColor !important; stroke: none !important; } }
+.ri.dps     { color: #e0685f; :deep(svg), :deep(svg *) { fill: currentColor !important; stroke: none !important; } }
+.ri.support { color: #6fc59a; :deep(svg), :deep(svg *) { fill: currentColor !important; stroke: none !important; } }
 .ri.secondary { opacity: .32; transform: scale(.85); }
 </style>
