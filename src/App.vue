@@ -62,6 +62,14 @@
           </a>
         </div>
       </div>
+
+      <!-- Right pill: Archive -->
+      <div class="topbar-pill topbar-pill-right">
+        <button class="ctrl-btn ctrl-archive" @click="toggleArchive">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+          <span>{{ t.archiveButton }}</span>
+        </button>
+      </div>
     </header>
 
     <div class="app-grid">
@@ -72,6 +80,8 @@
         <Teams />
       </div>
     </div>
+
+    <RankArchive />
   </div>
 </template>
 
@@ -79,17 +89,20 @@
 import '@/styles/main.scss';
 import { defineComponent, onMounted, ref } from 'vue';
 import Dropdown from 'bootstrap/js/src/dropdown';
+import { useStore } from '@/store';
 import { language, t, toggleLanguage } from '@/i18n';
 
 import Lobby from '@/components/Lobby.vue';
 import Teams from '@/components/Teams.vue';
 import OWIcon from '@/components/svg/OWIcon.vue';
+import RankArchive from '@/components/RankArchive.vue';
 
 export default defineComponent({
   name: 'App',
-  components: { Lobby, Teams, OWIcon },
+  components: { Lobby, Teams, OWIcon, RankArchive },
 
   setup() {
+    const store = useStore();
     const saved = localStorage.getItem('theme');
     const isDark = ref(saved !== 'light');
     const ghRef = ref(null);
@@ -109,7 +122,9 @@ export default defineComponent({
       applyTheme(isDark.value);
     };
 
-    return { toggleTheme, toggleLanguage, language, t, isDark, ghRef };
+    const toggleArchive = () => { store.commit('TOGGLE_ARCHIVE', undefined); };
+
+    return { toggleTheme, toggleLanguage, toggleArchive, language, t, isDark, ghRef };
   },
 });
 </script>
@@ -127,10 +142,19 @@ export default defineComponent({
   top: 14px;
   z-index: 30;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   padding: 14px clamp(16px, 3vw, 40px) 0;
   max-width: 1500px;
   margin: 0 auto;
+}
+.topbar-pill-right { padding: 8px; }
+.ctrl-archive {
+  background: var(--accent-soft);
+  border-color: rgba(249,158,26,.3);
+  color: var(--accent);
+  &:hover { background: rgba(249,158,26,.18); border-color: rgba(249,158,26,.45); color: var(--accent); }
 }
 
 .topbar-pill {
