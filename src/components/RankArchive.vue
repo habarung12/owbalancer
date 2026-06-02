@@ -34,6 +34,7 @@
 
           <!-- BODY -->
           <div class="ar-body">
+            <div class="ar-main">
 
             <!-- PLAYER HISTORY MODE (when searching) -->
             <div v-if="query && historyRows.length" class="ar-history">
@@ -111,6 +112,18 @@
                 {{ t.archiveSnapshot }}
               </button>
             </div>
+
+            </div><!-- /ar-main -->
+
+            <!-- LEGEND -->
+            <aside class="ar-legend">
+              <div class="ar-legend-title">{{ t.archiveLegend }}</div>
+              <div class="ar-legend-item" v-for="tier in tiers" :key="tier.name">
+                <span class="ar-legend-swatch" :style="{ background: tier.color }"></span>
+                <span class="ar-legend-name">{{ tier.name }}</span>
+                <span class="ar-legend-range">{{ tier.min }}–{{ tier.max }}</span>
+              </div>
+            </aside>
           </div>
 
           <!-- FOOTER -->
@@ -141,16 +154,28 @@ function loadSeasons(): Season[] {
   } catch { return []; }
 }
 
-function getTier(sr: number): { name: string; color: string; bg: string } {
-  if (sr >= 4500) return { name: 'Champ',  color: '#f2c94c', bg: 'rgba(242,201,76,.13)' };
-  if (sr >= 4000) return { name: 'GM',     color: '#f2c94c', bg: 'rgba(242,201,76,.13)' };
-  if (sr >= 3500) return { name: 'Master', color: '#e0685f', bg: 'rgba(224,104,95,.13)' };
-  if (sr >= 3000) return { name: 'Dia',    color: '#a78bfa', bg: 'rgba(167,139,250,.13)' };
-  if (sr >= 2500) return { name: 'Plat',   color: '#5fd3c4', bg: 'rgba(95,211,196,.13)' };
-  if (sr >= 2000) return { name: 'Gold',   color: '#f99e1a', bg: 'rgba(249,158,26,.13)' };
-  if (sr >= 1500) return { name: 'Silver', color: '#a4a9b4', bg: 'rgba(164,169,180,.13)' };
-  if (sr > 0)     return { name: 'Bronze', color: '#cd7f5d', bg: 'rgba(205,127,93,.13)' };
-  return { name: '—', color: '#6b7280', bg: 'rgba(107,114,128,.08)' };
+type Tier = { name: string; min: number; max: number; color: string };
+
+const TIERS: Tier[] = [
+  { name: 'Champion',    min: 4500, max: 5000, color: '#f2c94c' },
+  { name: 'Grandmaster', min: 4000, max: 4400, color: '#e8973a' },
+  { name: 'Master',      min: 3500, max: 3900, color: '#e0685f' },
+  { name: 'Diamond',     min: 3000, max: 3400, color: '#a78bfa' },
+  { name: 'Platinum',    min: 2500, max: 2900, color: '#5fd3c4' },
+  { name: 'Gold',        min: 2000, max: 2400, color: '#f99e1a' },
+  { name: 'Silver',      min: 1500, max: 1900, color: '#a4a9b4' },
+  { name: 'Bronze',      min: 1000, max: 1400, color: '#cd7f5d' },
+];
+
+function hexToRgba(hex: string, a: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+}
+
+function getTier(sr: number): { color: string; bg: string } {
+  const tier = TIERS.find(t => sr >= t.min);
+  if (!tier) return { color: '#6b7280', bg: 'rgba(107,114,128,.08)' };
+  return { color: tier.color, bg: hexToRgba(tier.color, 0.14) };
 }
 
 export default defineComponent({
@@ -220,12 +245,12 @@ export default defineComponent({
 
     const disp = (sr: number) => (sr > 0 ? sr : '—');
     const badge = (sr: number) => {
-      const t = getTier(sr);
-      return { color: t.color, background: t.bg, borderColor: t.color + '33' };
+      const tier = getTier(sr);
+      return { color: tier.color, background: tier.bg, borderColor: tier.color + '33' };
     };
     const formatDate = (iso: string) => new Date(iso).toLocaleDateString();
 
-    return { isActive, seasons, query, close, snapshot, renameSeason, removeSeason, historyRows, disp, badge, formatDate, t };
+    return { isActive, seasons, query, close, snapshot, renameSeason, removeSeason, historyRows, disp, badge, formatDate, tiers: TIERS, t };
   },
 });
 </script>
@@ -277,7 +302,34 @@ export default defineComponent({
   &:hover { background: var(--accent-hover); transform: translateY(-1px); }
 }
 
-.ar-body { overflow-y: auto; flex: 1; padding: 18px 24px; }
+.ar-body { display: flex; min-height: 0; flex: 1; }
+.ar-main { flex: 1; overflow-y: auto; padding: 18px 24px; min-width: 0; }
+
+/* Legend */
+.ar-legend {
+  width: 178px; flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  background: var(--surface-2);
+  padding: 18px 16px;
+  overflow-y: auto;
+}
+.ar-legend-title {
+  font-size: .65rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--text-dim); margin-bottom: 12px;
+}
+.ar-legend-item {
+  display: grid; grid-template-columns: 12px 1fr auto;
+  align-items: center; gap: 8px; padding: 6px 0;
+}
+.ar-legend-swatch { width: 12px; height: 12px; border-radius: 4px; }
+.ar-legend-name { font-size: .78rem; font-weight: 600; color: var(--text); }
+.ar-legend-range { font-family: var(--mono); font-size: .68rem; color: var(--text-dim); }
+
+@media (max-width: 640px) {
+  .ar-body { flex-direction: column; }
+  .ar-legend { width: auto; border-left: none; border-top: 1px solid var(--border); }
+  .ar-legend-item { display: inline-grid; margin-right: 14px; }
+}
 
 /* Seasons */
 .ar-seasons { display: flex; flex-direction: column; gap: 16px; }
@@ -299,10 +351,8 @@ export default defineComponent({
   min-width: 38px;
   b { font-family: var(--mono); font-size: .68rem; font-weight: 700; line-height: 1; }
 }
-.rank-chip .ri-ico { width: 13px; height: 13px; }
-.rank-chip.tank    .ri-ico { color: var(--tank); }
-.rank-chip.dps     .ri-ico { color: var(--dps); }
-.rank-chip.support .ri-ico { color: var(--support); }
+/* Icon inherits the chip's tier colour so the whole square is one rank colour */
+.rank-chip .ri-ico { width: 13px; height: 13px; opacity: .85; }
 
 /* History */
 .ar-history { display: flex; flex-direction: column; gap: 12px; }
