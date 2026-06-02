@@ -362,15 +362,18 @@ export default defineComponent({
           return;
         }
 
-        // Apply the first balanced composition directly so teams appear immediately.
+        // Multiple balanced variants — let the user pick the best one.
+        if (results.length !== 1) {
+          store.commit(MutationTypes.SET_RESULTS, results);
+          store.commit(MutationTypes.TOGGLE_SELECTION, undefined);
+          closeModal();
+          return;
+        }
+
+        // Single result — apply directly.
         const ignoredUuids = results[0].leftovers.map((l: any) => l.uuid);
         store.commit(MutationTypes.RESERVE_PLAYERS, ignoredUuids);
         store.commit(MutationTypes.ADD_TEAMS, results[0].teams);
-
-        // Keep the remaining variants available for the "Choose" action.
-        if (results.length > 1) {
-          store.commit(MutationTypes.SET_RESULTS, results);
-        }
         closeModal();
       } catch (e) {
         console.error((e as Error).message);

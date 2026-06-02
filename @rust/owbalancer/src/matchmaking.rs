@@ -204,9 +204,11 @@ impl<'a> Matchmaking<'a> {
     fn minimize_dispersion(&mut self) {
         let not_complete_teams = self.teams.get_not_complete();
 
-        if !self.config.dispersion_minimizer
-            || (self.config.dispersion_minimizer && not_complete_teams.len() > 0)
-        {
+        // Always run the dispersion-tightening polish once every team is complete.
+        // `can_swap` only performs same-role swaps that strictly reduce SR
+        // dispersion on both teams (and never touch captains/squires), so this
+        // pass can only improve the balance — never worsen it.
+        if not_complete_teams.len() > 0 {
             return;
         }
 
