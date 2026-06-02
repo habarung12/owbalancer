@@ -1,24 +1,6 @@
 <template>
   <div class="toolbar">
     <actions />
-    <span class="spacer"></span>
-    <div class="mode-toggle">
-      <button
-        class="mode-toggle-btn"
-        :class="{ active: activeMode === 'full' }"
-        @click="activeMode = 'full'"
-      >Full</button>
-      <button
-        class="mode-toggle-btn"
-        :class="{ active: activeMode === 'half' }"
-        @click="activeMode = 'half'"
-      >Half</button>
-      <button
-        class="mode-toggle-btn"
-        :class="{ active: activeMode === 'final' }"
-        @click="activeMode = 'final'"
-      >Final</button>
-    </div>
   </div>
 
   <stats v-if="teams.length > 0" />
@@ -32,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { useStore } from '@/store';
 import { t } from '@/i18n';
 
@@ -48,8 +30,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const storeTeams = computed(() => store.state.teams);
-    const activeMode = ref('full');
-    return { teams: storeTeams, t, activeMode };
+    return { teams: storeTeams, t };
   },
 });
 </script>

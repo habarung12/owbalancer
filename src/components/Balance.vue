@@ -137,8 +137,9 @@
                 <div class="bsec-head">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                   {{ t.dispersion }}
-                  <span class="bsec-value">±{{ options.range }}</span>
+                  <span class="bsec-value">±{{ options.range }} SR</span>
                 </div>
+                <p class="bal-desc">{{ t.dispersionDesc }}</p>
                 <div class="slider-wrap dispersion-wrap">
                   <input type="range" class="bal-range" min="0" max="120" step="1" v-model.number="options.range" />
                 </div>
@@ -147,19 +148,24 @@
                 </div>
               </section>
 
-              <!-- Tries count slider -->
+              <!-- Tries count (number input) -->
               <section class="bal-section">
                 <div class="bsec-head">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
                   {{ t.triesCount }}
-                  <span class="bsec-value">{{ options.triesCount }}</span>
                 </div>
-                <div class="slider-wrap">
-                  <input type="range" class="bal-range tries-range" min="1" max="2500" step="1" :value="options.triesCount"
-                    @input="options.triesCount = +($event.target as HTMLInputElement).value" />
-                </div>
-                <div class="slider-labels">
-                  <span>{{ t.triesFast }}</span><span></span><span>{{ t.triesThorough }}</span>
+                <p class="bal-desc">{{ t.triesDesc }}</p>
+                <div class="number-stepper">
+                  <button type="button" class="step-btn" @click="setTries(options.triesCount - 5)">−</button>
+                  <input
+                    type="number"
+                    class="number-input"
+                    min="1"
+                    max="5000"
+                    :value="options.triesCount"
+                    @input="setTries(+($event.target as HTMLInputElement).value)"
+                  />
+                  <button type="button" class="step-btn" @click="setTries(options.triesCount + 5)">+</button>
                 </div>
               </section>
 
@@ -257,7 +263,6 @@ export default defineComponent({
     const advancedOpts = computed(() => [
       { key: 'lowRankLimiter',             label: t.value.optLowRankLimiter,      desc: t.value.optLowRankLimiterDesc },
       { key: 'disallowSecondaryRoles',     label: t.value.optPrimaryRoles,        desc: t.value.optPrimaryRolesDesc },
-      { key: 'dispersionMinimizer',        label: t.value.optDispersion,          desc: t.value.optDispersionDesc },
       { key: 'preferBalancedCaptains',     label: t.value.optBalancedCaptains,    desc: t.value.optBalancedCaptainsDesc },
       { key: 'preferFullFlexDistribution', label: t.value.optFullFlex,            desc: t.value.optFullFlexDesc },
       { key: 'preventSuperteamSynergy',    label: t.value.optSuperteam,           desc: t.value.optSuperteamDesc },
@@ -381,11 +386,16 @@ export default defineComponent({
       }
     };
 
+    const setTries = (value: number) => {
+      const v = Number.isFinite(value) ? Math.round(value) : 1;
+      options.value.triesCount = Math.min(5000, Math.max(1, v));
+    };
+
     return {
       isActive, balanceType, disableType, rankMode, progress, progressPct,
       options, activePreset, rankModeHints, typeOptions, disableOptions,
       presets, advancedOpts, applyPreset, closeModal, downloadSettings,
-      importSettings, balance, t,
+      importSettings, balance, setTries, t,
     };
   },
 });
@@ -531,6 +541,49 @@ export default defineComponent({
   cursor: pointer; transition: .14s;
   svg { width: 14px; height: 14px; flex-shrink: 0; }
   &:hover { border-color: var(--border-strong); color: var(--text); }
+}
+
+/* ── Section description ── */
+.bal-desc {
+  font-size: .72rem;
+  color: var(--text-dim);
+  line-height: 1.45;
+  margin: 0 0 12px;
+}
+
+/* ── Number stepper ── */
+.number-stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+}
+.step-btn {
+  width: 38px; height: 38px;
+  border-radius: 9px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 1.2rem; font-weight: 700;
+  cursor: pointer; transition: .14s;
+  display: grid; place-items: center; line-height: 1;
+  &:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+}
+.number-input {
+  width: 90px; height: 38px;
+  text-align: center;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 1rem; font-weight: 700;
+  outline: none;
+  &:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  /* hide native spinners */
+  &::-webkit-outer-spin-button, &::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* ── Toggle switches ── */
