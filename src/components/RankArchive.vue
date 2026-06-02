@@ -46,9 +46,18 @@
                   <div class="ar-ph-season" v-for="s in ph.seasons" :key="s.seasonId">
                     <div class="ar-ph-season-name">{{ s.seasonName }}</div>
                     <div class="ar-ranks">
-                      <span class="rank-chip tank"    :style="badge(s.ranks.tank)">{{ disp(s.ranks.tank) }}</span>
-                      <span class="rank-chip dps"     :style="badge(s.ranks.dps)">{{ disp(s.ranks.dps) }}</span>
-                      <span class="rank-chip support" :style="badge(s.ranks.support)">{{ disp(s.ranks.support) }}</span>
+                      <span class="rank-chip tank" :style="badge(s.ranks.tank)">
+                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>
+                        <b>{{ disp(s.ranks.tank) }}</b>
+                      </span>
+                      <span class="rank-chip dps" :style="badge(s.ranks.dps)">
+                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>
+                        <b>{{ disp(s.ranks.dps) }}</b>
+                      </span>
+                      <span class="rank-chip support" :style="badge(s.ranks.support)">
+                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                        <b>{{ disp(s.ranks.support) }}</b>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -75,9 +84,18 @@
                   <div class="ar-player" v-for="(ranks, name) in season.players" :key="name">
                     <span class="ar-player-name">{{ name }}</span>
                     <div class="ar-ranks">
-                      <span class="rank-chip tank"    :style="badge(ranks.tank)">{{ disp(ranks.tank) }}</span>
-                      <span class="rank-chip dps"     :style="badge(ranks.dps)">{{ disp(ranks.dps) }}</span>
-                      <span class="rank-chip support" :style="badge(ranks.support)">{{ disp(ranks.support) }}</span>
+                      <span class="rank-chip tank" :style="badge(ranks.tank)">
+                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>
+                        <b>{{ disp(ranks.tank) }}</b>
+                      </span>
+                      <span class="rank-chip dps" :style="badge(ranks.dps)">
+                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>
+                        <b>{{ disp(ranks.dps) }}</b>
+                      </span>
+                      <span class="rank-chip support" :style="badge(ranks.support)">
+                        <svg class="ri-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                        <b>{{ disp(ranks.support) }}</b>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -274,8 +292,17 @@ export default defineComponent({
 .ar-player { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 10px; border-radius: 9px; background: var(--surface-1); border: 1px solid var(--border); }
 .ar-player-name { font-size: .82rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-.ar-ranks { display: flex; gap: 4px; flex-shrink: 0; }
-.rank-chip { font-family: var(--mono); font-size: .68rem; font-weight: 700; padding: 3px 6px; border-radius: 6px; border: 1px solid; min-width: 30px; text-align: center; }
+.ar-ranks { display: flex; gap: 5px; flex-shrink: 0; }
+.rank-chip {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 4px 6px 5px; border-radius: 8px; border: 1px solid;
+  min-width: 38px;
+  b { font-family: var(--mono); font-size: .68rem; font-weight: 700; line-height: 1; }
+}
+.rank-chip .ri-ico { width: 12px; height: 12px; opacity: .9; }
+.rank-chip.tank    .ri-ico { color: var(--tank); }
+.rank-chip.dps     .ri-ico { color: var(--dps); }
+.rank-chip.support .ri-ico { color: var(--support); }
 
 /* History */
 .ar-history { display: flex; flex-direction: column; gap: 12px; }
