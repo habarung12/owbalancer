@@ -227,7 +227,7 @@ export default defineComponent({
 
 .add-btn {
   height: 42px; padding: 0 16px; flex-shrink: 0;
-  background: var(--accent); color: #1a1206;
+  background: var(--accent); color: #ffffff;
   border: none; border-radius: 11px;
   font-family: var(--font); font-size: .88rem; font-weight: 700;
   cursor: pointer; transition: .15s; white-space: nowrap;

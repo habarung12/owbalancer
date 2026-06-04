@@ -177,7 +177,7 @@ export default defineComponent({
 }
 
 .is-locked {
-  border-left: 3px solid rgba(249,158,26,.6) !important;
+  border-left: 3px solid rgba(35,128,177,.6) !important;
   background: var(--accent-soft) !important;
 }
 </style>

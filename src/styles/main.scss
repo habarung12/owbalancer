@@ -19,9 +19,9 @@ body.dark-mode {
   --text-muted:    #a4a9b4;
   --text-dim:      #6b7280;
 
-  --accent:        #f99e1a;
-  --accent-hover:  #ffb13d;
-  --accent-soft:   rgba(249,158,26,.12);
+  --accent:        #2380b1;
+  --accent-hover:  #2f9bd0;
+  --accent-soft:   rgba(35,128,177,.12);
 
   --tank:          #6aa3e0;
   --dps:           #e0685f;
@@ -57,9 +57,9 @@ body:not(.dark-mode) {
   --text:          #14161a;
   --text-muted:    #5c636e;
   --text-dim:      #9aa0aa;
-  --accent:        #e8870b;
-  --accent-hover:  #ce7708;
-  --accent-soft:   rgba(232,135,11,.12);
+  --accent:        #1f72a0;
+  --accent-hover:  #195f86;
+  --accent-soft:   rgba(35,128,177,.12);
   --tank:          #2f76c4;
   --dps:           #cf4338;
   --support:       #2f9b6a;
@@ -87,7 +87,7 @@ body::before {
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(60rem 40rem at 78% -10%, rgba(249,158,26,.06), transparent 60%),
+    radial-gradient(60rem 40rem at 78% -10%, rgba(35,128,177,.06), transparent 60%),
     radial-gradient(50rem 40rem at 0% 110%, rgba(106,163,224,.05), transparent 55%);
 }
 html[data-theme="light"] body::before,
@@ -209,7 +209,7 @@ body.dark-mode .btn {
 body.dark-mode .btn-primary {
   background: var(--accent) !important;
   border: none !important;
-  color: #1a1206 !important;
+  color: #ffffff !important;
 }
 body.dark-mode .btn-primary:hover { background: var(--accent-hover) !important; }
 
@@ -226,7 +226,7 @@ body.dark-mode .btn-secondary:hover {
 body.dark-mode .btn-warning {
   background: var(--accent) !important;
   border: none !important;
-  color: #1a1206 !important;
+  color: #ffffff !important;
 }
 body.dark-mode .btn-danger {
   background: var(--danger) !important;
@@ -252,7 +252,7 @@ body.dark-mode .btn-check + .btn-primary {
 body.dark-mode .btn-check:checked + .btn-primary {
   background: var(--accent) !important;
   border-color: var(--accent) !important;
-  color: #1a1206 !important;
+  color: #ffffff !important;
 }
 
 /* =============================================
@@ -286,7 +286,7 @@ body.dark-mode .action-btn.neutral:hover {
 body.dark-mode .action-btn.primary {
   background: var(--accent) !important;
   border-color: transparent !important;
-  color: #1a1206 !important;
+  color: #ffffff !important;
 }
 body.dark-mode .action-btn.primary:hover { background: var(--accent-hover) !important; }
 body.dark-mode .action-btn.danger {
@@ -301,12 +301,12 @@ body.dark-mode .action-btn.danger:hover {
 }
 body.dark-mode .action-btn.warning {
   background: var(--accent-soft) !important;
-  border: 1px solid rgba(249,158,26,.25) !important;
+  border: 1px solid rgba(35,128,177,.25) !important;
   color: var(--accent) !important;
 }
 body.dark-mode .action-btn.warning-outline {
   background: var(--surface-2) !important;
-  border: 1px solid rgba(249,158,26,.25) !important;
+  border: 1px solid rgba(35,128,177,.25) !important;
   color: var(--accent) !important;
 }
 body.dark-mode .action-btn.icon {
@@ -601,11 +601,11 @@ body.dark-mode .role-row {
 }
 body.dark-mode .role-row.active {
   background: var(--accent-soft) !important;
-  border-color: rgba(249,158,26,.35) !important;
+  border-color: rgba(35,128,177,.35) !important;
 }
 body.dark-mode .role-row.warning {
   background: var(--accent-soft) !important;
-  border-color: rgba(249,158,26,.4) !important;
+  border-color: rgba(35,128,177,.4) !important;
 }
 body.dark-mode .role-row.danger {
   background: var(--danger-soft) !important;
@@ -754,7 +754,7 @@ body.dark-mode .action-btn .btn-icon {
 body.dark-mode .action-btn svg,
 body.dark-mode .action-btn path { color: inherit !important; fill: none !important; stroke: currentColor !important; }
 body.dark-mode .action-btn.primary svg,
-body.dark-mode .action-btn.primary path { stroke: #1a1206 !important; }
+body.dark-mode .action-btn.primary path { stroke: #ffffff !important; }
 
 /* =============================================
    THEME-AGNOSTIC BASE STYLES
@@ -847,7 +847,7 @@ body.dark-mode .action-btn.primary path { stroke: #1a1206 !important; }
   &:hover { border-color: var(--border-strong); color: var(--text); }
 }
 .action-btn.primary {
-  background: var(--accent); border-color: transparent; color: #1a1206;
+  background: var(--accent); border-color: transparent; color: #ffffff;
   &:hover { background: var(--accent-hover); }
 }
 .action-btn.danger {
@@ -855,11 +855,11 @@ body.dark-mode .action-btn.primary path { stroke: #1a1206 !important; }
   &:hover { color: var(--danger); border-color: var(--danger); }
 }
 .action-btn.warning {
-  background: var(--accent-soft); border: 1px solid rgba(249,158,26,.25); color: var(--accent);
-  &:hover { background: rgba(249,158,26,.18); }
+  background: var(--accent-soft); border: 1px solid rgba(35,128,177,.25); color: var(--accent);
+  &:hover { background: rgba(35,128,177,.18); }
 }
 .action-btn.warning-outline {
-  background: var(--surface-2); border: 1px solid rgba(249,158,26,.25); color: var(--accent);
+  background: var(--surface-2); border: 1px solid rgba(35,128,177,.25); color: var(--accent);
 }
 
 /* =============================================
@@ -926,7 +926,7 @@ body:not(.dark-mode) .badge-sr { color: inherit !important; }
 /* Add button */
 body:not(.dark-mode) .add-btn {
   background: var(--accent) !important;
-  color: #1a1206 !important;
+  color: #ffffff !important;
 }
 
 /* Team cards */
@@ -972,7 +972,7 @@ body:not(.dark-mode) .role-row, body:not(.dark-mode) .option-card, body:not(.dar
   border-color: var(--border) !important;
   color: var(--text) !important;
 }
-body:not(.dark-mode) .role-row.active { background: var(--accent-soft) !important; border-color: rgba(249,158,26,.35) !important; }
+body:not(.dark-mode) .role-row.active { background: var(--accent-soft) !important; border-color: rgba(35,128,177,.35) !important; }
 body:not(.dark-mode) .role-name { color: var(--text) !important; }
 body:not(.dark-mode) .role-subtitle, body:not(.dark-mode) .advanced-field label { color: var(--text-dim) !important; }
 body:not(.dark-mode) .advanced-btn { background: var(--surface-3) !important; border-color: var(--border) !important; color: var(--text-muted) !important; }

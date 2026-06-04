@@ -152,9 +152,9 @@ export default defineComponent({
 .topbar-pill-right { padding: 8px; }
 .ctrl-archive {
   background: var(--accent-soft);
-  border-color: rgba(249,158,26,.3);
+  border-color: rgba(35,128,177,.3);
   color: var(--accent);
-  &:hover { background: rgba(249,158,26,.18); border-color: rgba(249,158,26,.45); color: var(--accent); }
+  &:hover { background: rgba(35,128,177,.18); border-color: rgba(35,128,177,.45); color: var(--accent); }
 }
 
 .topbar-pill {
@@ -182,13 +182,13 @@ export default defineComponent({
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  background: linear-gradient(145deg, #f99e1a, #c9760a);
-  box-shadow: 0 4px 14px rgba(249,158,26,.3);
+  background: linear-gradient(145deg, #2380b1, #18638c);
+  box-shadow: 0 4px 14px rgba(35,128,177,.3);
 
   :deep(svg), :deep(img) {
     width: 20px !important;
     height: 20px !important;
-    filter: brightness(0) !important;
+    filter: brightness(0) invert(1) !important;
   }
 }
 .brand-text { display: flex; flex-direction: column; }

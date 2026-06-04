@@ -270,7 +270,7 @@ export default defineComponent({
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  accent-color: #f59e0b;
+  accent-color: #2380b1;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>

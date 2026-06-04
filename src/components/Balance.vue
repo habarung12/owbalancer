@@ -434,10 +434,10 @@ export default defineComponent({
 .bal-header-left { display: flex; align-items: center; gap: 14px; }
 .bal-icon {
   width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
-  background: linear-gradient(145deg, var(--accent), #c9760a);
-  box-shadow: 0 4px 14px rgba(249,158,26,.3);
+  background: linear-gradient(145deg, var(--accent), #18638c);
+  box-shadow: 0 4px 14px rgba(35,128,177,.3);
   display: grid; place-items: center;
-  svg { width: 20px; height: 20px; stroke: #1a1206; }
+  svg { width: 20px; height: 20px; stroke: #ffffff; }
 }
 .bal-title { font-size: 1.15rem; font-weight: 800; letter-spacing: -.03em; color: var(--text); margin: 0; line-height: 1; }
 .bal-subtitle { font-size: .72rem; color: var(--text-dim); margin: 3px 0 0; }
@@ -486,7 +486,7 @@ export default defineComponent({
   background: var(--surface-3); border: 1px solid var(--border);
   cursor: pointer; transition: .15s; text-align: center;
   &:hover { border-color: var(--border-strong); }
-  &.active { background: var(--accent-soft); border-color: rgba(249,158,26,.4); }
+  &.active { background: var(--accent-soft); border-color: rgba(35,128,177,.4); }
 }
 .tc-icon { :deep(svg) { width: 20px; height: 20px; stroke: var(--text-muted); } }
 .type-card.active .tc-icon :deep(svg) { stroke: var(--accent); }
@@ -500,7 +500,7 @@ export default defineComponent({
   background: var(--surface-3); border: 1px solid var(--border);
   color: var(--text-muted); cursor: pointer; font-family: var(--font); transition: .14s;
   &:hover { border-color: var(--border-strong); color: var(--text); }
-  &.active { background: var(--accent); border-color: transparent; color: #1a1206; }
+  &.active { background: var(--accent); border-color: transparent; color: #ffffff; }
 }
 
 /* ── Rank mode ── */
@@ -526,7 +526,7 @@ export default defineComponent({
   background: var(--surface-3); border: 1px solid var(--border);
   cursor: pointer; transition: .14s; text-align: left; font-family: var(--font);
   &:hover { border-color: var(--border-strong); }
-  &.active { background: var(--accent-soft); border-color: rgba(249,158,26,.4); }
+  &.active { background: var(--accent-soft); border-color: rgba(35,128,177,.4); }
 }
 .pc-name { font-size: .84rem; font-weight: 700; color: var(--text); }
 .pc-desc { font-size: .72rem; color: var(--text-dim); }
@@ -607,7 +607,7 @@ export default defineComponent({
   position: absolute; top: 3px; left: 3px;
   width: 14px; height: 14px; border-radius: 50%;
   background: var(--text-dim); transition: .18s;
-  .toggle-switch.on & { left: 19px; background: #1a1206; }
+  .toggle-switch.on & { left: 19px; background: #ffffff; }
 }
 
 /* ── Sliders ── */
@@ -671,12 +671,12 @@ export default defineComponent({
 }
 .bal-btn-run {
   height: 40px; padding: 0 24px; border-radius: 10px;
-  background: linear-gradient(135deg, var(--accent), #e07e00); border: none;
-  color: #1a1206; font-family: var(--font); font-size: .9rem; font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #1c6c97); border: none;
+  color: #ffffff; font-family: var(--font); font-size: .9rem; font-weight: 700;
   cursor: pointer; transition: .15s; display: flex; align-items: center; gap: 8px;
-  box-shadow: 0 4px 16px rgba(249,158,26,.3);
-  svg { width: 14px; height: 14px; stroke: #1a1206; }
-  &:hover { box-shadow: 0 6px 24px rgba(249,158,26,.45); transform: translateY(-1px); }
+  box-shadow: 0 4px 16px rgba(35,128,177,.3);
+  svg { width: 14px; height: 14px; stroke: #ffffff; }
+  &:hover { box-shadow: 0 6px 24px rgba(35,128,177,.45); transform: translateY(-1px); }
   &:active { transform: none; }
 }
 

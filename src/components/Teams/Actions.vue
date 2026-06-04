@@ -121,9 +121,9 @@ export default defineComponent({
 .primary {
   background: var(--accent);
   border: 1px solid transparent;
-  color: #1a1206;
+  color: #ffffff;
   &:hover { background: var(--accent-hover); }
-  svg, path { stroke: #1a1206 !important; }
+  svg, path { stroke: #ffffff !important; }
 }
 .neutral {
   background: var(--surface-2);
@@ -139,13 +139,13 @@ export default defineComponent({
 }
 .warning {
   background: var(--accent-soft);
-  border: 1px solid rgba(249,158,26,.3);
+  border: 1px solid rgba(35,128,177,.3);
   color: var(--accent);
-  &:hover { background: rgba(249,158,26,.2); }
+  &:hover { background: rgba(35,128,177,.2); }
 }
 .warning-outline {
   background: var(--surface-2);
-  border: 1px solid rgba(249,158,26,.25);
+  border: 1px solid rgba(35,128,177,.25);
   color: var(--accent);
   &:hover { background: var(--accent-soft); }
 }

@@ -275,9 +275,9 @@ export default defineComponent({
 .ar-header-left { display: flex; align-items: center; gap: 14px; }
 .ar-icon {
   width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
-  background: linear-gradient(145deg, var(--accent), #c9760a);
-  box-shadow: 0 4px 14px rgba(249,158,26,.3); display: grid; place-items: center;
-  svg { width: 20px; height: 20px; stroke: #1a1206; }
+  background: linear-gradient(145deg, var(--accent), #18638c);
+  box-shadow: 0 4px 14px rgba(35,128,177,.3); display: grid; place-items: center;
+  svg { width: 20px; height: 20px; stroke: #ffffff; }
 }
 .ar-title { font-size: 1.15rem; font-weight: 800; letter-spacing: -.03em; color: var(--text); margin: 0; line-height: 1; }
 .ar-subtitle { font-size: .72rem; color: var(--text-dim); margin: 3px 0 0; }
@@ -296,7 +296,7 @@ export default defineComponent({
 .ar-snapshot {
   display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
   height: 38px; padding: 0 16px; border-radius: 10px;
-  background: var(--accent); border: none; color: #1a1206;
+  background: var(--accent); border: none; color: #ffffff;
   font-family: var(--font); font-size: .84rem; font-weight: 700; cursor: pointer; transition: .15s;
   svg { width: 15px; height: 15px; }
   &:hover { background: var(--accent-hover); transform: translateY(-1px); }

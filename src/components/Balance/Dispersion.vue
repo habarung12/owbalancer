@@ -69,7 +69,7 @@ export default defineComponent({
   left: 0; right: 0;
   height: 6px;
   border-radius: 99px;
-  background: linear-gradient(to right, #6aa3e0 0%, #5fd3c4 30%, var(--surface-3) 50%, #f99e1a 70%, #e0685f 100%);
+  background: linear-gradient(to right, #6aa3e0 0%, #5fd3c4 30%, var(--surface-3) 50%, #2380b1 70%, #e0685f 100%);
   pointer-events: none;
 }
 .styled-range {

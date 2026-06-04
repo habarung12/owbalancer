@@ -70,7 +70,7 @@ export default defineComponent({
 .seg-btn:hover { color: var(--text); }
 .seg-input:checked + .seg-btn {
   background: var(--accent);
-  color: #1a1206;
-  box-shadow: 0 2px 8px rgba(249,158,26,.3);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(35,128,177,.3);
 }
 </style>

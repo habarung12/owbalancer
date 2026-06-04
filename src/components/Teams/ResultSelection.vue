@@ -121,9 +121,9 @@ export default defineComponent({
 .rs-header-left { display: flex; align-items: center; gap: 14px; }
 .rs-icon {
   width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
-  background: linear-gradient(145deg, var(--accent), #c9760a);
-  box-shadow: 0 4px 14px rgba(249,158,26,.3); display: grid; place-items: center;
-  svg { width: 20px; height: 20px; stroke: #1a1206; }
+  background: linear-gradient(145deg, var(--accent), #18638c);
+  box-shadow: 0 4px 14px rgba(35,128,177,.3); display: grid; place-items: center;
+  svg { width: 20px; height: 20px; stroke: #ffffff; }
 }
 .rs-title { font-size: 1.15rem; font-weight: 800; letter-spacing: -.03em; color: var(--text); margin: 0; line-height: 1; }
 .rs-subtitle { font-size: .72rem; color: var(--text-dim); margin: 3px 0 0; }

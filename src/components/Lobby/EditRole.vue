@@ -386,8 +386,8 @@ export default defineComponent({
 }
 
 .role-row.active {
-  border-color: rgba(245,158,11,0.35);
-  background: rgba(245,158,11,0.06);
+  border-color: rgba(35,128,177,0.4);
+  background: rgba(35,128,177,0.08);
 }
 .role-row.warning {
   border-color: rgba(245,158,11,0.4);
@@ -605,10 +605,10 @@ export default defineComponent({
   box-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 .role-toggle input:checked + span {
-  background: #f59e0b;
+  background: #2380b1;
 }
 .role-toggle input:checked + span::after {
-  background: #111;
+  background: #fff;
   transform: translateX(18px);
 }
 </style>

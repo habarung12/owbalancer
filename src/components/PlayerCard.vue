@@ -192,7 +192,7 @@ export default defineComponent({
   color: #f4f5f7;
 }
 .crown {
-  color: #f99e1a;
+  color: #2380b1;
   flex-shrink: 0;
   display: flex;
   :deep(svg) { width: 14px !important; height: 14px !important; fill: currentColor !important; }

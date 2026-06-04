@@ -155,7 +155,7 @@ export default defineComponent({
 }
 .result-card.selected {
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent), 0 8px 24px rgba(249,158,26,.15);
+  box-shadow: 0 0 0 1px var(--accent), 0 8px 24px rgba(35,128,177,.15);
 }
 .result-card.recommended {
   border-color: rgba(111,197,154,.4);
@@ -202,7 +202,7 @@ export default defineComponent({
 .rc-selected-badge {
   position: absolute; top: 12px; right: 12px;
   font-size: .6rem; font-weight: 700; text-transform: uppercase;
-  color: #1a1206; background: var(--accent);
+  color: #ffffff; background: var(--accent);
   padding: 3px 8px; border-radius: 6px;
 }
 
