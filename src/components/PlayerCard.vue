@@ -168,6 +168,9 @@ export default defineComponent({
   cursor: grab;
   width: 100%;
   min-height: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: element;
 }
 .player-card-item:active { cursor: grabbing; }
 

@@ -269,7 +269,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .ep-overlay {
-  position: fixed; inset: 0; z-index: 1055;
+  position: fixed; inset: 0; z-index: 1075;
   background: rgba(0,0,0,.65); backdrop-filter: blur(4px);
   display: flex; align-items: center; justify-content: center; padding: 16px;
 }
