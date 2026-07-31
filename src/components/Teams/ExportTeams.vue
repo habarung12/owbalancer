@@ -109,9 +109,9 @@ export default defineComponent({
 
     const exportCSV = () => {
       const { teams } = store.state;
-      let text = 'Team;Role;Rank;Name;Captain;Squire\n';
+      let text = 'Team#;Team;Role;Rank;Name;Captain;Squire\n';
 
-      const extendText = teams.reduce((acc, team) => {
+      const extendText = teams.reduce((acc, team, teamIndex) => {
         let teamText = '';
 
         ['tank', 'dps', 'support'].forEach((role) => {
@@ -121,7 +121,7 @@ export default defineComponent({
               const { isCaptain } =
                 store.state.players[member.uuid].identity;
 
-              teamText = `${teamText}"${team.name}";"${member.role}";"${member.rank}";"${member.name}";${isCaptain ? '1' : '0'};0\n`;
+              teamText = `${teamText}${teamIndex + 1};"${team.name}";"${member.role}";"${member.rank}";"${member.name}";${isCaptain ? '1' : '0'};0\n`;
             });
         });
 

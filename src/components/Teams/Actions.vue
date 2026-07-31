@@ -23,6 +23,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M2 12h20"/></svg>
       {{ t.empty }}
     </button>
+    <import-teams />
     <export-teams />
   </div>
 </template>
@@ -36,11 +37,12 @@ import MutationTypes from '@/store/mutation-types';
 import TObj from '@/objects/team';
 
 import ExportTeams from '@/components/Teams/ExportTeams.vue';
+import ImportTeams from '@/components/Teams/ImportTeams.vue';
 import { t } from '@/i18n';
 
 export default defineComponent({
   name: 'Actions',
-  components: { ExportTeams },
+  components: { ExportTeams, ImportTeams },
   setup() {
     const store = useStore();
 

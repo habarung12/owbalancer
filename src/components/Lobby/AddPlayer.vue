@@ -204,8 +204,8 @@ export default defineComponent({
       modalText.value = text; isModalActive.value = true;
     };
     const exportCSV = () => {
-      let text = 'Team;Role;Rank;Name;Captain\n';
-      store.state.teams.forEach(team => { ['tank','dps','support'].forEach(role => { team.members.filter(m=>m.role===role).forEach(m => { text += `"${team.name}";"${m.role}";"${m.rank}";"${m.name}";${store.state.players[m.uuid].identity.isCaptain?1:0}\n`; }); }); });
+      let text = 'Team#;Team;Role;Rank;Name;Captain\n';
+      store.state.teams.forEach((team, teamIndex) => { ['tank','dps','support'].forEach(role => { team.members.filter(m=>m.role===role).forEach(m => { text += `${teamIndex + 1};"${team.name}";"${m.role}";"${m.rank}";"${m.name}";${store.state.players[m.uuid].identity.isCaptain?1:0}\n`; }); }); });
       modalText.value = text; isModalActive.value = true;
     };
     const exportCaptains = () => {
