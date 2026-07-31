@@ -32,15 +32,19 @@
                 {{ group.label }}
               </div>
               <div class="tv-role-members">
-                <player-card
-                  v-for="member in group.members"
-                  :key="member.uuid"
-                  :player="players[member.uuid]"
-                  :prefferedRank="member.rank"
-                  :rankRole="showBalancerSR ? undefined : member.role"
-                  :teamUuid="team.uuid"
-                />
-                <div v-if="group.members.length === 0" class="tv-empty">{{ t.emptySlot }}</div>
+                <template v-for="(member, i) in group.slots" :key="i">
+                  <player-card
+                    v-if="member"
+                    :player="players[member.uuid]"
+                    :prefferedRank="member.rank"
+                    :rankRole="showBalancerSR ? undefined : member.role"
+                    :teamUuid="team.uuid"
+                  />
+                  <button v-else type="button" class="tv-empty" @click="openPicker(group.role)">
+                    <span>{{ t.emptySlot }}</span>
+                    <span class="tv-empty-add">+</span>
+                  </button>
+                </template>
               </div>
             </div>
           </div>
@@ -53,20 +57,27 @@
       </div>
     </transition>
   </teleport>
+
+  <player-picker :open="!!pickerRtype" :rtype="pickerRtype ?? undefined" @close="pickerRtype = null" @select="onPick" />
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType, ref } from 'vue';
 import { t } from '@/i18n';
 import { useStore } from '@/store';
 import { Team } from '@/objects/team';
+import PObj from '@/objects/player';
+import MutationTypes from '@/store/mutation-types';
 
 import RoleIcon from '@/components/svg/RoleIcon.vue';
 import PlayerCard from '@/components/PlayerCard.vue';
+import PlayerPicker from '@/components/Teams/PlayerPicker.vue';
+
+const TEAM_SIZE = { tank: 1, dps: 2, support: 2 };
 
 export default defineComponent({
   name: 'TeamView',
-  components: { RoleIcon, PlayerCard },
+  components: { RoleIcon, PlayerCard, PlayerPicker },
   props: {
     team: Object as PropType<Team | null>,
   },
@@ -75,6 +86,7 @@ export default defineComponent({
     const store = useStore();
     const players = computed(() => store.state.players);
     const showBalancerSR = computed(() => store.state.showBalancerSR);
+    const pickerRtype = ref<'tank' | 'dps' | 'support' | null>(null);
 
     const teamAverage = computed(() => {
       if (!props.team || props.team.members.length === 0) return 0;
@@ -95,15 +107,40 @@ export default defineComponent({
         { role: 'dps', label: t.value.teamDamage },
         { role: 'support', label: t.value.teamSupport },
       ];
-      return roles.map(r => ({
-        ...r,
-        members: props.team?.members.filter(m => m.role === r.role) || [],
-      }));
+      return roles.map(r => {
+        const members = props.team?.members.filter(m => m.role === r.role) || [];
+        const slots = Array.from({ length: TEAM_SIZE[r.role] }, (_, i) => members[i] || null);
+        return { ...r, slots };
+      });
     });
+
+    const openPicker = (role: 'tank' | 'dps' | 'support') => { pickerRtype.value = role; };
+
+    const onPick = (playerId: string) => {
+      const role = pickerRtype.value;
+      if (!role || !props.team) return;
+
+      const player = players.value[playerId];
+      if (!player) return;
+
+      const playerRole = PObj.getRole(player.stats.classes, role);
+      if (!playerRole.isActive) return;
+
+      store.commit(MutationTypes.REMOVE_FROM_RESERVE, playerId);
+      store.commit(MutationTypes.ADD_TEAMPLAYER, {
+        teamUuid: props.team.uuid,
+        playerId,
+        role: playerRole,
+        roleName: role,
+        playerName: player.identity.name,
+        primary: playerRole.primary,
+        secondary: playerRole.secondary,
+      });
+    };
 
     const close = () => emit('close');
 
-    return { players, showBalancerSR, teamAverage, roleGroups, close, t };
+    return { players, showBalancerSR, teamAverage, roleGroups, pickerRtype, openPicker, onPick, close, t };
   },
 });
 </script>
@@ -173,9 +210,15 @@ export default defineComponent({
 .tv-role-members :deep(.badge-sr) { font-size: .92rem !important; }
 
 .tv-empty {
-  padding: 12px 14px; border: 1px dashed var(--border-strong); border-radius: 12px;
-  color: var(--text-dim); font-size: .82rem; text-align: center;
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 12px 14px;
+  border: 1px dashed var(--border-strong); border-radius: 12px;
+  background: transparent; cursor: pointer; font-family: var(--font);
+  color: var(--text-dim); font-size: .82rem; text-align: left;
+  transition: border-color .14s, background .14s, color .14s;
+  &:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
 }
+.tv-empty-add { font-size: .95rem; font-weight: 700; }
 
 .tv-footer { display: flex; align-items: center; justify-content: flex-end; padding: 16px 24px; border-top: 1px solid var(--border); flex-shrink: 0; background: var(--surface-2); }
 .tv-btn-close { height: 40px; padding: 0 20px; border-radius: 10px; background: var(--surface-3); border: 1px solid var(--border); color: var(--text-muted); font-family: var(--font); font-size: .86rem; font-weight: 600; cursor: pointer; transition: .15s; &:hover { border-color: var(--border-strong); color: var(--text); } }

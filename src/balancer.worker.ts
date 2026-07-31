@@ -1,5 +1,5 @@
 import * as Comlink from 'comlink';
-import init, { balance, balance_half, balance_final } from '@rust/owbalancer';
+import init, { balance, balance_half, balance_final, balance_equalize } from '@rust/owbalancer';
 import wasmFileUrl from '@rust/owbalancer/owbalancer_bg.wasm?url';
 
 export default class WasmWorker {
@@ -109,6 +109,30 @@ export default class WasmWorker {
           preferFullFlexDistribution,
           preventSuperteamSynergy,
           reserveCopy,
+          teamsCopy,
+          adjustSr
+        )
+      );
+    });
+  }
+
+  equalizeBalance(data) {
+    const {
+      players,
+      range,
+      lowRankLimiter,
+      disallowSecondaryRoles,
+      teamsCopy,
+      adjustSr,
+    } = JSON.parse(data);
+
+    return new Promise((resolve) => {
+      resolve(
+        balance_equalize(
+          players,
+          range,
+          lowRankLimiter,
+          disallowSecondaryRoles,
           teamsCopy,
           adjustSr
         )

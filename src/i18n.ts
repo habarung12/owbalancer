@@ -60,6 +60,7 @@ const dictionary = {
     viewTeam: 'View team',
     pickPlayer: 'Add player',
     pickPlayerEmpty: 'No eligible players for this role',
+    dropPlayerHere: 'No players here — drag a player back or add one above',
 
     // Balance modal
     balanceSetup: 'Balance Setup',
@@ -70,7 +71,10 @@ const dictionary = {
     balanceHalf: 'Half',
     balanceHalfDesc: 'Keep current teams as base',
     balanceFinal: 'Final',
-    balanceFinalDesc: 'Refine existing balance result',
+    balanceFinalDesc: 'Fill remaining empty slots from reserved players',
+    balanceEqualize: 'Equalize',
+    balanceEqualizeDesc: 'Swap players between existing teams to even out SR',
+    balanceNoTeams: 'No teams exist yet — create teams first',
     disableSlot: 'Disable slot',
     rankMode: 'Rank Mode',
     rankModeAdaptive: 'Adaptive — auto risk based',
@@ -272,6 +276,7 @@ const dictionary = {
     viewTeam: 'Просмотр команды',
     pickPlayer: 'Добавить игрока',
     pickPlayerEmpty: 'Нет подходящих игроков для этой роли',
+    dropPlayerHere: 'Здесь пока никого — перетащи игрока обратно или добавь через поле выше',
 
     // Balance modal
     balanceSetup: 'Настройка баланса',
@@ -282,7 +287,10 @@ const dictionary = {
     balanceHalf: 'Частичный',
     balanceHalfDesc: 'Взять текущие команды за основу',
     balanceFinal: 'Финальный',
-    balanceFinalDesc: 'Улучшить существующий результат',
+    balanceFinalDesc: 'Заполнить пустые слоты игроками из резерва',
+    balanceEqualize: 'Уравнивание',
+    balanceEqualizeDesc: 'Обменять игроков между командами, чтобы выровнять SR',
+    balanceNoTeams: 'Команд пока нет — сначала создай команды',
     disableSlot: 'Отключить слот',
     rankMode: 'Режим рангов',
     rankModeAdaptive: 'Адаптивный — авто на основе рисков',

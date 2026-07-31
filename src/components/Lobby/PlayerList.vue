@@ -5,6 +5,7 @@
 
     <div
       class="player-list"
+      :class="{ 'is-empty': state.players.length === 0 }"
       @dragover="allowDrop"
       @drop="drop"
     >
@@ -22,6 +23,7 @@
         :lobby="lobby"
         @click="e => click(e, uuid)"
       />
+      <div v-if="state.players.length === 0" class="player-list-empty">{{ t.dropPlayerHere }}</div>
     </div>
   </div>
 </template>
@@ -31,6 +33,7 @@ import { computed, defineComponent, PropType, reactive } from 'vue';
 import orderBy from 'lodash/orderBy';
 
 import { useStore } from '@/store';
+import { t } from '@/i18n';
 import MutationTypes from '@/store/mutation-types';
 
 import PlayerFilter from '@/components/Lobby/Filter.vue';
@@ -131,7 +134,7 @@ export default defineComponent({
       }
     };
 
-    return { state, sort, filter, allowDrop, drop, click, marked, duplicates };
+    return { state, sort, filter, allowDrop, drop, click, marked, duplicates, t };
   },
 });
 </script>
@@ -146,6 +149,26 @@ export default defineComponent({
   overflow-y: auto;
   padding-right: 4px;
   padding-bottom: 2px;
+}
+
+/* Keep a sizable drop target even with no cards, so dragging a player
+   back into an empty lobby list stays reliable. */
+.player-list.is-empty {
+  min-height: 90px;
+}
+
+.player-list-empty {
+  flex: 1;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 10px;
+  color: var(--text-dim);
+  font-size: .8rem;
 }
 
 /* Each direct child gets spacing — belt + suspenders */

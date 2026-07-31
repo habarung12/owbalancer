@@ -276,6 +276,7 @@ export default defineComponent({
       { value: 'full',  label: t.value.balanceFull,  desc: t.value.balanceFullDesc,  icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>' },
       { value: 'half',  label: t.value.balanceHalf,  desc: t.value.balanceHalfDesc,  icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>' },
       { value: 'final', label: t.value.balanceFinal, desc: t.value.balanceFinalDesc, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>' },
+      { value: 'equalize', label: t.value.balanceEqualize, desc: t.value.balanceEqualizeDesc, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 16l-4-4 4-4M17 8l4 4-4 4M3 12h18"/></svg>' },
     ]);
 
     const disableOptions = computed(() => [
@@ -347,10 +348,10 @@ export default defineComponent({
       return Math.max(cur, reg, man, peak > 0 ? Math.max(peak - 200, 0) : 0);
     };
 
-    const getBalancePlayers = (): Players => {
+    const getBalancePlayers = (includeExcluded = false): Players => {
       const result: Players = {};
       Object.entries(store.state.players).forEach(([id, player]) => {
-        if (player.identity.excludeFromBalance) return;
+        if (player.identity.excludeFromBalance && !includeExcluded) return;
         result[id] = { ...player, stats: { ...player.stats, classes: {
           dps:     { ...player.stats.classes.dps,     rank: getModeRank(player.stats.classes.dps) },
           tank:    { ...player.stats.classes.tank,    rank: getModeRank(player.stats.classes.tank) },
@@ -369,6 +370,12 @@ export default defineComponent({
         alert('Please select at least one captain');
         return;
       }
+
+      if ((balanceType.value === 'final' || balanceType.value === 'equalize') && store.state.teams.length === 0) {
+        alert(t.value.balanceNoTeams);
+        return;
+      }
+
       const teamsCopy = [...store.state.teams];
       const reserveCopy = [...store.state.reservedPlayers];
       store.commit(MutationTypes.CLEAR_TEAMS, undefined);
@@ -393,6 +400,8 @@ export default defineComponent({
           results = await lib.halfBalance(JSON.stringify(payload));
         } else if (balanceType.value === 'final') {
           results = await lib.finalBalance(JSON.stringify({ ...payload, reserveCopy, teamsCopy }));
+        } else if (balanceType.value === 'equalize') {
+          results = await lib.equalizeBalance(JSON.stringify({ ...payload, players: getBalancePlayers(true), teamsCopy }));
         } else {
           results = await lib.fullBalance(JSON.stringify({ ...payload, disableType: disableType.value, dispersionMinimizer: options.value.dispersionMinimizer, triesCount: options.value.triesCount }));
         }
@@ -515,7 +524,7 @@ export default defineComponent({
 }
 
 /* ── Balance type cards ── */
-.type-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.type-cards { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
 .type-card {
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   padding: 12px 8px; border-radius: 10px;

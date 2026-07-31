@@ -226,3 +226,37 @@ pub fn balance_final(
 
     to_js(&results)
 }
+
+#[wasm_bindgen]
+pub fn balance_equalize(
+    player_data: &JsValue,
+    tolerance: u32,
+    rank_limiter: bool,
+    duplicate_roles: bool,
+    teams_data: &JsValue,
+    adjust_sr: &JsValue,
+) -> JsValue {
+    let mut players: Players = from_js(player_data);
+    let adjust: AdjustSr = from_js(adjust_sr);
+    players.adjust_sr(adjust);
+
+    let teams: Teams = from_js(teams_data);
+
+    let mut matchmaking = Matchmaking::new(
+        &players,
+        tolerance,
+        rank_limiter,
+        duplicate_roles,
+        false,
+        false,
+        false,
+    );
+
+    matchmaking.add_teams(teams);
+    matchmaking.equalize();
+
+    let mut results = Vec::default();
+    results.push(matchmaking.result());
+
+    to_js(&results)
+}

@@ -389,14 +389,16 @@ impl Team {
                     let newdisp1 = (newsr - avg).abs();
                     let newdisp2 = (newsr2 - avg).abs();
 
+                    let role_slots = if mem.role == SimpleRole::Tank { 1 } else { 2 };
+
                     let team1_role_sr = self.total_role_sr(&mem.role);
                     let team2_role_sr = team.total_role_sr(&mem2.role);
 
-                    let team1_role_avg = team1_role_sr / 2;
-                    let team2_role_avg = team2_role_sr / 2;
+                    let team1_role_avg = team1_role_sr / role_slots;
+                    let team2_role_avg = team2_role_sr / role_slots;
 
-                    let new_role_avg = (team1_role_sr - mem.rank + mem2.rank) / 2;
-                    let new_role_avg2 = (team.total_role_sr(&mem2.role) - mem2.rank + mem.rank) / 2;
+                    let new_role_avg = (team1_role_sr - mem.rank + mem2.rank) / role_slots;
+                    let new_role_avg2 = (team.total_role_sr(&mem2.role) - mem2.rank + mem.rank) / role_slots;
 
                     let role_disp1 = (team1_role_avg - global_role_avg).abs();
                     let role_disp2 = (team2_role_avg - global_role_avg).abs();

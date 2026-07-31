@@ -135,6 +135,112 @@ impl<'a> Matchmaking<'a> {
         self.teams.sort(Direction::ASC);
     }
 
+    /// Finds the same-role swap between two teams that most reduces the
+    /// gap between their average SR, skipping captains/squires (anchors
+    /// stay put). Returns None if no swap improves on the current gap.
+    fn best_equalizing_swap(&self, t1: usize, t2: usize) -> Option<(usize, usize)> {
+        let team1 = &self.teams.0[t1];
+        let team2 = &self.teams.0[t2];
+
+        let n1 = team1.members_count() as f32;
+        let n2 = team2.members_count() as f32;
+
+        if n1 == 0.0 || n2 == 0.0 {
+            return None;
+        }
+
+        let mut best: Option<(usize, usize)> = None;
+        let mut best_gap = (team1.avg_sr - team2.avg_sr).abs();
+
+        for (i, m1) in team1.members.iter().enumerate() {
+            let p1 = match self.players.0.get(m1.uuid.as_str()) {
+                Some(p) => p,
+                None => continue,
+            };
+
+            if p1.identity.is_captain || p1.identity.is_squire {
+                continue;
+            }
+
+            for (j, m2) in team2.members.iter().enumerate() {
+                if m1.role != m2.role {
+                    continue;
+                }
+
+                let p2 = match self.players.0.get(m2.uuid.as_str()) {
+                    Some(p) => p,
+                    None => continue,
+                };
+
+                if p2.identity.is_captain || p2.identity.is_squire {
+                    continue;
+                }
+
+                let new_avg1 = (team1.total_sr - m1.rank + m2.rank) as f32 / n1;
+                let new_avg2 = (team2.total_sr - m2.rank + m1.rank) as f32 / n2;
+                let new_gap = (new_avg1 - new_avg2).abs();
+
+                if new_gap < best_gap {
+                    best_gap = new_gap;
+                    best = Some((i, j));
+                }
+            }
+        }
+
+        best
+    }
+
+    /// Repeatedly swaps same-role players between the currently highest-
+    /// and lowest-average teams to level everyone out, stopping once the
+    /// spread is within tolerance or no further improving swap exists.
+    pub fn equalize(&mut self) {
+        self.teams.update();
+
+        let tolerance = self.config.tolerance as f32;
+        let max_iterations = 500;
+        let mut iterations = 0;
+
+        loop {
+            iterations += 1;
+            if iterations > max_iterations {
+                break;
+            }
+
+            let mut hi: Option<usize> = None;
+            let mut lo: Option<usize> = None;
+
+            for (i, team) in self.teams.0.iter().enumerate() {
+                if team.members_count() == 0 {
+                    continue;
+                }
+                if hi.is_none() || team.avg_sr > self.teams.0[hi.unwrap()].avg_sr {
+                    hi = Some(i);
+                }
+                if lo.is_none() || team.avg_sr < self.teams.0[lo.unwrap()].avg_sr {
+                    lo = Some(i);
+                }
+            }
+
+            let (hi, lo) = match (hi, lo) {
+                (Some(h), Some(l)) if h != l => (h, l),
+                _ => break,
+            };
+
+            if (self.teams.0[hi].avg_sr - self.teams.0[lo].avg_sr).abs() <= tolerance {
+                break;
+            }
+
+            match self.best_equalizing_swap(hi, lo) {
+                Some((mi, mj)) => {
+                    self.teams.swap(hi, mi, lo, mj);
+                }
+                None => break,
+            }
+        }
+
+        self.teams.sort(Direction::ASC);
+    }
+
     pub fn balance_remaining(&mut self) {
         self.init_pool(true);
         self.distribute_fillers();
