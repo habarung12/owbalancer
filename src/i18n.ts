@@ -58,6 +58,8 @@ const dictionary = {
     excludeBalanceDesc: 'Balancer will skip this player when building teams',
     removeFromTeam: 'Remove from team',
     viewTeam: 'View team',
+    pickPlayer: 'Add player',
+    pickPlayerEmpty: 'No eligible players for this role',
 
     // Balance modal
     balanceSetup: 'Balance Setup',
@@ -268,6 +270,8 @@ const dictionary = {
     excludeBalanceDesc: 'Балансер будет пропускать этого игрока при составлении команд',
     removeFromTeam: 'Убрать из команды',
     viewTeam: 'Просмотр команды',
+    pickPlayer: 'Добавить игрока',
+    pickPlayerEmpty: 'Нет подходящих игроков для этой роли',
 
     // Balance modal
     balanceSetup: 'Настройка баланса',

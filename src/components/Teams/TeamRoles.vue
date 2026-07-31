@@ -14,15 +14,18 @@
       :rankRole="showBalancerSR ? undefined : members[i - 1].role"
       :teamUuid="teamUuid"
     />
-    <div v-else class="empty-slot">
+    <button v-else type="button" class="empty-slot" @click="openPicker">
       <div class="empty-dot"></div>
       <span class="empty-text">{{ t.emptySlot }}</span>
-    </div>
+      <span class="empty-add">+</span>
+    </button>
   </li>
+
+  <player-picker :open="pickerOpen" :rtype="rtype" @close="pickerOpen = false" @select="onPick" />
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType, ref } from 'vue';
 import { t } from '@/i18n';
 
 import PObj from '@/objects/player';
@@ -30,6 +33,7 @@ import { useStore } from '@/store';
 
 import RoleIcon from '@/components/svg/RoleIcon.vue';
 import PlayerCard from '@/components/PlayerCard.vue';
+import PlayerPicker from '@/components/Teams/PlayerPicker.vue';
 import MutationTypes from '@/store/mutation-types';
 
 export default defineComponent({
@@ -41,10 +45,34 @@ export default defineComponent({
       { uuid: string; name: string; primary: boolean; secondary: boolean }[]
     >,
   },
-  components: { RoleIcon, PlayerCard },
+  components: { RoleIcon, PlayerCard, PlayerPicker },
   setup(props) {
     const store = useStore();
     const players = computed(() => store.state.players);
+    const pickerOpen = ref(false);
+
+    const openPicker = () => { pickerOpen.value = true; };
+
+    const onPick = (playerId: string) => {
+      if (!props.rtype || !props.teamUuid) return;
+
+      const player = players.value[playerId];
+      if (!player) return;
+
+      const role = PObj.getRole(player.stats.classes, props.rtype);
+      if (!role.isActive) return;
+
+      store.commit(MutationTypes.REMOVE_FROM_RESERVE, playerId);
+      store.commit(MutationTypes.ADD_TEAMPLAYER, {
+        teamUuid: props.teamUuid,
+        playerId,
+        role,
+        roleName: props.rtype,
+        playerName: player.identity.name,
+        primary: role.primary,
+        secondary: role.secondary,
+      });
+    };
 
     const teamSize = {
       tank: 1,
@@ -159,7 +187,7 @@ export default defineComponent({
 
     const showBalancerSR = computed(() => store.state.showBalancerSR);
 
-    return { players, allowDrop, drop, showBalancerSR, teamSize, t };
+    return { players, allowDrop, drop, showBalancerSR, teamSize, pickerOpen, openPicker, onPick, t };
   },
 });
 </script>
@@ -181,13 +209,28 @@ export default defineComponent({
   gap: 10px;
   padding: 11px 14px;
   min-height: 46px;
+  width: 100%;
   border: 1px dashed var(--border-strong);
   border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font);
   transition: border-color .14s, background .14s;
 }
 .team-role-slot.empty:hover .empty-slot {
   border-color: var(--accent);
   background: var(--accent-soft);
+}
+
+.empty-add {
+  margin-left: auto;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.team-role-slot.empty:hover .empty-add {
+  color: var(--accent);
 }
 
 .empty-dot {
