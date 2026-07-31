@@ -209,6 +209,11 @@ const dictionary = {
     competitiveDescFull: 'Strictest balance for serious matches.',
 
     filterPlaceholder: 'Search players…',
+
+    roleFilterAll: 'All',
+    roleFilterTank: 'Tank',
+    roleFilterDps: 'Damage',
+    roleFilterSupport: 'Support',
   },
 
   ru: {
@@ -408,6 +413,11 @@ const dictionary = {
     competitiveDescFull: 'Максимально строгий баланс.',
 
     filterPlaceholder: 'Поиск игроков…',
+
+    roleFilterAll: 'Все',
+    roleFilterTank: 'Танк',
+    roleFilterDps: 'Урон',
+    roleFilterSupport: 'Саппорт',
   },
 };
 

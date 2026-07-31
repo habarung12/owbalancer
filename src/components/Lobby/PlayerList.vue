@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, PropType, reactive, watch } from 'vue';
+import { computed, defineComponent, PropType, reactive } from 'vue';
 import orderBy from 'lodash/orderBy';
 
 import { useStore } from '@/store';
@@ -75,15 +75,9 @@ export default defineComponent({
       state.activeSort.order = order;
     };
 
-    watch(() => state.storePlayers, () => {
-      sort(state.activeSort.rule, state.activeSort.order, storePlayers.value);
-    });
-
     const filter = (filtered: PlayerEntries) => {
       sort(state.activeSort.rule, state.activeSort.order, filtered);
     };
-
-    onMounted(() => sort(state.activeSort.rule, state.activeSort.order));
 
     const allowDrop = (ev: DragEvent) => ev.preventDefault();
 
