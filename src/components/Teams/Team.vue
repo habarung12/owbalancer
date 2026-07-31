@@ -6,6 +6,9 @@
         <span class="team-number">#{{ teamId }}</span>
         <input type="text" class="team-name" :value="mTeam.name" @input="updateTeam" />
       </div>
+      <button class="view-btn" :title="t.viewTeam" @click="$emit('view', teamUuid)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
       <div class="team-average">
         {{ teamAverage }}
         <small>AVG SR</small>
@@ -60,6 +63,7 @@ export default defineComponent({
   name: 'Team',
   props: { teamId: Number, team: Object as PropType<Team> },
   components: { TeamRoles },
+  emits: ['view'],
 
   setup(props) {
     const store = useStore();
@@ -143,6 +147,22 @@ export default defineComponent({
   flex-shrink: 0;
 }
 .remove-btn:hover { color: var(--danger); }
+
+.view-btn {
+  border: 1px solid var(--border);
+  background: var(--surface-3);
+  color: var(--text-muted);
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: .15s;
+  svg { width: 14px; height: 14px; }
+}
+.view-btn:hover { border-color: var(--border-strong); color: var(--accent); background: var(--accent-soft); }
 
 .team-number {
   font-family: var(--mono);

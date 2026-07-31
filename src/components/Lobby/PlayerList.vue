@@ -14,6 +14,7 @@
           'is-locked':    player.identity.isLocked,
           'is-selected':  !!marked[uuid],
           'is-duplicate': duplicates.includes(player.identity.name),
+          'is-excluded':  player.identity.excludeFromBalance,
         }"
         v-for="[uuid, player] in state.players"
         :player="player"
@@ -173,5 +174,10 @@ export default defineComponent({
 .is-locked {
   border-left: 3px solid rgba(35,128,177,.6) !important;
   background: var(--accent-soft) !important;
+}
+
+.is-excluded {
+  border-left: 3px dashed var(--text-dim) !important;
+  opacity: .55;
 }
 </style>

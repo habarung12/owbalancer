@@ -186,6 +186,7 @@ export default defineComponent({
       { key: 'isCaptain',  label: t.value.captain,  desc: t.value.captainDesc },
       { key: 'isFullFlex', label: t.value.fullFlex,  desc: t.value.fullFlexDesc },
       { key: 'isLocked',   label: t.value.locked,    desc: t.value.lockedDesc },
+      { key: 'excludeFromBalance', label: t.value.excludeBalance, desc: t.value.excludeBalanceDesc },
     ]);
 
     const sortedRoles = computed(() => {

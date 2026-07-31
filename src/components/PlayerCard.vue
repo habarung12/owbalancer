@@ -37,6 +37,16 @@
         <role-icon :rtype="role" />
       </span>
     </div>
+
+    <!-- Remove from team -->
+    <button
+      v-if="teamUuid"
+      type="button"
+      class="card-remove-btn"
+      :title="t.removeFromTeam"
+      @click.stop="removeFromTeam"
+      @mousedown.stop
+    >×</button>
   </div>
 </template>
 
@@ -44,6 +54,7 @@
 import { defineComponent, PropType, reactive, computed } from 'vue';
 
 import { useStore } from '@/store';
+import { t } from '@/i18n';
 import PObj, { LobbyType, Player } from '@/objects/player';
 import MutationTypes from '@/store/mutation-types';
 
@@ -133,7 +144,16 @@ export default defineComponent({
       return icons.value.join(' / ');
     });
 
-    return { sr, drag, state, editPlayer, tierName, badgeStyle, metaRoles };
+    const removeFromTeam = () => {
+      if (!props.player || !props.teamUuid) return;
+      store.commit(MutationTypes.REMOVE_FROM_TEAM, {
+        teamUuid: props.teamUuid,
+        playerId: props.player.identity.uuid,
+      });
+      store.commit(MutationTypes.ADD_RESERVE, props.player.identity.uuid);
+    };
+
+    return { sr, drag, state, editPlayer, tierName, badgeStyle, metaRoles, removeFromTeam, t };
   },
 });
 </script>
@@ -235,4 +255,22 @@ export default defineComponent({
 .ri.dps     { color: #e0685f; :deep(svg), :deep(svg *) { fill: currentColor !important; stroke: none !important; } }
 .ri.support { color: #6fc59a; :deep(svg), :deep(svg *) { fill: currentColor !important; stroke: none !important; } }
 .ri.secondary { opacity: .32; transform: scale(.85); }
+
+.card-remove-btn {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: rgba(255,255,255,.25);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: .15s;
+}
+.card-remove-btn:hover {
+  color: #ffffff;
+  background: var(--danger);
+}
 </style>

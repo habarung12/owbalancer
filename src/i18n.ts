@@ -54,6 +54,10 @@ const dictionary = {
     fullFlexDesc: 'Can play all roles equally',
     locked: 'Locked',
     lockedDesc: 'Prevents editing stats',
+    excludeBalance: "Don't include in balance",
+    excludeBalanceDesc: 'Balancer will skip this player when building teams',
+    removeFromTeam: 'Remove from team',
+    viewTeam: 'View team',
 
     // Balance modal
     balanceSetup: 'Balance Setup',
@@ -87,6 +91,8 @@ const dictionary = {
     dispersionWide: 'Wide',
     triesCount: 'Tries Count',
     triesDesc: 'How many balancing attempts to run. More attempts find more distinct, higher-quality compositions but take longer.',
+    teamsCount: 'Teams Count',
+    teamsCountDesc: 'How many teams the balancer should form. Captains are auto-assigned to match this number.',
     triesFast: 'Fast',
     triesThorough: 'Thorough',
     progress: 'Progress',
@@ -258,6 +264,10 @@ const dictionary = {
     fullFlexDesc: 'Может играть на любой роли',
     locked: 'Заблокирован',
     lockedDesc: 'Запрещает редактирование рангов',
+    excludeBalance: 'Не учитывать при балансе',
+    excludeBalanceDesc: 'Балансер будет пропускать этого игрока при составлении команд',
+    removeFromTeam: 'Убрать из команды',
+    viewTeam: 'Просмотр команды',
 
     // Balance modal
     balanceSetup: 'Настройка баланса',
@@ -291,6 +301,8 @@ const dictionary = {
     dispersionWide: 'Широко',
     triesCount: 'Количество попыток',
     triesDesc: 'Сколько попыток баланса выполнить. Больше попыток — больше разных качественных составов, но дольше счёт.',
+    teamsCount: 'Количество команд',
+    teamsCountDesc: 'Сколько команд должен сформировать балансер. Капитаны назначаются автоматически под это число.',
     triesFast: 'Быстро',
     triesThorough: 'Тщательно',
     progress: 'Прогресс',

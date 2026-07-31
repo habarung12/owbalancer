@@ -50,6 +50,26 @@
                 </div>
               </section>
 
+              <!-- Teams count (only for full balance) -->
+              <section class="bal-section" v-if="balanceType === 'full'">
+                <div class="bsec-head">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  {{ t.teamsCount }}
+                </div>
+                <p class="bal-desc">{{ t.teamsCountDesc }}</p>
+                <div class="number-stepper">
+                  <button type="button" class="step-btn" @click="setTeamsCount(teamsCount - 1)">−</button>
+                  <input
+                    type="number"
+                    class="number-input"
+                    min="1"
+                    :value="teamsCount"
+                    @input="setTeamsCount(+($event.target as HTMLInputElement).value)"
+                  />
+                  <button type="button" class="step-btn" @click="setTeamsCount(teamsCount + 1)">+</button>
+                </div>
+              </section>
+
               <!-- Disable type (only for full balance) -->
               <section class="bal-section" v-if="balanceType === 'full'">
                 <div class="bsec-head">
@@ -202,12 +222,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive, ref, watch } from 'vue';
 import { t } from '@/i18n';
 import MutationTypes from '@/store/mutation-types';
 import { useStore } from '@/store';
 import wasm from '@/mworker';
 import Utils from '@/utils';
+import { PLAYERS_IN_TEAM } from '@/constants';
 
 import { Teams } from '@/objects/team';
 import { Results } from '@/objects/balance';
@@ -227,6 +248,16 @@ export default defineComponent({
 
     const options = computed(() => store.state.balancerOptions);
     const activePreset = ref('tournament');
+
+    const defaultTeamsCount = computed(() => {
+      const eligible = Object.values(store.state.players).filter(p => !p.identity.excludeFromBalance).length;
+      return Math.max(1, Math.floor(eligible / PLAYERS_IN_TEAM));
+    });
+    const teamsCount = ref(defaultTeamsCount.value);
+    watch(isActive, active => { if (active) teamsCount.value = defaultTeamsCount.value; });
+    const setTeamsCount = (value: number) => {
+      teamsCount.value = Number.isFinite(value) ? Math.max(1, Math.round(value)) : 1;
+    };
 
     document.addEventListener('wasm-update', () => { progress.current += 1; });
 
@@ -319,6 +350,7 @@ export default defineComponent({
     const getBalancePlayers = (): Players => {
       const result: Players = {};
       Object.entries(store.state.players).forEach(([id, player]) => {
+        if (player.identity.excludeFromBalance) return;
         result[id] = { ...player, stats: { ...player.stats, classes: {
           dps:     { ...player.stats.classes.dps,     rank: getModeRank(player.stats.classes.dps) },
           tank:    { ...player.stats.classes.tank,    rank: getModeRank(player.stats.classes.tank) },
@@ -329,6 +361,10 @@ export default defineComponent({
     };
 
     const balance = async () => {
+      if (balanceType.value === 'full') {
+        store.commit(MutationTypes.SET_CAPTAINS_COUNT, teamsCount.value);
+      }
+
       if (!Object.values(store.state.players).some(p => p.identity.isCaptain)) {
         alert('Please select at least one captain');
         return;
@@ -395,7 +431,7 @@ export default defineComponent({
       isActive, balanceType, disableType, rankMode, progress, progressPct,
       options, activePreset, rankModeHints, typeOptions, disableOptions,
       presets, advancedOpts, applyPreset, closeModal, downloadSettings,
-      importSettings, balance, setTries, t,
+      importSettings, balance, setTries, teamsCount, setTeamsCount, t,
     };
   },
 });

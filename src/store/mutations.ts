@@ -37,6 +37,7 @@ export type Mutations<S = State> = {
   [MutationTypes.ASSIGN_SQUIRES](state: S, maxSR: number): void;
   [MutationTypes.ADD_PLAYERS](state: S, data: { players: Players; lobby?: LobbyType }): void;
   [MutationTypes.ASSIGN_CAPTAINS](state: S, minSR: number): void;
+  [MutationTypes.SET_CAPTAINS_COUNT](state: S, count: number): void;
   [MutationTypes.REMOVE_FROM_ARCHIVE](state: S, id: number): void;
   [MutationTypes.DELETE_PLAYER](state: S, data: { playerId: string; lobby?: LobbyType }): void;
   [MutationTypes.SET_RESULTS](state: S, results: Results): void;
@@ -276,6 +277,21 @@ export const mutations: MutationTree<State> & Mutations = {
 
     let i = 0;
     while (i < captainsCount && i < eligible.length) {
+      const [uuid] = eligible[i];
+      state.players[uuid].identity.isCaptain = true;
+      i += 1;
+    }
+  },
+  [MutationTypes.SET_CAPTAINS_COUNT](state, count) {
+    const players = Object.entries(state.players);
+    players.forEach(([, player]) => { player.identity.isCaptain = false; });
+
+    const eligible = players
+      .filter(([, player]) => !player.identity.excludeFromBalance)
+      .sort(([, player], [, player2]) => PObj.getTopRank(player2) - PObj.getTopRank(player));
+
+    let i = 0;
+    while (i < count && i < eligible.length) {
       const [uuid] = eligible[i];
       state.players[uuid].identity.isCaptain = true;
       i += 1;
