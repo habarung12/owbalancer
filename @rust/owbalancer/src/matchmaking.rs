@@ -146,8 +146,10 @@ impl<'a> Matchmaking<'a> {
 
     /// Finds the same-role swap between two teams that most reduces the
     /// gap between their average SR, skipping captains/squires (anchors
-    /// stay put). Returns None if no swap improves on the current gap.
-    fn best_equalizing_swap(&self, t1: usize, t2: usize) -> Option<(usize, usize)> {
+    /// stay put). Returns the member indices and the gap the swap would
+    /// leave those two teams at, or None if no swap improves on the
+    /// current gap.
+    fn best_equalizing_swap(&self, t1: usize, t2: usize) -> Option<(usize, usize, f32)> {
         let team1 = &self.teams.0[t1];
         let team2 = &self.teams.0[t2];
 
@@ -158,7 +160,7 @@ impl<'a> Matchmaking<'a> {
             return None;
         }
 
-        let mut best: Option<(usize, usize)> = None;
+        let mut best: Option<(usize, usize, f32)> = None;
         let mut best_gap = (team1.avg_sr - team2.avg_sr).abs();
 
         for (i, m1) in team1.members.iter().enumerate() {
@@ -191,7 +193,7 @@ impl<'a> Matchmaking<'a> {
 
                 if new_gap < best_gap {
                     best_gap = new_gap;
-                    best = Some((i, j));
+                    best = Some((i, j, new_gap));
                 }
             }
         }
@@ -199,15 +201,22 @@ impl<'a> Matchmaking<'a> {
         best
     }
 
-    /// Repeatedly swaps same-role players between the currently highest-
-    /// and lowest-average teams to level everyone out, stopping once the
-    /// spread is within tolerance or no further improving swap exists.
+    /// Repeatedly swaps same-role players to level every team's average SR
+    /// out, stopping once the overall spread is within tolerance. Each
+    /// round prefers a swap between the current highest- and lowest-average
+    /// teams, but that specific pair often has no valid same-role,
+    /// non-anchor swap available (one side is out of that role, or every
+    /// candidate is a captain/squire) — when that happens this used to give
+    /// up immediately even though a less extreme pair could still improve,
+    /// which is why the tolerance setting often did nothing. It now falls
+    /// back to the best swap available between ANY two teams instead.
     pub fn equalize(&mut self) {
         self.teams.update();
 
         let tolerance = self.config.tolerance as f32;
         let max_iterations = 500;
         let mut iterations = 0;
+        let team_count = self.teams.0.len();
 
         loop {
             iterations += 1;
@@ -239,9 +248,25 @@ impl<'a> Matchmaking<'a> {
                 break;
             }
 
-            match self.best_equalizing_swap(hi, lo) {
-                Some((mi, mj)) => {
-                    self.teams.swap(hi, mi, lo, mj);
+            let mut swap_target = self
+                .best_equalizing_swap(hi, lo)
+                .map(|(mi, mj, gap)| (hi, mi, lo, mj, gap));
+
+            if swap_target.is_none() {
+                for t1 in 0..team_count {
+                    for t2 in (t1 + 1)..team_count {
+                        if let Some((mi, mj, gap)) = self.best_equalizing_swap(t1, t2) {
+                            if swap_target.map_or(true, |(.., best_gap)| gap < best_gap) {
+                                swap_target = Some((t1, mi, t2, mj, gap));
+                            }
+                        }
+                    }
+                }
+            }
+
+            match swap_target {
+                Some((t1, mi, t2, mj, _)) => {
+                    self.teams.swap(t1, mi, t2, mj);
                 }
                 None => break,
             }
