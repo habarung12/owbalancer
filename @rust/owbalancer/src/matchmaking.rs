@@ -132,6 +132,15 @@ impl<'a> Matchmaking<'a> {
         self.init_pool(false);
         self.distribute_lieutenants();
         self.distribute_ensigns();
+
+        // Lieutenant/ensign placement only checks role-slot availability, not
+        // SR closeness, so the tolerance/dispersion setting has no effect on
+        // it. Run the same same-role swap pass "Уравнивание" uses (respects
+        // `config.tolerance`, never touches captains/squires) so dispersion
+        // actually tightens the partial teams this produces.
+        self.equalize();
+        self.update();
+
         self.teams.sort(Direction::ASC);
     }
 
@@ -247,6 +256,9 @@ impl<'a> Matchmaking<'a> {
         self.distribute_remaining();
         self.swap_steal();
         self.increase_quality();
+        // Same dispersion-tightening polish `balance_players` runs once teams
+        // are complete; `balance_half` skips it, so it never ran here either.
+        self.minimize_dispersion();
         self.teams.sort(Direction::ASC);
     }
 
