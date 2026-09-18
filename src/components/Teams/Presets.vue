@@ -29,14 +29,13 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import { useStore } from '@/store';
 import MutationTypes from '@/store/mutation-types';
-import { Players } from '@/objects/player';
 import { Teams } from '@/objects/team';
 import { t } from '@/i18n';
 
 const STORAGE = 'owbalancer_presets';
 const SLOT_COUNT = 3;
 
-type PresetSlot = { teams: Teams; players: Players; reservedPlayers: string[] } | null;
+type PresetSlot = { teams: Teams } | null;
 
 function loadSlots(): PresetSlot[] {
   try {
@@ -63,19 +62,13 @@ export default defineComponent({
       const slot = slots.value[i];
       activeIndex.value = i;
 
-      store.commit(MutationTypes.LOAD_LOBBY_STATE, slot
-        ? cloneDeep(slot)
-        : { teams: [], players: {}, reservedPlayers: [] });
+      store.commit(MutationTypes.LOAD_LOBBY_STATE, { teams: slot ? cloneDeep(slot.teams) : [] });
     };
 
     const savePreset = (i: number) => {
       if (slots.value[i] && !window.confirm(t.value.teamPresetConfirmOverwrite)) return;
 
-      slots.value[i] = cloneDeep({
-        teams: store.state.teams,
-        players: store.state.players,
-        reservedPlayers: store.state.reservedPlayers,
-      });
+      slots.value[i] = { teams: cloneDeep(store.state.teams) };
       activeIndex.value = i;
       persist();
     };
