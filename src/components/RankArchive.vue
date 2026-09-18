@@ -161,10 +161,11 @@ const TIERS: Tier[] = [
   { name: 'Grandmaster', min: 4000, max: 4400, color: '#e8973a' },
   { name: 'Master',      min: 3500, max: 3900, color: '#e0685f' },
   { name: 'Diamond',     min: 3000, max: 3400, color: '#a78bfa' },
-  { name: 'Platinum',    min: 2500, max: 2900, color: '#5fd3c4' },
-  { name: 'Gold',        min: 2000, max: 2400, color: '#f99e1a' },
-  { name: 'Silver',      min: 1500, max: 1900, color: '#a4a9b4' },
-  { name: 'Bronze',      min: 1000, max: 1400, color: '#cd7f5d' },
+  { name: 'Emerald',     min: 2500, max: 2900, color: '#3ddc97' },
+  { name: 'Platinum',    min: 2000, max: 2400, color: '#5fd3c4' },
+  { name: 'Gold',        min: 1500, max: 1900, color: '#f99e1a' },
+  { name: 'Silver',      min: 1000, max: 1400, color: '#a4a9b4' },
+  { name: 'Bronze',      min: 1,    max: 999,  color: '#cd7f5d' },
 ];
 
 function hexToRgba(hex: string, a: number): string {

@@ -67,9 +67,10 @@ function getTier(sr: number): { name: string; color: string; bg: string } {
   if (sr >= 4000) return { name: 'GM',    color: '#f2c94c', bg: 'rgba(242,201,76,.13)' };
   if (sr >= 3500) return { name: 'Master',color: '#e0685f', bg: 'rgba(224,104,95,.13)' };
   if (sr >= 3000) return { name: 'Dia',   color: '#a78bfa', bg: 'rgba(167,139,250,.13)' };
-  if (sr >= 2500) return { name: 'Plat',  color: '#5fd3c4', bg: 'rgba(95,211,196,.13)' };
-  if (sr >= 2000) return { name: 'Gold',  color: '#f99e1a', bg: 'rgba(249,158,26,.13)' };
-  if (sr >= 1500) return { name: 'Silver',color: '#a4a9b4', bg: 'rgba(164,169,180,.13)' };
+  if (sr >= 2500) return { name: 'Em',    color: '#3ddc97', bg: 'rgba(61,220,151,.13)' };
+  if (sr >= 2000) return { name: 'Plat',  color: '#5fd3c4', bg: 'rgba(95,211,196,.13)' };
+  if (sr >= 1500) return { name: 'Gold',  color: '#f99e1a', bg: 'rgba(249,158,26,.13)' };
+  if (sr >= 1000) return { name: 'Silver',color: '#a4a9b4', bg: 'rgba(164,169,180,.13)' };
   if (sr > 0)     return { name: 'Bronze',color: '#cd7f5d', bg: 'rgba(205,127,93,.13)' };
   return { name: '—', color: '#6b7280', bg: 'rgba(107,114,128,.1)' };
 }
