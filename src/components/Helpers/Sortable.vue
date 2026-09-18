@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue';
 import Sortable, { SortableEvent } from 'sortablejs';
 
 export default defineComponent({
@@ -15,6 +15,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const container= ref<HTMLElement | null>(null);
+    let instance: Sortable | null = null;
 
     const onUpdate = (e: SortableEvent) => {
       emit('update-position', e);
@@ -22,12 +23,17 @@ export default defineComponent({
 
     onMounted(() => {
       if (container.value) {
-        Sortable.create(container.value, {
+        instance = Sortable.create(container.value, {
           onUpdate,
           direction: 'vertical',
           handle: props.handle,
         });
       }
+    });
+
+    onBeforeUnmount(() => {
+      instance?.destroy();
+      instance = null;
     });
 
     return { container };

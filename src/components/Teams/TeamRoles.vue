@@ -93,6 +93,8 @@ export default defineComponent({
       if (!playerId || !props.rtype || !props.teamUuid || source === 'backup') return;
 
       const player = players.value[playerId];
+      if (!player) return;
+
       const role = PObj.getRole(player.stats.classes, props.rtype);
 
       if (!role.isActive) {

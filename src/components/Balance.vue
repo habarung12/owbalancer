@@ -407,6 +407,8 @@ export default defineComponent({
         }
 
         if (!results || results.length === 0) {
+          store.commit(MutationTypes.ADD_TEAMS, teamsCopy);
+          store.commit(MutationTypes.RESERVE_PLAYERS, reserveCopy);
           closeModal();
           alert(t.value.balanceNoResult);
           return;
@@ -427,6 +429,8 @@ export default defineComponent({
         closeModal();
       } catch (e) {
         console.error((e as Error).message);
+        store.commit(MutationTypes.ADD_TEAMS, teamsCopy);
+        store.commit(MutationTypes.RESERVE_PLAYERS, reserveCopy);
         alert('Balance failed: ' + (e as Error).message);
       }
     };

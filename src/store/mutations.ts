@@ -235,9 +235,22 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.DELETE_PLAYER](state, { playerId, lobby = 'players' }) {
     delete state[lobby][playerId];
+
+    if (lobby === 'players') {
+      state.reservedPlayers = state.reservedPlayers.filter(uuid => uuid !== playerId);
+      state.teams.forEach(team => {
+        const index = team.members.findIndex(member => member.uuid === playerId);
+        if (index >= 0) team.members.splice(index, 1);
+      });
+    }
   },
   [MutationTypes.DELETE_PLAYERS](state, lobby = 'players') {
     state[lobby] = {};
+
+    if (lobby === 'players') {
+      state.reservedPlayers = [];
+      state.teams.forEach(team => { team.members = []; });
+    }
   },
   [MutationTypes.REMOVE_FROM_RESERVE](state, playerId) {
     const index = state.reservedPlayers.indexOf(playerId);
