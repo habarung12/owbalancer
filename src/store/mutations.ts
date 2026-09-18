@@ -42,6 +42,10 @@ export type Mutations<S = State> = {
   [MutationTypes.DELETE_PLAYER](state: S, data: { playerId: string; lobby?: LobbyType }): void;
   [MutationTypes.SET_RESULTS](state: S, results: Results): void;
   [MutationTypes.IMPORT_PLAYERS](state: S, data: { players: Players; lobby?: LobbyType }): void;
+  [MutationTypes.LOAD_LOBBY_STATE](
+    state: S,
+    data: { teams: Teams; players: Players; reservedPlayers: string[] }
+  ): void;
   [MutationTypes.IMPORT_ARCHIVE](state: S, data: ArchiveEntry): void;
   [MutationTypes.IMPORT_PLAYERS_OLD](state: S, data: string): void;
   [MutationTypes.RESERVE_PLAYERS](state: S, players: string[]): void;
@@ -209,6 +213,12 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [MutationTypes.IMPORT_PLAYERS](state, { players, lobby = 'players' }) {
     state[lobby] = { ...players, ...state[lobby] };
+  },
+  [MutationTypes.LOAD_LOBBY_STATE](state, { teams, players, reservedPlayers }) {
+    state.teams = teams;
+    state.players = players;
+    state.reservedPlayers = reservedPlayers;
+    state.balancerResults = [];
   },
   [MutationTypes.SET_BALANCER_OPTIONS](state, options) {
     state.balancerOptions = options;

@@ -40,6 +40,11 @@ const dictionary = {
     captains: 'Captains',
     import: 'Import',
 
+    teamPreset: 'Preset',
+    teamPresetSave: 'Save current teams to this preset',
+    teamPresetEmpty: 'This preset is empty',
+    teamPresetConfirmOverwrite: 'Overwrite this preset with the current teams?',
+
     total: 'Total',
     visible: 'Seen',
 
@@ -256,6 +261,11 @@ const dictionary = {
     text: 'Текст',
     captains: 'Капитаны',
     import: 'Импорт',
+
+    teamPreset: 'Пресет',
+    teamPresetSave: 'Сохранить текущие команды в этот пресет',
+    teamPresetEmpty: 'Пресет пуст',
+    teamPresetConfirmOverwrite: 'Перезаписать этот пресет текущими командами?',
 
     total: 'Всего',
     visible: 'Показано',

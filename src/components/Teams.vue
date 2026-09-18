@@ -2,6 +2,9 @@
   <div class="toolbar">
     <actions />
   </div>
+  <div class="toolbar">
+    <presets />
+  </div>
 
   <stats v-if="teams.length > 0" />
 
@@ -23,12 +26,13 @@ import Balance from '@/components/Balance.vue';
 import Team from '@/components/Teams/Team.vue';
 import Stats from '@/components/Teams/Stats.vue';
 import Actions from '@/components/Teams/Actions.vue';
+import Presets from '@/components/Teams/Presets.vue';
 import ResultSelection from '@/components/Teams/ResultSelection.vue';
 import TeamView from '@/components/Teams/TeamView.vue';
 
 export default defineComponent({
   name: 'Teams',
-  components: { Team, Balance, Stats, Actions, ResultSelection, TeamView },
+  components: { Team, Balance, Stats, Actions, Presets, ResultSelection, TeamView },
   setup() {
     const store = useStore();
     const storeTeams = computed(() => store.state.teams);
