@@ -72,6 +72,7 @@ export default defineComponent({
         rank: header.indexOf('rank'),
         name: header.indexOf('name'),
         captain: header.indexOf('captain'),
+        squire: header.indexOf('squire'),
       };
 
       if (col.team === -1 || col.role === -1 || col.rank === -1 || col.name === -1) {
@@ -89,6 +90,7 @@ export default defineComponent({
         const rank = Math.round(+fields[col.rank]) || 0;
         const name = fields[col.name];
         const isCaptain = col.captain >= 0 && fields[col.captain] === '1';
+        const isSquire = col.squire >= 0 && fields[col.squire] === '1';
         const key = col.teamId >= 0 ? fields[col.teamId] : teamName;
 
         if (!teamName || !role || !name) return;
@@ -107,6 +109,7 @@ export default defineComponent({
           isActive: true,
         };
         if (isCaptain) player.identity.isCaptain = true;
+        if (isSquire) player.identity.isSquire = true;
 
         store.commit(MutationTypes.ADD_PLAYER, { player: { ...player, identity: { ...player.identity, uuid } }, lobby: 'players' });
 
