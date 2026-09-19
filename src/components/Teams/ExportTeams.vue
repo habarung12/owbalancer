@@ -5,6 +5,7 @@
       {{ t.export }}
     </template>
     <drop-item @drop-click="exportText">{{ t.text }}</drop-item>
+    <drop-item @drop-click="exportPlusCaptain">{{ t.textPlusCaptain }}</drop-item>
     <drop-item @drop-click="exportCSV">CSV</drop-item>
     <drop-item @drop-click="exportCaptains">{{ t.captains }}</drop-item>
     <drop-item @drop-click="exportJSON">JSON</drop-item>
@@ -107,6 +108,34 @@ export default defineComponent({
       isModalActive.value = true;
     };
 
+    const exportPlusCaptain = () => {
+      const { teams } = store.state;
+
+      const text = teams.reduce((acc, team) => {
+        const members = ['tank', 'dps', 'support'].flatMap((role) =>
+          team.members.filter((member) => member.role === role)
+        );
+
+        const lines = members
+          .slice()
+          .sort((a, b) => {
+            const aCaptain = store.state.players[a.uuid].identity.isCaptain;
+            const bCaptain = store.state.players[b.uuid].identity.isCaptain;
+            return Number(bCaptain) - Number(aCaptain);
+          })
+          .map((member) => {
+            const { isCaptain } = store.state.players[member.uuid].identity;
+            return `${isCaptain ? '+' : ''}${member.name}`;
+          })
+          .join('\n');
+
+        return `${acc}${team.name}\n${lines}\n\n`;
+      }, '');
+
+      modalText.value = text.trim();
+      isModalActive.value = true;
+    };
+
     const exportCSV = () => {
       const { teams } = store.state;
       let text = 'Team;Role;Rank;Name;Captain;Squire\n';
@@ -152,6 +181,7 @@ export default defineComponent({
 
     return {
       exportText,
+      exportPlusCaptain,
       exportCSV,
       exportCaptains,
       exportJSON,

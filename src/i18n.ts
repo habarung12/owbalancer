@@ -37,6 +37,7 @@ const dictionary = {
     export: 'Export',
     importTeams: 'Import teams',
     text: 'Text',
+    textPlusCaptain: 'List (+captain)',
     captains: 'Captains',
     import: 'Import',
 
@@ -259,6 +260,7 @@ const dictionary = {
     export: 'Экспорт',
     importTeams: 'Импорт команд',
     text: 'Текст',
+    textPlusCaptain: 'Список (+капитан)',
     captains: 'Капитаны',
     import: 'Импорт',
 
